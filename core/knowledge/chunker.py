@@ -32,7 +32,12 @@ class SemanticChunker(BaseChunker):
         ]
 
     def _token_count(self, text: str) -> int:
-        """Approximate token count (split on whitespace)."""
+        """Approximate token count by whitespace splitting.
+
+        Note: Under-counts CJK (Chinese/Japanese/Korean) characters since they
+        are not whitespace-separated. For CJK-heavy content, consider character
+        count (len(text) // 2) as an alternative estimate.
+        """
         return len(text.split())
 
     def _merge_paragraphs(self, paragraphs: list[str]) -> list[str]:
@@ -55,7 +60,12 @@ class SemanticChunker(BaseChunker):
         return chunks
 
     def _add_overlap(self, chunks: list[str]) -> list[str]:
-        """Prepend the last `overlap` tokens of previous chunk to current chunk."""
+        """Prepend the last `overlap` tokens of previous chunk to current chunk.
+
+        Note: This inflates each chunk (except the first) by up to `overlap` tokens
+        beyond `chunk_size`. This is intentional — overlap improves retrieval by
+        ensuring context is not lost at chunk boundaries.
+        """
         if len(chunks) <= 1:
             return chunks
         result = [chunks[0]]

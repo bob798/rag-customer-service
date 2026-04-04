@@ -40,6 +40,9 @@ class TestFAQParser:
         assert parser.can_handle("txt", "faq document") is True
 
     def test_faq_parser_can_handle_explicit_faq_type(self, parser):
+        """file_type='faq' must match even with an empty content_hint."""
+        assert parser.can_handle("faq") is True
+        assert parser.can_handle("faq", "") is True
         assert parser.can_handle("faq", "faq content") is True
 
     def test_faq_parser_cannot_handle_pdf(self, parser):
@@ -185,7 +188,7 @@ class TestDefaultParser:
         assert parser.can_handle("pdf") is True
         assert parser.can_handle("docx") is True
         assert parser.can_handle("txt") is True
-        assert parser.can_handle("text") is True
+        assert parser.can_handle("text") is False  # no real .text extension
 
     def test_default_parser_cannot_handle_faq(self, parser):
         assert parser.can_handle("faq") is False

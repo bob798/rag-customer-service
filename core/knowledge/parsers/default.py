@@ -8,11 +8,11 @@ class DefaultParser(BaseParser):
         self.chunker = chunker
 
     def can_handle(self, file_type: str, content_hint: str = "") -> bool:
-        return file_type in ("pdf", "docx", "txt", "text")
+        return file_type in ("pdf", "docx", "txt")
 
     def parse(self, file_path: str, doc_id: str, metadata: dict) -> list[dict]:
-        file_type = file_path.rsplit(".", 1)[-1].lower()
-        text = self._extract_text(file_path, file_type=file_type)
+        ext = file_path.rsplit(".", 1)[-1].lower() if "." in file_path else "txt"
+        text = self._extract_text(file_path, ext)
         return self.chunker.chunk(text, doc_id, metadata)
 
     def _extract_text(self, file_path: str, file_type: str) -> str:

@@ -31,4 +31,49 @@
 
 ## 项目状态
 
-Phase 1 设计完成，待执行（2026-03）
+Phase 1 实施中（2026-04）
+
+---
+
+## 开发方式：AI 协作编程
+
+本项目采用 **人机协作编程（Human-AI Collaborative Programming）** 模式开发。
+
+### 工作流程
+
+```
+开发者碰撞产品需求
+    ↓
+根据需求制定技术方案 + 架构设计
+    ↓
+编写实施计划（Claude Code Plan Mode）
+    ↓
+Subagent 驱动执行（自动 TDD + 双轮代码审查）
+    ↓
+开发者审核合并
+```
+
+### 使用的工具
+
+- **Claude Code**：主 AI 编程助手（claude.ai/code）
+- **[Superpowers Skills](https://github.com/obra/superpowers)**：Claude Code 技能扩展套件
+  - `subagent-driven-development`：每个任务派发独立 subagent 实现，实现后自动规格合规 + 代码质量双轮审查
+  - `writing-plans`：结构化实施计划制定
+  - `test-driven-development`：TDD 纪律执行
+  - `using-git-worktrees`：git worktree 隔离工作空间
+
+### 编码解释模式
+
+本项目采用**混合编码解释模式**：开发者用自然语言描述意图和约束，AI 负责代码生成与自审，开发者保留架构决策权与最终审查权。
+
+参考：Jiang et al., *"混合编码解释模式下的人机协同编程"*，arXiv:2601.20245
+
+### 分工原则
+
+| 开发者负责 | AI 负责 |
+|-----------|---------|
+| 产品需求定义 | 代码生成与实现 |
+| 架构设计决策 | 规格合规审查 |
+| 技术选型判断 | 代码质量审查 |
+| 计划审批 | TDD 执行 |
+| 最终代码审核 | 测试编写 |

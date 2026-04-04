@@ -275,3 +275,164 @@ class TestChromaVectorStore:
         mock_collection.count.assert_called_once()
         assert result == 42
         assert isinstance(result, int)
+
+
+# ---------------------------------------------------------------------------
+# Stub jieba and rank_bm25 before importing Bm25Store
+# ---------------------------------------------------------------------------
+
+def _make_jieba_stub():
+    stub = types.ModuleType("jieba")
+
+    def _cut(text):
+        # Simple whitespace + character split for testing
+        return list(text)
+
+    stub.cut = _cut
+    sys.modules["jieba"] = stub
+    return stub
+
+
+def _make_rank_bm25_stub():
+    stub = types.ModuleType("rank_bm25")
+
+    class _BM25Okapi:
+        def __init__(self, corpus):
+            self._corpus = corpus  # list of token lists
+
+        def get_scores(self, query_tokens):
+            """Naive TF-based scoring: count how many query tokens appear in each doc."""
+            import numpy as np
+            scores = []
+            query_set = set(query_tokens)
+            for doc_tokens in self._corpus:
+                doc_set = set(doc_tokens)
+                scores.append(float(len(query_set & doc_set)))
+            return np.array(scores)
+
+    stub.BM25Okapi = _BM25Okapi
+    sys.modules["rank_bm25"] = stub
+    return stub
+
+
+_make_jieba_stub()
+_make_rank_bm25_stub()
+
+from core.knowledge.bm25_store import Bm25Store  # noqa: E402
+
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+def _make_chunks(n: int, doc_id: str = "d1") -> list[dict]:
+    return [
+        {"chunk_id": f"c{i}", "doc_id": doc_id, "content": f"content {i} token{i}"}
+        for i in range(n)
+    ]
+
+
+# ---------------------------------------------------------------------------
+# TestBm25Store
+# ---------------------------------------------------------------------------
+
+class TestBm25Store:
+    def test_bm25_add_and_search_returns_results(self):
+        """add() then search() should return matching results."""
+        store = Bm25Store()
+        chunks = [
+            {"chunk_id": "c1", "doc_id": "d1", "content": "退款流程说明"},
+            {"chunk_id": "c2", "doc_id": "d1", "content": "发货时间查询"},
+        ]
+        store.add(chunks)
+        results = store.search("退款")
+        assert len(results) > 0
+        assert all("chunk_id" in r for r in results)
+        assert all("doc_id" in r for r in results)
+        assert all("content" in r for r in results)
+        assert all("score" in r for r in results)
+
+    def test_bm25_search_empty_index_returns_empty(self):
+        """Searching an empty store returns []."""
+        store = Bm25Store()
+        results = store.search("anything")
+        assert results == []
+
+    def test_bm25_search_top_k_limits_results(self):
+        """top_k=3 should return at most 3 results even with 10 chunks."""
+        store = Bm25Store()
+        # All chunks share the token 'x' so they all score > 0
+        chunks = [
+            {"chunk_id": f"c{i}", "doc_id": "d1", "content": f"x item{i}"}
+            for i in range(10)
+        ]
+        store.add(chunks)
+        results = store.search("x", top_k=3)
+        assert len(results) <= 3
+
+    def test_bm25_search_filters_zero_scores(self):
+        """Results with score <= 0 must be excluded."""
+        store = Bm25Store()
+        chunks = [
+            {"chunk_id": "c1", "doc_id": "d1", "content": "退款流程"},
+            {"chunk_id": "c2", "doc_id": "d1", "content": "发货时间"},
+        ]
+        store.add(chunks)
+        # Query term appears in neither doc (stub returns 0 for no overlap)
+        results = store.search("zzznomatch")
+        assert results == []
+
+    def test_bm25_delete_by_doc_id_removes_chunks(self):
+        """After deleting doc d1, search only finds chunks from d2."""
+        store = Bm25Store()
+        chunks_d1 = [
+            {"chunk_id": "c1", "doc_id": "d1", "content": "退款流程"},
+            {"chunk_id": "c2", "doc_id": "d1", "content": "退款申请"},
+        ]
+        chunks_d2 = [
+            {"chunk_id": "c3", "doc_id": "d2", "content": "发货时间"},
+        ]
+        store.add(chunks_d1 + chunks_d2)
+        removed = store.delete_by_doc_id("d1")
+        assert removed == 2
+        assert store.count() == 1
+        # Search for a term unique to d1 — should return nothing
+        results = store.search("退款")
+        assert all(r["doc_id"] != "d1" for r in results)
+
+    def test_bm25_delete_nonexistent_doc_returns_zero(self):
+        """delete_by_doc_id() for unknown doc_id returns 0."""
+        store = Bm25Store()
+        store.add([{"chunk_id": "c1", "doc_id": "d1", "content": "hello"}])
+        count = store.delete_by_doc_id("nonexistent")
+        assert count == 0
+        assert store.count() == 1
+
+    def test_bm25_rebuild_from_chunks_replaces_index(self):
+        """rebuild_from_chunks() replaces all existing data."""
+        store = Bm25Store()
+        old_chunks = [
+            {"chunk_id": "old1", "doc_id": "d_old", "content": "旧数据内容"},
+        ]
+        store.add(old_chunks)
+        assert store.count() == 1
+
+        new_chunks = [
+            {"chunk_id": "new1", "doc_id": "d_new", "content": "新数据一"},
+            {"chunk_id": "new2", "doc_id": "d_new", "content": "新数据二"},
+        ]
+        store.rebuild_from_chunks(new_chunks)
+
+        assert store.count() == 2
+        # Old data should be gone
+        results = store.search("旧")
+        assert all(r["doc_id"] != "d_old" for r in results)
+
+    def test_bm25_count_returns_correct_number(self):
+        """count() should reflect the total number of indexed chunks."""
+        store = Bm25Store()
+        assert store.count() == 0
+        store.add(_make_chunks(5, doc_id="d1"))
+        assert store.count() == 5
+        store.add(_make_chunks(3, doc_id="d2"))
+        assert store.count() == 8

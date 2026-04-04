@@ -1,5 +1,5 @@
 import pytest
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 from core.llm.factory import LLMFactory
 
@@ -8,9 +8,9 @@ from core.llm.factory import LLMFactory
 async def test_factory_returns_response():
     factory = LLMFactory(model="deepseek/deepseek-chat")
     with patch("litellm.acompletion", new_callable=AsyncMock) as mock:
-        mock.return_value.choices = [
-            type("C", (), {"message": type("M", (), {"content": "hello"})()})()
-        ]
+        choice = MagicMock()
+        choice.message.content = "hello"
+        mock.return_value.choices = [choice]
         result = await factory.complete([{"role": "user", "content": "hi"}])
     assert result == "hello"
 
@@ -20,15 +20,10 @@ async def test_factory_fallback_on_error():
     factory = LLMFactory(
         model="claude-3-5-sonnet-20241022", fallback="deepseek/deepseek-chat"
     )
-    fallback_response = type(
-        "R",
-        (),
-        {
-            "choices": [
-                type("C", (), {"message": type("M", (), {"content": "fallback"})()})()
-            ]
-        },
-    )()
+    fallback_choice = MagicMock()
+    fallback_choice.message.content = "fallback"
+    fallback_response = MagicMock()
+    fallback_response.choices = [fallback_choice]
     with patch(
         "litellm.acompletion",
         side_effect=[Exception("API error"), fallback_response],
@@ -82,9 +77,9 @@ async def test_factory_complete_stream_false_returns_content():
     """stream=False (default) returns string content, not raw response."""
     factory = LLMFactory(model="deepseek/deepseek-chat")
     with patch("litellm.acompletion", new_callable=AsyncMock) as mock:
-        mock.return_value.choices = [
-            type("C", (), {"message": type("M", (), {"content": "world"})()})()
-        ]
+        choice = MagicMock()
+        choice.message.content = "world"
+        mock.return_value.choices = [choice]
         result = await factory.complete(
             [{"role": "user", "content": "hi"}], stream=False
         )

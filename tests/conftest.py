@@ -1,8 +1,7 @@
 import pytest
-import pytest_asyncio
 from unittest.mock import AsyncMock
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def mock_llm():
     """Mock LLM that returns a fixed response."""
     mock = AsyncMock()

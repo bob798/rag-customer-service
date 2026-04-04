@@ -44,3 +44,6 @@ temp/
 
 # Git worktrees
 .worktrees/
+
+# Runtime data (DO NOT commit)
+data/

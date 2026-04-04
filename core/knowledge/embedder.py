@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import threading
 from core.interfaces import BaseEmbedder
 
 logger = logging.getLogger(__name__)
@@ -15,13 +16,16 @@ class GteQwen2Embedder(BaseEmbedder):
     def __init__(self, model_name: str = "Alibaba-NLP/gte-Qwen2-1.5B-instruct"):
         self.model_name = model_name
         self._model = None  # lazy load
+        self._load_lock = threading.Lock()
 
     def _load_model(self):
         """Lazy load the model on first use."""
         if self._model is None:
-            from sentence_transformers import SentenceTransformer
-            logger.info(f"Loading embedding model: {self.model_name}")
-            self._model = SentenceTransformer(self.model_name)
+            with self._load_lock:
+                if self._model is None:  # double-checked locking
+                    from sentence_transformers import SentenceTransformer
+                    logger.info(f"Loading embedding model: {self.model_name}")
+                    self._model = SentenceTransformer(self.model_name)
         return self._model
 
     def _encode_sync(self, texts: list[str]) -> list[list[float]]:
@@ -34,5 +38,5 @@ class GteQwen2Embedder(BaseEmbedder):
         """Embed texts asynchronously using thread pool executor."""
         if not texts:
             return []
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         return await loop.run_in_executor(None, self._encode_sync, texts)

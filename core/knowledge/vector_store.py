@@ -1,4 +1,5 @@
 import logging
+import threading
 from typing import Optional
 from core.interfaces import BaseEmbedder
 
@@ -23,16 +24,19 @@ class ChromaVectorStore:
         self.persist_directory = persist_directory
         self._client = None
         self._collection = None
+        self._init_lock = threading.Lock()
 
     def _get_collection(self):
         """Lazy init ChromaDB client and collection."""
         if self._collection is None:
-            import chromadb
-            self._client = chromadb.PersistentClient(path=self.persist_directory)
-            self._collection = self._client.get_or_create_collection(
-                name=self.collection_name,
-                metadata={"hnsw:space": "cosine"},
-            )
+            with self._init_lock:
+                if self._collection is None:  # double-checked locking
+                    import chromadb
+                    self._client = chromadb.PersistentClient(path=self.persist_directory)
+                    self._collection = self._client.get_or_create_collection(
+                        name=self.collection_name,
+                        metadata={"hnsw:space": "cosine"},
+                    )
         return self._collection
 
     async def add(self, chunks: list[dict]) -> None:
@@ -79,12 +83,13 @@ class ChromaVectorStore:
         chunks = []
         for i, chunk_id in enumerate(results["ids"][0]):
             distance = results["distances"][0][i]
-            # Cosine distance → similarity score
-            score = 1.0 - distance
-            metadata = results["metadatas"][0][i]
+            # Cosine distance → similarity score (clamped to [0.0, 1.0])
+            score = max(0.0, min(1.0, 1.0 - distance))
+            metadata = dict(results["metadatas"][0][i])
+            metadata.pop("doc_id", None)  # already a top-level key
             chunks.append({
                 "chunk_id": chunk_id,
-                "doc_id": metadata.get("doc_id", ""),
+                "doc_id": results["metadatas"][0][i].get("doc_id", ""),
                 "content": results["documents"][0][i],
                 "score": score,
                 "metadata": metadata,

@@ -45,7 +45,7 @@ from core.knowledge.vector_store import ChromaVectorStore  # noqa: E402
 
 def run(coro):
     """Run a coroutine synchronously in tests."""
-    return asyncio.get_event_loop().run_until_complete(coro)
+    return asyncio.run(coro)
 
 
 # ---------------------------------------------------------------------------
@@ -209,7 +209,7 @@ class TestChromaVectorStore:
         assert r0["doc_id"] == "d1"
         assert r0["content"] == "hello"
         assert r0["score"] == pytest.approx(0.9)  # 1.0 - 0.1
-        assert r0["metadata"] == {"doc_id": "d1", "page": 1}
+        assert r0["metadata"] == {"page": 1}  # doc_id stripped (already a top-level key)
 
     def test_vector_store_query_score_conversion(self):
         """score must equal 1.0 - distance for every result."""

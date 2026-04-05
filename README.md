@@ -32,6 +32,74 @@
 5. `tech-selection.md` — 看选型依据
 6. `test-validation-plan.md` — 了解评测方法
 
+## 快速开始
+
+### 环境准备
+
+```bash
+# 克隆项目
+git clone https://github.com/bob798/rag-customer-service.git
+cd rag-customer-service
+
+# 安装依赖（建议使用 venv）
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+
+# 配置环境变量
+cp .env.example .env   # 编辑填入 API Key
+```
+
+### 启动服务
+
+```bash
+# 开发模式（热重载）
+uvicorn api.main:app --reload --port 8000
+
+# 生产模式
+uvicorn api.main:app --workers 4 --port 8000
+```
+
+> **注意**：API 路由层（`api/routes/`）为 Week 2 任务，当前尚未实现。
+
+---
+
+## 测试
+
+### 运行测试（自动生成 HTML 报告）
+
+```bash
+# 全量测试（默认生成报告）
+pytest
+
+# 仅单元测试（跳过冒烟）
+pytest tests/core/ tests/integration/
+
+# 仅冒烟测试（真实依赖）
+pytest tests/smoke/ -m smoke
+
+# 快速运行不生成报告
+pytest -p no:html --no-cov -q
+```
+
+### 查看测试结果
+
+每次 `pytest` 运行后，报告自动保存到 `test-reports/`：
+
+| 文件 | 内容 | 打开方式 |
+|------|------|---------|
+| `test-reports/report.html` | 测试用例通过/失败详情 | 浏览器直接打开 |
+| `test-reports/coverage/index.html` | 代码覆盖率可视化 | 浏览器直接打开 |
+
+```bash
+# macOS 一键打开
+open test-reports/report.html
+open test-reports/coverage/index.html
+```
+
+当前状态：**160 passed，覆盖率 91%**
+
+---
+
 ## 技术栈
 
 - **核心**：Python + FastAPI + RAG 全链路手搓
@@ -43,7 +111,7 @@
 
 ## 项目状态
 
-Phase 1 实施中（2026-04）
+Phase 1 完成（2026-04）：RAG 核心链路 + 基础组件，160 tests passing
 
 ---
 

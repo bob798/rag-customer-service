@@ -20,6 +20,7 @@ def create_default_pipeline(
     chroma_path: str = "./data/chroma",
     collection_name: str = "knowledge",
     use_noop_reranker: bool = False,
+    reranker_model: str = "BAAI/bge-reranker-v2-m3",
 ) -> RAGPipeline:
     """Assemble a production RAGPipeline from configuration.
 
@@ -29,6 +30,8 @@ def create_default_pipeline(
         chroma_path: Path to ChromaDB persistent storage.
         collection_name: ChromaDB collection name.
         use_noop_reranker: Use NoopReranker instead of BGEReranker (for tests/dev).
+        reranker_model: BGEReranker model name. Use "BAAI/bge-reranker-base" if you
+            have it cached locally (~/.cache/huggingface/) and don't need v2-m3 yet.
 
     Returns:
         Fully-wired RAGPipeline ready to call .run() or .run_stream().
@@ -48,7 +51,7 @@ def create_default_pipeline(
         reranker = NoopReranker()
     else:
         from core.rag.reranker import BGEReranker
-        reranker = BGEReranker()
+        reranker = BGEReranker(model_name=reranker_model)
 
     return RAGPipeline(
         intent_classifier=IntentClassifier(llm=llm),

@@ -236,3 +236,41 @@ export ANTHROPIC_API_KEY=sk-ant-...
 .venv/bin/python scripts/test_llm.py
 # 输出：配置成功
 ```
+
+---
+
+## 八、本地模型（无需 API Key）
+
+RAG 流程除 LLM 外，还有两个本地模型：
+
+| 组件 | 模型 | 缓存状态 | 用途 |
+|------|------|---------|------|
+| `GteQwen2Embedder` | `Alibaba-NLP/gte-Qwen2-1.5B-instruct` | **未下载**（~3GB）| 向量检索 |
+| `BGEReranker` | `BAAI/bge-reranker-v2-m3` | **未下载**（~1.1GB）| 精排 |
+| `BGEReranker` (base) | `BAAI/bge-reranker-base` | **已缓存** ✓ | 精排（轻量版）|
+
+### 立即可用：用本地已缓存的 bge-reranker-base
+
+```python
+from core.rag.pipeline_builder import create_default_pipeline
+
+pipeline = create_default_pipeline(
+    llm_model="claude-haiku-4-5-20251001",
+    reranker_model="BAAI/bge-reranker-base",   # 使用本地缓存，无需下载
+)
+```
+
+`bge-reranker-base` 和 `bge-reranker-v2-m3` 的区别：
+- **base**：XLM-RoBERTa，768维，中文支持基本，适合开发验证
+- **v2-m3**：多语言升级版，中文效果更好，生产推荐
+
+### Embedding 模型下载
+
+GteQwen2 暂无本地缓存，首次使用会自动下载（约 3GB）：
+
+```bash
+# 触发下载（需要网络，会缓存到 ~/.cache/huggingface/）
+python -c "from core.knowledge.embedder import GteQwen2Embedder; GteQwen2Embedder()._load_model()"
+```
+
+下载完成后后续均走本地缓存，无需网络。

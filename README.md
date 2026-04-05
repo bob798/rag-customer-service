@@ -4,6 +4,16 @@
 
 ## 文档导航
 
+### 技术文档（代码同步更新）
+
+| 文档 | 内容 |
+|------|------|
+| [docs/architecture.md](./docs/architecture.md) | 系统分层架构图、Ports & Adapters 对照表 |
+| [docs/rag-query-flow.md](./docs/rag-query-flow.md) | RAG 七步查询流程、置信度三路信号、SSE 时序图、RRF 算法 |
+| [docs/data-model.md](./docs/data-model.md) | ER 图、ChromaDB 元数据约定、sources 格式、trace_id 日志 |
+
+### 产品与设计文档
+
 | 文档 | 用途 | 适合读者 |
 |------|------|---------|
 | [phase1-product-spec.md](./phase1-product-spec.md) | **产品规格**：功能清单、API契约、安全模型、里程碑 | 快速了解做了什么 |
@@ -15,10 +25,12 @@
 
 ## 推荐阅读顺序
 
-1. `phase1-product-spec.md` — 了解整体范围
-2. `architecture-design-principles.md` — 理解核心设计
-3. `tech-selection.md` — 看选型依据
-4. `test-validation-plan.md` — 了解评测方法
+1. `docs/architecture.md` — 系统分层架构全景
+2. `docs/rag-query-flow.md` — RAG 核心链路详解
+3. `phase1-product-spec.md` — 了解整体产品范围
+4. `architecture-design-principles.md` — 理解核心设计决策
+5. `tech-selection.md` — 看选型依据
+6. `test-validation-plan.md` — 了解评测方法
 
 ## 技术栈
 

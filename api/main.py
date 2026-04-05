@@ -89,12 +89,16 @@ async def root():
     return {"message": "AI 客服系统 API", "docs": "/docs"}
 
 
-# Register routes (imported after app creation to avoid circular imports)
-try:
-    from api.routes import chat, knowledge, sessions, config
-    app.include_router(chat.router)
-    app.include_router(knowledge.router)
-    app.include_router(sessions.router)
-    app.include_router(config.router)
-except ImportError:
-    pass  # Routes not yet implemented (Tasks 5-7)
+# Register routes individually so partial availability doesn't block others
+for _module, _attr in [
+    ("api.routes.chat", "router"),
+    ("api.routes.knowledge", "router"),
+    ("api.routes.sessions", "router"),
+    ("api.routes.config", "router"),
+]:
+    try:
+        import importlib
+        mod = importlib.import_module(_module)
+        app.include_router(getattr(mod, _attr))
+    except (ImportError, AttributeError):
+        pass

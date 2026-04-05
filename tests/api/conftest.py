@@ -1,6 +1,7 @@
 """Fixtures for API tests — isolated from tests/conftest.py."""
 import os
 import pytest
+import pytest_asyncio
 from unittest.mock import AsyncMock, MagicMock
 
 # Set test env vars before any app imports
@@ -8,6 +9,13 @@ os.environ["ADMIN_API_KEY"] = "test-admin-key"
 os.environ["WIDGET_TOKEN_SECRET"] = "test-widget-token"
 os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///./test_api.db"
 os.environ["USE_NOOP_RERANKER"] = "true"
+
+
+@pytest_asyncio.fixture(autouse=True)
+async def setup_test_db():
+    """Ensure DB tables exist for every API test."""
+    from db.session import init_db
+    await init_db()
 
 
 @pytest.fixture

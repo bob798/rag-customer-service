@@ -170,7 +170,7 @@ tests/core/test_hybrid_retriever.py ← RRF 混合检索
 
 点击任意失败测试 → 展开看 `AssertionError` 详情，精确定位哪行代码出问题。
 
-### coverage/index.html — 覆盖率报告
+### coverage/index.html — 覆盖率报告（含测试溯源）
 
 > 覆盖率数字（91%）只说明"代码被执行过"，不等于"逻辑被验证过"。
 
@@ -178,9 +178,21 @@ tests/core/test_hybrid_retriever.py ← RRF 混合检索
 
 打开 `coverage/index.html` → 点击 `core/rag/pipeline.py` → 查看每行颜色：
 
-- **绿色** — 该行被测试执行过
+- **绿色** — 该行被测试执行过。**点击该行**可展开看是哪些测试覆盖了它。
 - **红色** — 该行从未执行（测试盲区）
 - **黄色** — 分支只走了一半（如 `if` 只测了 True，没测 False）
+
+**测试溯源（核心功能）**：点击任意绿色行右侧的展开按钮，弹出覆盖该行的测试列表：
+
+```
+core/rag/intent.py 第 47 行  ← 点击展开
+  ✓ test_intent.py::test_in_scope_classification
+  ✓ test_intent.py::test_ambiguous_returns_clarification_question
+  ✓ test_pipeline_flow.py::test_out_of_scope_triggers_fallback
+  ... 共 15 个测试
+```
+
+这样可以回答："IntentClassifier 的 classify() 方法被哪些测试覆盖了？" 直接在 HTML 里点击对应行查看，零额外操作。
 
 **核心逻辑对应的测试位置**：
 

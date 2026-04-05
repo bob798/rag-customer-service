@@ -5,6 +5,22 @@
     <title>Coverage for core/rag/query_rewriter.py: 100%</title>
     <link rel="icon" sizes="32x32" href="favicon_32_cb_c827f16f.png">
     <link rel="stylesheet" href="style_cb_9ff733b0.css" type="text/css">
+    <script type="text/javascript">
+        contexts = {
+  "a": "(empty)",
+  "b": "tests/core/test_query_rewriter.py::test_returns_original_on_llm_failure|run",
+  "c": "tests/core/test_query_rewriter.py::test_passes_question_to_llm|run",
+  "d": "tests/core/test_query_rewriter.py::test_returns_original_when_response_empty|run",
+  "e": "tests/core/test_query_rewriter.py::test_rewrites_colloquial_question|run",
+  "f": "tests/core/test_query_rewriter.py::test_strips_whitespace_from_response|run",
+  "g": "tests/integration/test_pipeline_flow.py::test_in_scope_question_returns_answer|run",
+  "h": "tests/integration/test_pipeline_flow.py::test_low_confidence_triggers_fallback|run",
+  "i": "tests/integration/test_pipeline_flow.py::test_medium_confidence_marks_uncertain|run",
+  "j": "tests/integration/test_pipeline_flow.py::test_trace_id_present_in_result|run",
+  "k": "tests/integration/test_pipeline_flow.py::test_ambiguous_returns_clarification|run",
+  "l": "tests/integration/test_pipeline_flow.py::test_out_of_scope_triggers_fallback|run"
+}
+    </script>
     <script src="coverage_html_cb_dd2e7eb5.js" defer></script>
 </head>
 <body class="pyfile">
@@ -65,7 +81,7 @@
             <a id="nextFileLink" class="nav" href="z_52c7db943f2cca06_reranker_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.13.5">coverage.py v7.13.5</a>,
-            created at 2026-04-05 10:17 +0800
+            created at 2026-04-05 16:19 +0800
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -80,36 +96,36 @@
     </div>
 </header>
 <main id="source">
-    <p class="run"><span class="n"><a id="t1" href="#t1">1</a></span><span class="t"><span class="key">import</span> <span class="nam">logging</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t1" href="#t1">1</a></span><span class="t"><span class="key">import</span> <span class="nam">logging</span>&nbsp;</span><span class="r"><label for="ctxs1" class="ctx">(empty)</label></span></p>
     <p class="pln"><span class="n"><a id="t2" href="#t2">2</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t3" href="#t3">3</a></span><span class="t"><span class="key">from</span> <span class="nam">core</span><span class="op">.</span><span class="nam">llm</span><span class="op">.</span><span class="nam">factory</span> <span class="key">import</span> <span class="nam">LLMFactory</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t3" href="#t3">3</a></span><span class="t"><span class="key">from</span> <span class="nam">core</span><span class="op">.</span><span class="nam">llm</span><span class="op">.</span><span class="nam">factory</span> <span class="key">import</span> <span class="nam">LLMFactory</span>&nbsp;</span><span class="r"><label for="ctxs3" class="ctx">(empty)</label></span></p>
     <p class="pln"><span class="n"><a id="t4" href="#t4">4</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t5" href="#t5">5</a></span><span class="t"><span class="nam">logger</span> <span class="op">=</span> <span class="nam">logging</span><span class="op">.</span><span class="nam">getLogger</span><span class="op">(</span><span class="nam">__name__</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t5" href="#t5">5</a></span><span class="t"><span class="nam">logger</span> <span class="op">=</span> <span class="nam">logging</span><span class="op">.</span><span class="nam">getLogger</span><span class="op">(</span><span class="nam">__name__</span><span class="op">)</span>&nbsp;</span><span class="r"><label for="ctxs5" class="ctx">(empty)</label></span></p>
     <p class="pln"><span class="n"><a id="t6" href="#t6">6</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t7" href="#t7">7</a></span><span class="t"><span class="nam">_SYSTEM_PROMPT</span> <span class="op">=</span> <span class="str">"""&#20320;&#26159;&#19968;&#20010;&#26597;&#35810;&#20248;&#21270;&#21161;&#25163;&#12290;&#23558;&#29992;&#25143;&#30340;&#21475;&#35821;&#21270;&#38382;&#39064;&#25913;&#20889;&#20026;&#28165;&#26224;&#12289;&#35268;&#33539;&#30340;&#26816;&#32034;&#26597;&#35810;&#35821;&#21477;&#12290;</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t7" href="#t7">7</a></span><span class="t"><span class="nam">_SYSTEM_PROMPT</span> <span class="op">=</span> <span class="str">"""&#20320;&#26159;&#19968;&#20010;&#26597;&#35810;&#20248;&#21270;&#21161;&#25163;&#12290;&#23558;&#29992;&#25143;&#30340;&#21475;&#35821;&#21270;&#38382;&#39064;&#25913;&#20889;&#20026;&#28165;&#26224;&#12289;&#35268;&#33539;&#30340;&#26816;&#32034;&#26597;&#35810;&#35821;&#21477;&#12290;</span>&nbsp;</span><span class="r"><label for="ctxs7" class="ctx">(empty)</label></span></p>
     <p class="run run2"><span class="n"><a id="t8" href="#t8">8</a></span><span class="t"><span class="str">&#21482;&#36820;&#22238;&#25913;&#20889;&#21518;&#30340;&#26597;&#35810;&#35821;&#21477;&#65292;&#19981;&#35201;&#21253;&#21547;&#20219;&#20309;&#35299;&#37322;&#25110;&#39069;&#22806;&#25991;&#23383;&#12290;</span>&nbsp;</span><span class="r"></span></p>
     <p class="run run2"><span class="n"><a id="t9" href="#t9">9</a></span><span class="t"><span class="str">&#33509;&#38382;&#39064;&#24050;&#32463;&#36275;&#22815;&#28165;&#26224;&#65292;&#21407;&#26679;&#36820;&#22238;&#21363;&#21487;&#12290;"""</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t10" href="#t10">10</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t11" href="#t11">11</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t12" href="#t12">12</a></span><span class="t"><span class="key">class</span> <span class="nam">QueryRewriter</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t12" href="#t12">12</a></span><span class="t"><span class="key">class</span> <span class="nam">QueryRewriter</span><span class="op">:</span>&nbsp;</span><span class="r"><label for="ctxs12" class="ctx">(empty)</label></span></p>
     <p class="pln"><span class="n"><a id="t13" href="#t13">13</a></span><span class="t">    <span class="str">"""Rewrites colloquial user questions into clean retrieval queries."""</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t14" href="#t14">14</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t15" href="#t15">15</a></span><span class="t">    <span class="key">def</span> <span class="nam">__init__</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">llm</span><span class="op">:</span> <span class="nam">LLMFactory</span><span class="op">)</span> <span class="op">-></span> <span class="key">None</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t16" href="#t16">16</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">_llm</span> <span class="op">=</span> <span class="nam">llm</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t15" href="#t15">15</a></span><span class="t">    <span class="key">def</span> <span class="nam">__init__</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">llm</span><span class="op">:</span> <span class="nam">LLMFactory</span><span class="op">)</span> <span class="op">-></span> <span class="key">None</span><span class="op">:</span>&nbsp;</span><span class="r"><label for="ctxs15" class="ctx">(empty)</label></span></p>
+    <p class="run"><span class="n"><a id="t16" href="#t16">16</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">_llm</span> <span class="op">=</span> <span class="nam">llm</span>&nbsp;</span><input type="checkbox" id="ctxs16"><span class="r"><label for="ctxs16" class="ctx">11 ctx</label></span><span class="ctxs">1cbdefkghilj</span></p>
     <p class="pln"><span class="n"><a id="t17" href="#t17">17</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t18" href="#t18">18</a></span><span class="t">    <span class="key">async</span> <span class="key">def</span> <span class="nam">rewrite</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">question</span><span class="op">:</span> <span class="nam">str</span><span class="op">)</span> <span class="op">-></span> <span class="nam">str</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t18" href="#t18">18</a></span><span class="t">    <span class="key">async</span> <span class="key">def</span> <span class="nam">rewrite</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">question</span><span class="op">:</span> <span class="nam">str</span><span class="op">)</span> <span class="op">-></span> <span class="nam">str</span><span class="op">:</span>&nbsp;</span><span class="r"><label for="ctxs18" class="ctx">(empty)</label></span></p>
     <p class="pln"><span class="n"><a id="t19" href="#t19">19</a></span><span class="t">        <span class="str">"""Rewrite question for retrieval. Returns original on failure."""</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t20" href="#t20">20</a></span><span class="t">        <span class="nam">messages</span> <span class="op">=</span> <span class="op">[</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t20" href="#t20">20</a></span><span class="t">        <span class="nam">messages</span> <span class="op">=</span> <span class="op">[</span>&nbsp;</span><input type="checkbox" id="ctxs20"><span class="r"><label for="ctxs20" class="ctx">9 ctx</label></span><span class="ctxs">1cbdefghij</span></p>
     <p class="run run2"><span class="n"><a id="t21" href="#t21">21</a></span><span class="t">            <span class="op">{</span><span class="str">"role"</span><span class="op">:</span> <span class="str">"system"</span><span class="op">,</span> <span class="str">"content"</span><span class="op">:</span> <span class="nam">_SYSTEM_PROMPT</span><span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="run run2"><span class="n"><a id="t22" href="#t22">22</a></span><span class="t">            <span class="op">{</span><span class="str">"role"</span><span class="op">:</span> <span class="str">"user"</span><span class="op">,</span> <span class="str">"content"</span><span class="op">:</span> <span class="nam">question</span><span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="run run2"><span class="n"><a id="t23" href="#t23">23</a></span><span class="t">        <span class="op">]</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t24" href="#t24">24</a></span><span class="t">        <span class="key">try</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t25" href="#t25">25</a></span><span class="t">            <span class="nam">rewritten</span> <span class="op">=</span> <span class="key">await</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_llm</span><span class="op">.</span><span class="nam">complete</span><span class="op">(</span><span class="nam">messages</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t26" href="#t26">26</a></span><span class="t">            <span class="nam">rewritten</span> <span class="op">=</span> <span class="nam">rewritten</span><span class="op">.</span><span class="nam">strip</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t27" href="#t27">27</a></span><span class="t">            <span class="key">return</span> <span class="nam">rewritten</span> <span class="key">if</span> <span class="nam">rewritten</span> <span class="key">else</span> <span class="nam">question</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t28" href="#t28">28</a></span><span class="t">        <span class="key">except</span> <span class="nam">Exception</span> <span class="key">as</span> <span class="nam">exc</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t29" href="#t29">29</a></span><span class="t">            <span class="nam">logger</span><span class="op">.</span><span class="nam">warning</span><span class="op">(</span><span class="str">"QueryRewriter failed, using original question: %s"</span><span class="op">,</span> <span class="nam">exc</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t30" href="#t30">30</a></span><span class="t">            <span class="key">return</span> <span class="nam">question</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t24" href="#t24">24</a></span><span class="t">        <span class="key">try</span><span class="op">:</span>&nbsp;</span><input type="checkbox" id="ctxs24"><span class="r"><label for="ctxs24" class="ctx">9 ctx</label></span><span class="ctxs">1cbdefghij</span></p>
+    <p class="run"><span class="n"><a id="t25" href="#t25">25</a></span><span class="t">            <span class="nam">rewritten</span> <span class="op">=</span> <span class="key">await</span> <span class="nam">self</span><span class="op">.</span><span class="nam">_llm</span><span class="op">.</span><span class="nam">complete</span><span class="op">(</span><span class="nam">messages</span><span class="op">)</span>&nbsp;</span><input type="checkbox" id="ctxs25"><span class="r"><label for="ctxs25" class="ctx">9 ctx</label></span><span class="ctxs">1cbdefghij</span></p>
+    <p class="run"><span class="n"><a id="t26" href="#t26">26</a></span><span class="t">            <span class="nam">rewritten</span> <span class="op">=</span> <span class="nam">rewritten</span><span class="op">.</span><span class="nam">strip</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><input type="checkbox" id="ctxs26"><span class="r"><label for="ctxs26" class="ctx">8 ctx</label></span><span class="ctxs">1cdefghij</span></p>
+    <p class="run"><span class="n"><a id="t27" href="#t27">27</a></span><span class="t">            <span class="key">return</span> <span class="nam">rewritten</span> <span class="key">if</span> <span class="nam">rewritten</span> <span class="key">else</span> <span class="nam">question</span>&nbsp;</span><input type="checkbox" id="ctxs27"><span class="r"><label for="ctxs27" class="ctx">8 ctx</label></span><span class="ctxs">1cdefghij</span></p>
+    <p class="run"><span class="n"><a id="t28" href="#t28">28</a></span><span class="t">        <span class="key">except</span> <span class="nam">Exception</span> <span class="key">as</span> <span class="nam">exc</span><span class="op">:</span>&nbsp;</span><input type="checkbox" id="ctxs28"><span class="r"><label for="ctxs28" class="ctx">1 ctx</label></span><span class="ctxs">1b</span></p>
+    <p class="run"><span class="n"><a id="t29" href="#t29">29</a></span><span class="t">            <span class="nam">logger</span><span class="op">.</span><span class="nam">warning</span><span class="op">(</span><span class="str">"QueryRewriter failed, using original question: %s"</span><span class="op">,</span> <span class="nam">exc</span><span class="op">)</span>&nbsp;</span><input type="checkbox" id="ctxs29"><span class="r"><label for="ctxs29" class="ctx">1 ctx</label></span><span class="ctxs">1b</span></p>
+    <p class="run"><span class="n"><a id="t30" href="#t30">30</a></span><span class="t">            <span class="key">return</span> <span class="nam">question</span>&nbsp;</span><input type="checkbox" id="ctxs30"><span class="r"><label for="ctxs30" class="ctx">1 ctx</label></span><span class="ctxs">1b</span></p>
 </main>
 <footer>
     <div class="content">
@@ -119,7 +135,7 @@
             <a class="nav" href="z_52c7db943f2cca06_reranker_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.13.5">coverage.py v7.13.5</a>,
-            created at 2026-04-05 10:17 +0800
+            created at 2026-04-05 16:19 +0800
         </p>
     </div>
 </footer>

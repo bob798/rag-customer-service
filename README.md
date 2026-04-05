@@ -142,7 +142,7 @@ open test-reports/report.html       # 测试通过/失败详情
 open test-reports/coverage/index.html  # 代码覆盖率（哪些行被执行过）
 ```
 
-当前状态：**160 passed，覆盖率 91%**
+当前状态：**160 passed，覆盖率 91%**（已知缺口见 [test-validation-plan.md §Phase1现状](./test-validation-plan.md#phase-1-测试现状与已知缺口2026-04-05)）
 
 ---
 

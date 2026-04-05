@@ -53,3 +53,11 @@ data/
 coverage_html/
 test-results.xml
 *.xml
+
+# SQLite database files
+*.db
+*.db-shm
+*.db-wal
+
+# Data uploads
+data/uploads/

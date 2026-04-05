@@ -230,20 +230,31 @@ async def run_demo_with_mock():
     }
 
     def side_effect(messages, **kwargs):
-        content = str(messages)
-        content_lower = content.lower()
-        # intent 分类
-        if "意图" in content or "scope" in content_lower or "out_of_scope" in content_lower:
-            question = messages[-1]["content"] if messages else ""
+        # 只取最后一条用户消息，避免检索上下文污染关键词匹配
+        last_content = messages[-1]["content"] if messages else ""
+        sys_content = messages[0]["content"] if messages else ""
+
+        # intent 分类：系统提示含 scope 标识
+        if "scope" in sys_content or "意图" in sys_content or "分类" in sys_content:
+            # 从最后一条用户消息提取原始问题（用户直接发问，无参考资料前缀）
+            question = last_content
             if any(w in question for w in ["诗", "天气", "股票", "玩"]):
                 return '{"intent": "out_of_scope", "confidence": 0.95, "clarification_question": null}'
             return '{"intent": "in_scope", "confidence": 0.9, "clarification_question": null}'
-        # query 改写
-        if "改写" in content or "rewrite" in content_lower or "规范" in content_lower:
-            return messages[-1]["content"]
-        # LLM 生成（基于检索内容）
+
+        # query 改写：系统提示含改写标识
+        if "改写" in sys_content or "rewrite" in sys_content.lower():
+            return last_content
+
+        # LLM 生成：最后一条消息格式为 "参考资料：\n...\n\n问题：{question}"
+        # 只对问题部分做关键词匹配，不看参考资料
+        if "问题：" in last_content:
+            question_text = last_content.split("问题：")[-1].strip()
+        else:
+            question_text = last_content
+
         for kw, ans in MOCK_ANSWERS.items():
-            if kw in content:
+            if kw in question_text:
                 return ans
         return "感谢您的提问。根据我们的知识库，您可以参考相关 FAQ 了解详情。如需更多帮助请联系客服。"
 

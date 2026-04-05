@@ -12,6 +12,7 @@
 | [docs/rag-query-flow.md](./docs/rag-query-flow.md) | RAG 七步查询流程、置信度三路信号、SSE 时序图、RRF 算法 |
 | [docs/data-model.md](./docs/data-model.md) | ER 图、ChromaDB 元数据约定、sources 格式、trace_id 日志 |
 | [docs/llm-guide.md](./docs/llm-guide.md) | LLM 配置指南：LiteLLM 机制、模型切换、Fallback、成本优化 |
+| [docs/ingestion-guide.md](./docs/ingestion-guide.md) | 知识库构建：解析文档、写入向量库、BM25 索引、数据结构说明 |
 
 ### 产品与设计文档
 
@@ -87,7 +88,24 @@ export ANTHROPIC_API_KEY=sk-ant-...
 
 脚本会验证以下链路节点：意图识别 → Query 改写 → 向量检索+BM25检索+RRF融合 → 置信度评估 → LLM 生成 → sources 溯源 → out_of_scope fallback。
 
-### 3. 启动 API 服务
+### 3. 构建知识库
+
+```bash
+# 预览解析结果（不写入，快速验证格式）
+.venv/bin/python scripts/ingest.py docs/samples/faq_example.txt --dry-run
+
+# 正式导入（首次会下载 GteQwen2 embedding 模型，约 3GB）
+.venv/bin/python scripts/ingest.py docs/samples/faq_example.txt
+
+# 批量导入整个目录
+.venv/bin/python scripts/ingest.py data/docs/
+```
+
+支持格式：`.txt`（FAQ 格式自动识别）、`.pdf`、`.docx`
+
+> **完整说明**见 [docs/ingestion-guide.md](./docs/ingestion-guide.md)
+
+### 4. 启动 API 服务
 
 ```bash
 # 开发模式（热重载）

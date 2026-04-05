@@ -245,32 +245,27 @@ RAG 流程除 LLM 外，还有两个本地模型：
 
 | 组件 | 模型 | 缓存状态 | 用途 |
 |------|------|---------|------|
-| `GteQwen2Embedder` | `Alibaba-NLP/gte-Qwen2-1.5B-instruct` | **未下载**（~3GB）| 向量检索 |
-| `BGEReranker` | `BAAI/bge-reranker-v2-m3` | **未下载**（~1.1GB）| 精排 |
-| `BGEReranker` (base) | `BAAI/bge-reranker-base` | **已缓存** ✓ | 精排（轻量版）|
+| `GteQwen2Embedder` | `Alibaba-NLP/gte-Qwen2-1.5B-instruct` | **已缓存** ✓（~3.2GB）| 向量检索 |
+| `BGEReranker` | `BAAI/bge-reranker-v2-m3` | **已缓存** ✓（~2.1GB）| 精排 |
 
-### 立即可用：用本地已缓存的 bge-reranker-base
+两个模型均已下载至 `~/.cache/huggingface/`，后续使用无需网络。
 
-```python
-from core.rag.pipeline_builder import create_default_pipeline
-
-pipeline = create_default_pipeline(
-    llm_model="claude-haiku-4-5-20251001",
-    reranker_model="BAAI/bge-reranker-base",   # 使用本地缓存，无需下载
-)
-```
-
-`bge-reranker-base` 和 `bge-reranker-v2-m3` 的区别：
-- **base**：XLM-RoBERTa，768维，中文支持基本，适合开发验证
-- **v2-m3**：多语言升级版，中文效果更好，生产推荐
-
-### Embedding 模型下载
-
-GteQwen2 暂无本地缓存，首次使用会自动下载（约 3GB）：
+### 首次下载（未缓存时）
 
 ```bash
-# 触发下载（需要网络，会缓存到 ~/.cache/huggingface/）
-python -c "from core.knowledge.embedder import GteQwen2Embedder; GteQwen2Embedder()._load_model()"
+# Embedding 模型（约 3.2GB，下载时需要 ~6GB 临时空间）
+HF_HUB_DISABLE_XET=1 python -c "
+from core.knowledge.embedder import GteQwen2Embedder
+GteQwen2Embedder()._load_model()
+print('embedding model ready')
+"
+
+# Reranker 模型（约 2.1GB）
+python -c "
+from core.rag.reranker import BGEReranker
+BGEReranker()
+print('reranker ready')
+"
 ```
 
-下载完成后后续均走本地缓存，无需网络。
+> **注意**：`HF_HUB_DISABLE_XET=1` 禁用 xet 重建协议，避免下载过程中占用 ~2x 临时空间（在磁盘剩余空间 < 8GB 时必须设置）。

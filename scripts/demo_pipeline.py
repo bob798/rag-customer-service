@@ -220,45 +220,21 @@ async def run_demo_with_mock():
     mock_llm = MagicMock()
     mock_llm.complete = AsyncMock()
 
-    # FAQ 回答模板（模拟 LLM 基于检索上下文生成的答案）
-    MOCK_ANSWERS = {
-        "退款": '退款申请：在订单详情页点击"申请退款"，填写原因提交即可。审核通过后 3-5 工作日原路退回。',
-        "积分": "会员积分：每消费 1 元得 1 积分，100 积分兑换 1 元优惠券，有效期 2 年。",
-        "发货": "发货时间：付款后 1-2 工作日内发货，节假日可能延迟，以短信通知为准。",
-        "物流": '物流查询：发货后会收到短信通知含快递单号，也可在"我的订单"页面查看实时物流。',
-        "换货": "换货政策：收货后 7 天内可申请换货，商品须保持原包装未使用状态。",
-    }
-
-    def side_effect(messages, **kwargs):
-        # 只取最后一条用户消息，避免检索上下文污染关键词匹配
-        last_content = messages[-1]["content"] if messages else ""
-        sys_content = messages[0]["content"] if messages else ""
-
-        # intent 分类：系统提示含 scope 标识
-        if "scope" in sys_content or "意图" in sys_content or "分类" in sys_content:
-            # 从最后一条用户消息提取原始问题（用户直接发问，无参考资料前缀）
-            question = last_content
-            if any(w in question for w in ["诗", "天气", "股票", "玩"]):
-                return '{"intent": "out_of_scope", "confidence": 0.95, "clarification_question": null}'
-            return '{"intent": "in_scope", "confidence": 0.9, "clarification_question": null}'
-
-        # query 改写：系统提示含改写标识
-        if "改写" in sys_content or "rewrite" in sys_content.lower():
-            return last_content
-
-        # LLM 生成：最后一条消息格式为 "参考资料：\n...\n\n问题：{question}"
-        # 只对问题部分做关键词匹配，不看参考资料
-        if "问题：" in last_content:
-            question_text = last_content.split("问题：")[-1].strip()
-        else:
-            question_text = last_content
-
-        for kw, ans in MOCK_ANSWERS.items():
-            if kw in question_text:
-                return ans
-        return "感谢您的提问。根据我们的知识库，您可以参考相关 FAQ 了解详情。如需更多帮助请联系客服。"
-
-    mock_llm.complete.side_effect = side_effect
+    # 每个问题对应固定的 LLM 调用序列（call 顺序：intent → rewrite → generate）
+    # out_of_scope 问题只有 1 次调用（intent），无 rewrite/generate。
+    # 有序列表比关键词路由更健壮：不依赖 system prompt 措辞，提示词改动不影响测试。
+    mock_llm.complete.side_effect = [
+        # ── 问题 1：怎么申请退款？ ──────────────────────────────────────────
+        '{"intent": "in_scope", "confidence": 0.9, "clarification_question": null}',   # call 1: intent
+        "怎么申请退款",                                                                  # call 2: rewrite
+        '退款申请：在订单详情页点击"申请退款"，填写原因提交即可。审核通过后 3-5 工作日原路退回。',  # call 3: generate
+        # ── 问题 2：积分怎么用 ───────────────────────────────────────────────
+        '{"intent": "in_scope", "confidence": 0.9, "clarification_question": null}',   # call 4: intent
+        "积分如何使用",                                                                  # call 5: rewrite
+        "会员积分：每消费 1 元得 1 积分，100 积分兑换 1 元优惠券，有效期 2 年。",            # call 6: generate
+        # ── 问题 3：帮我写一首诗（out_of_scope，仅 1 次 LLM 调用）──────────────
+        '{"intent": "out_of_scope", "confidence": 0.95, "clarification_question": null}',  # call 7: intent
+    ]
 
     print("📚 正在构建知识库 (mock 模式)...")
     await vector_store.add(FAQ_CHUNKS)

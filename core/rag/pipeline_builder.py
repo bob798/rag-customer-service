@@ -35,7 +35,11 @@ def create_default_pipeline(
     """
     llm = LLMFactory(model=llm_model, fallback=llm_fallback)
     embedder = GteQwen2Embedder()
-    vector_store = ChromaVectorStore(path=chroma_path, collection_name=collection_name)
+    vector_store = ChromaVectorStore(
+        embedder=embedder,
+        collection_name=collection_name,
+        persist_directory=chroma_path,
+    )
     bm25_store = Bm25Store()
 
     retriever = HybridRetriever(vector_store=vector_store, bm25_store=bm25_store)

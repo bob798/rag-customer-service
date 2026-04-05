@@ -343,6 +343,7 @@ class TestBm25Store:
         chunks = [
             {"chunk_id": "c1", "doc_id": "d1", "content": "退款流程说明"},
             {"chunk_id": "c2", "doc_id": "d1", "content": "发货时间查询"},
+            {"chunk_id": "c3", "doc_id": "d2", "content": "售后服务政策"},
         ]
         store.add(chunks)
         results = store.search("退款")

@@ -4,26 +4,28 @@
 
 ```mermaid
 flowchart TD
-    Start([用户提问]) --> Intent[1. 意图识别\nIntentClassifier]
-    
-    Intent -->|out_of_scope| Fallback1[兜底响应\n"超出服务范围"]
-    Intent -->|ambiguous| Clarify[返回澄清问题\nclarification_question]
-    Intent -->|in_scope| Rewrite[2. Query 改写\nQueryRewriter]
-    
-    Rewrite --> Embed[3. 向量化\nEmbedder.embed]
-    Embed --> Retrieve[3. 混合检索\nHybridRetriever\n向量检索 + BM25\nRRF 融合]
-    
-    Retrieve --> Rerank[4. 重排序\nBGEReranker]
-    Rerank --> Confidence[5. 置信度评估\nSignalFusionEvaluator]
-    
-    Confidence -->|tier = low| Fallback2[兜底响应\n"没有足够把握"]
-    Confidence -->|tier = medium/high| Generate[6. LLM 生成\nLLMGenerator]
-    
-    Generate -->|tier = medium| Uncertain[答案前加\n'以下回答仅供参考']
-    Generate -->|tier = high| Direct[直接返回答案]
-    
-    Uncertain & Direct --> Response([返回结果\nanswer + sources\nconfidence + trace_id])
-    Fallback1 & Fallback2 --> Response
+    Start([用户提问]) --> Intent["1. 意图识别 IntentClassifier"]
+
+    Intent -->|out_of_scope| Fallback1["兜底响应：超出服务范围"]
+    Intent -->|ambiguous| Clarify["返回澄清问题 clarification_question"]
+    Intent -->|in_scope| Rewrite["2. Query 改写 QueryRewriter"]
+
+    Rewrite --> Embed["3a. 向量化 Embedder.embed"]
+    Embed --> Retrieve["3b. 混合检索 HybridRetriever<br>向量检索 + BM25 / RRF 融合"]
+
+    Retrieve --> Rerank["4. 重排序 BGEReranker"]
+    Rerank --> Confidence["5. 置信度评估 SignalFusionEvaluator"]
+
+    Confidence -->|tier = low| Fallback2["兜底响应：没有足够把握"]
+    Confidence -->|tier = medium / high| Generate["6. LLM 生成 LLMGenerator"]
+
+    Generate -->|tier = medium| Uncertain["答案前加：以下回答仅供参考"]
+    Generate -->|tier = high| Direct["直接返回答案"]
+
+    Uncertain --> Response([返回结果：answer / sources / confidence / trace_id])
+    Direct --> Response
+    Fallback1 --> Response
+    Fallback2 --> Response
     Clarify --> Response
 ```
 
@@ -31,15 +33,15 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-    R[retrieval_score\n= reranked[0].rerank_score\n权重 0.6] --> Fusion
-    C[coverage_score\n= query tokens 在 top-1 content 中的覆盖率\n权重 0.3] --> Fusion
-    G[score_gap\n= reranked[0].score - reranked[1].score\n权重 0.1] --> Fusion
-    
-    Fusion[加权求和] --> Score[confidence ∈ 0~1]
-    
-    Score -->|≥ 0.75| High[high\n直接回答]
-    Score -->|≥ 0.50| Medium[medium\n加'仅供参考'前缀]
-    Score -->|< 0.50| Low[low\n触发 fallback]
+    R["retrieval_score<br>= top1.rerank_score<br>权重 0.6"] --> Fusion
+    C["coverage_score<br>= query tokens 在 top1 content 中的覆盖率<br>权重 0.3"] --> Fusion
+    G["score_gap<br>= top1.score - top2.score<br>权重 0.1"] --> Fusion
+
+    Fusion["加权求和"] --> Score["confidence ∈ 0~1"]
+
+    Score -->|">= 0.75"| High["high：直接回答"]
+    Score -->|">= 0.50"| Medium["medium：加仅供参考前缀"]
+    Score -->|"< 0.50"| Low["low：触发 fallback"]
 ```
 
 ## SSE 流式输出时序

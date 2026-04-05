@@ -13,9 +13,19 @@ os.environ["USE_NOOP_RERANKER"] = "true"
 
 @pytest_asyncio.fixture(autouse=True)
 async def setup_test_db():
-    """Ensure DB tables exist for every API test."""
-    from db.session import init_db
+    """Ensure DB tables exist and default configs are seeded for every API test."""
+    from db.session import init_db, AsyncSessionLocal
+    from db.models import Config
     await init_db()
+    # Seed default configs (mirrors lifespan behavior)
+    defaults = {"llm_model": "claude-haiku-4-5-20251001", "bot_name": "AI 客服",
+                "fallback_action": "tell_user", "top_k": "5"}
+    async with AsyncSessionLocal() as db:
+        for key, value in defaults.items():
+            existing = await db.get(Config, key)
+            if not existing:
+                db.add(Config(key=key, value=value))
+        await db.commit()
 
 
 @pytest.fixture
@@ -31,5 +41,6 @@ def mock_pipeline():
     })
     p.retriever = MagicMock()
     p.retriever.vector_store = MagicMock()
+    p.retriever.vector_store.add = AsyncMock()  # vector_store.add is awaited
     p.retriever.bm25_store = MagicMock()
     return p

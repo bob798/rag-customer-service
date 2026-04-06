@@ -60,6 +60,10 @@ class RAGPipeline:
         self._tracer = tracer
         self._embedder = embedder
 
+    @property
+    def retriever(self) -> BaseRetriever:
+        return self._retriever
+
     async def _run_pre_generation(
         self,
         question: str,

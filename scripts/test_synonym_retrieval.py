@@ -1,39 +1,36 @@
 """
-检索质量探索：近义词场景下的检索结果对比（完整 Pipeline 版）
+检索质量对比实验：BGEReranker × SynonymAugmentor 2×2 矩阵
 
-测试维度：
-  A. 原始查询 vs QueryRewriter 改写后 → 验证 QueryRewriter 是否有效
-  B. normalize vs synonym_expansion 两种 prompt variant → 对比效果
-  C. 三种检索方式（向量/BM25/混合）在改写前后的命中率变化
+配置 A：基线        — NoopReranker，无同义词扩展
+配置 B：BGEReranker — 开启精排，无同义词扩展
+配置 C：SynonymAug — NoopReranker，知识库侧同义词扩展
+配置 D：全部开启   — BGEReranker + SynonymAugmentor
 
 用法：
-  # 需要 LLM API Key（QueryRewriter/IntentClassifier 依赖）
-  export ANTHROPIC_API_KEY=sk-ant-...
   .venv/bin/python scripts/test_synonym_retrieval.py
 
-  # 无 API Key 时，跳过 QueryRewriter 对比，仅测原始检索
-  .venv/bin/python scripts/test_synonym_retrieval.py --no-llm
-
-需要本地已缓存 gte-Qwen2-1.5B 模型（~3.2GB）。
+需要本地已缓存：
+  - gte-Qwen2-1.5B （~3.2GB，embedding）
+  - bge-reranker-v2-m3（~2.1GB，reranker）
 """
 from __future__ import annotations
 
-import argparse
 import asyncio
 import logging
 import os
 import sys
 import tempfile
+import time
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-for noisy in ("chromadb", "jieba", "httpx", "sentence_transformers", "torch",
-              "litellm", "httpcore", "LiteLLM"):
+for noisy in ("chromadb", "jieba", "httpx", "sentence_transformers",
+              "torch", "FlagEmbedding", "transformers"):
     logging.getLogger(noisy).setLevel(logging.CRITICAL)
 logging.basicConfig(level=logging.ERROR)
 
 # ---------------------------------------------------------------------------
-# 知识库：桌面近场音响系统 FAQ
+# 知识库：桌面近场音响系统 FAQ（原版，不含同义词）
 # ---------------------------------------------------------------------------
 AUDIO_FAQ = [
     {
@@ -78,208 +75,177 @@ AUDIO_FAQ = [
     },
 ]
 
-# ---------------------------------------------------------------------------
+# 音响领域同义词表
+AUDIO_SYNONYMS = {
+    "音箱":     ["音响", "扬声器", "喇叭"],
+    "没有声音": ["不出声", "无声", "没响", "静音"],
+    "杂音":     ["噪音", "嗡嗡声", "嗡嗡响"],
+    "蓝牙":     ["无线连接", "BT"],
+    "低音":     ["低频", "Bass", "重低音"],
+    "爆音":     ["噼啪声", "Pop", "Click"],
+}
+
 # 测试查询组
-# ---------------------------------------------------------------------------
 QUERY_GROUPS = [
     {
         "name": "无声故障",
         "queries": ["音箱没有声音", "音响不出声", "扬声器没声音", "喇叭没响"],
-        "expected_chunks": ["a1"],
+        "expected": {"a1"},
     },
     {
         "name": "杂音故障",
         "queries": ["音响有杂音", "音箱嗡嗡响", "扬声器有噪音", "喇叭发出嗡嗡声"],
-        "expected_chunks": ["a2"],
+        "expected": {"a2"},
     },
     {
         "name": "蓝牙连接",
         "queries": ["蓝牙音箱连不上", "音响蓝牙配对失败", "蓝牙扬声器搜不到"],
-        "expected_chunks": ["a6"],
+        "expected": {"a6"},
     },
     {
         "name": "低音调节",
         "queries": ["音箱低音调节", "音响低频太弱", "扬声器Bass怎么调", "喇叭低音不够"],
-        "expected_chunks": ["a7"],
+        "expected": {"a7"},
     },
 ]
 
 
-async def build_stores(tmp_dir: str):
+async def build_stores(tmp_dir: str, use_augmentor: bool):
     from core.knowledge.embedder import GteQwen2Embedder
     from core.knowledge.vector_store import ChromaVectorStore
     from core.knowledge.bm25_store import Bm25Store
 
-    print("⏳ 加载 GTE-Qwen2 embedding 模型（首次约 20-30 秒）...")
     embedder = GteQwen2Embedder()
     vector_store = ChromaVectorStore(
         embedder=embedder,
-        collection_name="synonym_test",
+        collection_name=f"syn_test_{'aug' if use_augmentor else 'raw'}",
         persist_directory=tmp_dir,
     )
     bm25_store = Bm25Store()
-    print(f"📚 写入 {len(AUDIO_FAQ)} 条知识库...")
-    await vector_store.add(AUDIO_FAQ)
-    bm25_store.add(AUDIO_FAQ)
-    print("✅ 知识库就绪\n")
+
+    chunks = AUDIO_FAQ
+    if use_augmentor:
+        from core.knowledge.synonym_augmentor import SynonymAugmentor
+        aug = SynonymAugmentor(AUDIO_SYNONYMS)
+        chunks = aug.augment(chunks)
+
+    await vector_store.add(chunks)
+    bm25_store.add(chunks)
     return embedder, vector_store, bm25_store
 
 
-async def retrieve_raw(query: str, embedder, vector_store, bm25_store, top_k=3):
-    """直接检索（不经过 QueryRewriter）"""
+async def run_config(
+    label: str,
+    embedder,
+    vector_store,
+    bm25_store,
+    use_bge: bool,
+    verbose: bool = False,
+) -> dict:
+    """Run all queries under one configuration. Returns stats dict."""
     from core.rag.retriever import HybridRetriever
-    query_vec = (await embedder.embed([query]))[0]
+    from core.rag.reranker import NoopReranker, BGEReranker
+
     retriever = HybridRetriever(vector_store=vector_store, bm25_store=bm25_store)
-    vector_r = await vector_store.query(query_vec, top_k=top_k)
-    bm25_r = bm25_store.search(query, top_k=top_k)
-    hybrid_r = await retriever.retrieve(query_vec, query, top_k=top_k)
-    return vector_r, bm25_r, hybrid_r
+    reranker = BGEReranker() if use_bge else NoopReranker()
 
+    hits = misses = 0
+    miss_details = []
 
-def top1_hit(results, expected):
-    return bool(results) and results[0]["chunk_id"] in expected
-
-
-def fmt_top3(results, expected):
-    lines = []
-    for i, r in enumerate(results):
-        cid = r["chunk_id"]
-        hit = "✅" if cid in expected else "  "
-        score = r.get("score", r.get("distance", 0))
-        preview = r["content"][:35].replace("\n", " ")
-        lines.append(f"    {hit} #{i+1} [{cid}] {score:.4f}  {preview}...")
-    return "\n".join(lines) if lines else "    (空)"
-
-
-async def run_no_llm(embedder, vector_store, bm25_store):
-    """无 LLM 模式：仅测原始检索（复现上次实验）"""
-    print("=" * 68)
-    print("📊 原始检索质量（无 QueryRewriter）")
-    print("=" * 68)
-
-    total = hybrid_hits = vec_hits = bm25_hits = 0
     for group in QUERY_GROUPS:
-        print(f"\n【{group['name']}】  期望: {group['expected_chunks']}")
-        expected = set(group["expected_chunks"])
+        expected = group["expected"]
         for query in group["queries"]:
-            total += 1
-            vec_r, bm25_r, hybrid_r = await retrieve_raw(
-                query, embedder, vector_store, bm25_store
-            )
-            v = top1_hit(vec_r, expected)
-            b = top1_hit(bm25_r, expected)
-            h = top1_hit(hybrid_r, expected)
-            if v: vec_hits += 1
-            if b: bm25_hits += 1
-            if h: hybrid_hits += 1
-            print(f"  「{query}」  向量{'✅' if v else '❌'}  BM25{'✅' if b else '❌'}  混合{'✅' if h else '❌'}")
+            query_vec = (await embedder.embed([query]))[0]
+            candidates = await retriever.retrieve(query_vec, query, top_k=20)
+            reranked = await reranker.rerank(query, candidates, top_k=5)
 
-    print(f"\n{'='*68}")
-    print(f"汇总 (Top-1命中/{total})")
-    print(f"  向量: {vec_hits}/{total} ({vec_hits/total:.0%})  "
-          f"BM25: {bm25_hits}/{total} ({bm25_hits/total:.0%})  "
-          f"混合: {hybrid_hits}/{total} ({hybrid_hits/total:.0%})")
-    print("=" * 68)
+            top1_hit = bool(reranked) and reranked[0]["chunk_id"] in expected
+            if top1_hit:
+                hits += 1
+            else:
+                misses += 1
+                if verbose:
+                    top1_id = reranked[0]["chunk_id"] if reranked else "—"
+                    miss_details.append(
+                        f"  ❌ [{group['name']}] 「{query}」"
+                        f" → 实际Top1=[{top1_id}] 期望={expected}"
+                    )
 
-
-async def run_with_llm(embedder, vector_store, bm25_store):
-    """LLM 模式：对比 normalize vs synonym_expansion 两种改写策略"""
-    from core.llm.factory import LLMFactory
-    from core.rag.query_rewriter import QueryRewriter
-
-    model = (os.getenv("ANTHROPIC_API_KEY") and "claude-haiku-4-5-20251001") or \
-            (os.getenv("OPENAI_API_KEY") and "gpt-4o-mini") or \
-            (os.getenv("DEEPSEEK_API_KEY") and "deepseek/deepseek-chat")
-    if not model:
-        print("⚠️  未检测到 API Key，切换到 --no-llm 模式")
-        await run_no_llm(embedder, vector_store, bm25_store)
-        return
-
-    print(f"🤖 使用 LLM: {model}")
-    llm = LLMFactory(model=model)
-
-    rewriters = {
-        "原始（无改写）": None,
-        "normalize": QueryRewriter(llm, variant="normalize"),
-        "synonym_expansion": QueryRewriter(llm, variant="synonym_expansion"),
+    total = hits + misses
+    return {
+        "label": label,
+        "hits": hits,
+        "total": total,
+        "pct": hits / total if total else 0,
+        "miss_details": miss_details,
     }
 
-    # 统计各策略命中数
-    stats: dict[str, dict] = {k: {"vec": 0, "bm25": 0, "hybrid": 0, "total": 0}
-                               for k in rewriters}
 
-    print("\n" + "=" * 68)
-    print("📊 QueryRewriter 改写效果对比（完整 Pipeline 检索层）")
-    print("=" * 68)
+async def main():
+    tmp = tempfile.mkdtemp(prefix="rag_cmp_")
 
-    for group in QUERY_GROUPS:
-        print(f"\n【{group['name']}】  期望: {group['expected_chunks']}")
-        print("-" * 55)
-        expected = set(group["expected_chunks"])
+    print("⏳ 加载 GTE-Qwen2 embedding 模型（首次约 20-30 秒）...")
+    t0 = time.time()
 
-        for query in group["queries"]:
-            print(f"\n  原始查询: 「{query}」")
+    # 同时建两套知识库（raw 和 augmented）
+    embedder_raw, vs_raw, bm25_raw = await build_stores(tmp + "/raw", use_augmentor=False)
+    embedder_aug, vs_aug, bm25_aug = await build_stores(tmp + "/aug", use_augmentor=True)
+    print(f"✅ 知识库就绪（{time.time()-t0:.1f}s）\n")
 
-            for label, rewriter in rewriters.items():
-                stats[label]["total"] += 1
+    print("⏳ 加载 BGE-Reranker-v2-m3（~2.1GB，首次约 10-20 秒）...")
+    t1 = time.time()
 
-                # 获取改写后的查询
-                if rewriter is None:
-                    rewritten = query
-                else:
-                    rewritten = await rewriter.rewrite(query)
+    configs = [
+        ("A: 基线 (NoopReranker, 无扩展)",       embedder_raw, vs_raw, bm25_raw, False),
+        ("B: BGEReranker (无扩展)",              embedder_raw, vs_raw, bm25_raw, True),
+        ("C: SynonymAug (NoopReranker)",         embedder_aug, vs_aug, bm25_aug, False),
+        ("D: BGEReranker + SynonymAug",          embedder_aug, vs_aug, bm25_aug, True),
+    ]
 
-                # 执行检索
-                vec_r, bm25_r, hybrid_r = await retrieve_raw(
-                    rewritten, embedder, vector_store, bm25_store
-                )
-                v = top1_hit(vec_r, expected)
-                b = top1_hit(bm25_r, expected)
-                h = top1_hit(hybrid_r, expected)
-                if v: stats[label]["vec"] += 1
-                if b: stats[label]["bm25"] += 1
-                if h: stats[label]["hybrid"] += 1
+    results = []
+    for label, emb, vs, bm, use_bge in configs:
+        if use_bge and not results:
+            print(f"  BGEReranker 加载完成（{time.time()-t1:.1f}s）\n")
+        r = await run_config(label, emb, vs, bm, use_bge, verbose=True)
+        results.append(r)
+        print(f"  [{label}] Top-1命中: {r['hits']}/{r['total']} ({r['pct']:.0%})")
 
-                rewrite_display = ""
-                if rewriter is not None and rewritten != query:
-                    rewrite_display = f" → 「{rewritten}」"
+    # 横向对比表
+    total_q = results[0]["total"]
+    print("\n" + "=" * 62)
+    print(f"📊 实验结果对比  ({total_q} 个查询，Top-1 命中率)")
+    print("=" * 62)
+    print(f"{'配置':<35} {'命中':>5} {'命中率':>7}  {'vs 基线':>8}")
+    print("-" * 62)
+    base_hits = results[0]["hits"]
+    for r in results:
+        delta = r["hits"] - base_hits
+        delta_str = f"+{delta}" if delta > 0 else (f"{delta}" if delta < 0 else "—")
+        print(f"  {r['label']:<33} {r['hits']:>3}/{total_q}  {r['pct']:>6.0%}  {delta_str:>8}")
+    print("=" * 62)
 
-                print(f"  [{label}]{rewrite_display}")
-                print(f"    向量{'✅' if v else '❌'}  BM25{'✅' if b else '❌'}  混合{'✅' if h else '❌'}")
+    # 显示配置 A 的失败 case（基线错误的地方）
+    print("\n📋 基线失败 case（配置 A miss）：")
+    for d in results[0]["miss_details"]:
+        print(d)
 
-                # 展开混合检索详情（方便对比）
-                if not h:
-                    print(fmt_top3(hybrid_r, expected))
+    # 对比：D 比 A 多命中了哪些
+    a_miss_queries = {d.split("「")[1].split("」")[0] for d in results[0]["miss_details"]}
+    d_miss_queries = {d.split("「")[1].split("」")[0] for d in results[3]["miss_details"]}
+    newly_hit = a_miss_queries - d_miss_queries
+    if newly_hit:
+        print(f"\n✅ D（全开）比 A（基线）新增命中的 queries：")
+        for q in sorted(newly_hit):
+            print(f"  「{q}」")
 
-    # 汇总
-    total = stats["原始（无改写）"]["total"]
-    print(f"\n{'='*68}")
-    print(f"📈 汇总对比（混合检索 Top-1 命中率，共 {total} 个查询）")
-    print(f"{'策略':<20} {'向量':>6} {'BM25':>6} {'混合':>6}")
-    print("-" * 42)
-    for label, s in stats.items():
-        t = s["total"]
-        print(f"{label:<20} {s['vec']:>3}/{t} ({s['vec']/t:.0%})  "
-              f"{s['bm25']:>3}/{t} ({s['bm25']/t:.0%})  "
-              f"{s['hybrid']:>3}/{t} ({s['hybrid']/t:.0%})")
-    print("=" * 68)
+    still_miss = a_miss_queries & d_miss_queries
+    if still_miss:
+        print(f"\n⚠️  D（全开）仍未命中（需进一步分析）：")
+        for q in sorted(still_miss):
+            print(f"  「{q}」")
 
-
-async def main(no_llm: bool):
-    tmp_dir = tempfile.mkdtemp(prefix="rag_synonym_")
-    embedder, vector_store, bm25_store = await build_stores(tmp_dir)
-
-    if no_llm:
-        await run_no_llm(embedder, vector_store, bm25_store)
-    else:
-        await run_with_llm(embedder, vector_store, bm25_store)
-
-    print(f"\n临时目录: {tmp_dir}")
+    print(f"\n临时目录: {tmp}")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--no-llm", action="store_true",
-                        help="跳过 QueryRewriter，仅测原始检索")
-    args = parser.parse_args()
-    asyncio.run(main(args.no_llm))
+    asyncio.run(main())

@@ -28,6 +28,18 @@ Port 接口在 `core/interfaces/`，所有组件通过依赖注入组装（`core
 - 集成测试用 `NoopReranker` + `KeywordEmbedder`，不依赖真实模型
 - smoke 测试用真实 jieba/BM25/Chunker，标记 `@pytest.mark.smoke`
 
+### Reranker 说明（重要，新开发者必读）
+
+| | NoopReranker | BGEReranker |
+|-|-------------|-------------|
+| 用途 | 测试/开发（默认） | 生产 / 检索质量评估 |
+| 模型加载 | 无 | bge-reranker-v2-m3（~2.1GB） |
+| 切换方式 | `USE_NOOP_RERANKER=true` | `USE_NOOP_RERANKER=false` |
+| 效果 | 直通，Top-K 截断 | cross-encoder 精排，质量显著提升 |
+
+**CI 和所有单元/集成测试强制使用 NoopReranker**，避免在无模型的 CI 环境报错。
+检索质量实验（`scripts/test_synonym_retrieval.py`）必须切为 BGEReranker。
+
 ### 运行测试
 
 ```bash
@@ -88,14 +100,19 @@ Port 接口在 `core/interfaces/`，所有组件通过依赖注入组装（`core
 
 ## 当前开发状态
 
-- **Phase 1（完成）**：RAG 核心链路 + 基础组件，160 tests passing
-- **Week 2（进行中）**：API 路由层（`api/routes/`）、多轮对话、Session 管理
+> **任务列表唯一来源：`TODO.md`**（本文件只记快照，详细任务看 TODO.md）
 
-已知测试缺口（Week 2 后补齐）：
-- 检索排名质量测试（同主题歧义、近义词）
-- Demo 场景扩展（medium/low confidence、ambiguous 意图）
+| 版本 | 里程碑 | 状态 |
+|---|---|---|
+| v0.1.0 | Phase 1：RAG 核心链路 | ✅ 完成，160 tests，91% 覆盖率 |
+| v0.2.0 | Week 2：完整 API 层 | 🔄 PR #3 待合并 |
+| v0.3.0 | Week 3：Widget + Docker | 📋 计划中 |
 
-详见 `test-validation-plan.md §Phase1现状`。
+**当前优先级（详见 TODO.md）：**
+1. 合并 PR #3，打 tag v0.2.0
+2. Widget JS 聊天气泡
+3. Docker Compose 容器化
+4. 检索质量提升（synonym_expansion 验证）
 
 ## 硬件注意事项
 

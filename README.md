@@ -173,6 +173,8 @@ open test-reports/coverage/index.html  # 代码覆盖率（哪些行被执行过
 
 当前状态：**179 passed，覆盖率 93%**（已知缺口见 [test-validation-plan.md §Phase1现状](./test-validation-plan.md#phase-1-测试现状与已知缺口2026-04-05)）
 
+> **⚠️ 关于 Reranker**：单元/集成测试默认使用 `NoopReranker`（直通，不加载模型），通过环境变量 `USE_NOOP_RERANKER=true` 控制。**生产部署和检索质量评估必须使用 `BGEReranker`**（需本地缓存 `bge-reranker-v2-m3`，~2.1GB）。参见「检索质量实验」一节。
+
 ---
 
 ## 如何阅读测试报告
@@ -262,6 +264,30 @@ open test-reports/coverage/index.html
 ✗ GteQwen2Embedder（同上）
 ✗ ChromaDB 错误路径（空集合边界条件）
 ```
+
+---
+
+## 检索质量实验
+
+```bash
+# 运行 BGEReranker × SynonymAugmentor 2×2 对比实验（音响客服场景）
+# 需要：gte-Qwen2-1.5B（~3.2GB）+ bge-reranker-v2-m3（~2.1GB）均已本地缓存
+.venv/bin/python scripts/test_synonym_retrieval.py
+```
+
+输出 4 种配置的 Top-1 命中率对比表：
+
+| 配置 | 说明 |
+|------|------|
+| A：基线 | NoopReranker（直通），知识库无同义词扩展 |
+| B：BGEReranker | 开启精排（cross-encoder），替代 NoopReranker |
+| C：SynonymAug | 知识库写入时追加同义词标注，NoopReranker |
+| D：全部开启 | BGEReranker + SynonymAugmentor 同时启用 |
+
+**NoopReranker vs BGEReranker**：
+- `NoopReranker`：不加载任何模型，直接截断候选列表。用于本地开发/CI 测试，避免下载 2.1GB 模型。
+- `BGEReranker`：生产级精排，用 cross-encoder 逐对打分，召回率和排名质量显著提升。
+- 切换：`pipeline_builder.py` 的 `use_noop_reranker` 参数，或启动时 `USE_NOOP_RERANKER=false`。
 
 ---
 

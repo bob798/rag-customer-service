@@ -61,3 +61,7 @@ test-results.xml
 
 # Data uploads
 data/uploads/
+
+# Private scenario research (audio domain — not for public)
+docs/research/audio/
+scripts/test_audio_retrieval.py

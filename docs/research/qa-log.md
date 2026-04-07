@@ -114,15 +114,60 @@ QueryRewriter.rewrite() 调用前查询 Config 表（缓存 TTL=60s）
 
 ## QA-007 详细 · SPLADE / ColBERT 改造架构
 
+当前架构：
+
+  Query
+    ├─ embed(query) → 稠密向量 → ChromaDB ANN搜索 → Top-K 候选
+    └─ jieba(query) → 稀疏词袋 → rank_bm25 全量扫描 → Top-K 候选
+          ↓ RRF 融合
+     Top-20 候选
+          ↓ BGEReranker cross-encoder 精排
+     Top-5 结果
+
 **SPLADE**（替换 BM25，侵入性小）：
 - 输入 query → SPLADE 模型 → 词汇空间稀疏向量（隐式同义词扩展）
 - 检索：倒排索引（和 ES 兼容），可保留现有 RRF + Reranker 架构
+
+  引入 SPLADE 后（替换 BM25 那条腿）：
+
+  Query
+    ├─ embed(query) → 稠密向量 → ChromaDB ANN搜索 → Top-K
+    └─ SPLADE(query) → 稀疏扩展向量（词汇空间，dim=30522）
+                     → 倒排索引检索（和 Elasticsearch 兼容）→ Top-K
+          ↓ RRF 融合
+     （SPLADE 隐式做了同义词扩展：「喇叭」→激活「音箱」「音响」「扬声器」权重）
+
+  SPLADE 的核心改变：它输出的不是"喇叭=1, 没=1"这样的词袋，而是把模型认为相关的词都激活：
+  输入：「喇叭没响」
+  SPLADE输出：{喇叭:1.2, 音响:0.8, 扬声器:0.7, 声音:0.9, 无声:0.6, 故障:0.5, 静音:0.3}
+  这就是隐式同义词扩展，不需要任何外部词典。
 
 **ColBERT**（架构级变化）：
 - 文档索引时存储 token 级向量（存储 10-20×）
 - 检索时 MaxSim(query_tokens, doc_tokens)，token 级语义对齐
 - 需要替换向量数据库（Qdrant / RAGatouille）
 - 适用场景：召回率要求极高（医疗/法律），现阶段不推荐
+
+索引阶段（写入时）：
+    每条文档 → ColBERT encoder → 每个 token 一个向量
+    doc: "音箱没有声音怎么办" → [[0.1,0.3,...], [0.5,0.2,...], ...]  (7个向量)
+    存储代价：是单向量的 7-20 倍
+
+  检索阶段：
+  Query → ColBERT encoder → query token 向量列表 [q1, q2, ..., qm]
+
+  相似度计算（MaxSim）：
+    score(query, doc) = Σ_i  max_j  sim(qi, dj)
+    即：query 的每个 token 找 doc 中最相似的 token，加总
+
+  「喇叭」(q1) → max_sim with [音箱,没有,声音,怎么,办]
+                 = sim(「喇叭」, 「音箱」) = 高！（token 级语义对齐）
+
+  ColBERT 的工程影响：
+  - ChromaDB 无法直接支持，需要换 Qdrant 或使用 RAGatouille 库
+  - 存储成本 10-20×
+  - 检索延迟高于单向量（但有近似算法优化）
+  - 效果在 BEIR 上接近 cross-encoder reranker
 
 ---
 

@@ -53,3 +53,15 @@ data/
 coverage_html/
 test-results.xml
 *.xml
+
+# SQLite database files
+*.db
+*.db-shm
+*.db-wal
+
+# Data uploads
+data/uploads/
+
+# Private scenario research (audio domain — not for public)
+docs/research/audio/
+scripts/test_audio_retrieval.py

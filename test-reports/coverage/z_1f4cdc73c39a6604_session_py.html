@@ -2,9 +2,49 @@
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Coverage for db/session.py: 0%</title>
+    <title>Coverage for db/session.py: 82%</title>
     <link rel="icon" sizes="32x32" href="favicon_32_cb_c827f16f.png">
     <link rel="stylesheet" href="style_cb_9ff733b0.css" type="text/css">
+    <script type="text/javascript">
+        contexts = {
+  "a": "tests/api/test_auth.py::test_chat_rejects_no_token|setup",
+  "b": "tests/api/test_auth.py::test_admin_endpoints_reject_widget_token|run",
+  "c": "tests/api/test_auth.py::test_chat_rejects_no_token|run",
+  "d": "tests/api/test_auth.py::test_widget_token_cannot_access_admin_sessions|run",
+  "e": "tests/api/test_chat.py::test_chat_non_stream_returns_answer|run",
+  "f": "tests/api/test_chat.py::test_chat_requires_widget_token|run",
+  "g": "tests/api/test_chat.py::test_chat_saves_message_to_db|run",
+  "h": "tests/api/test_chat.py::test_chat_stream_returns_sse|run",
+  "i": "tests/api/test_knowledge.py::test_list_documents_requires_admin|run",
+  "j": "tests/api/test_knowledge.py::test_list_documents_returns_list|run",
+  "k": "tests/api/test_knowledge.py::test_qa_entry_stored|run",
+  "l": "tests/api/test_knowledge.py::test_upload_requires_admin_key|run",
+  "m": "tests/api/test_knowledge.py::test_upload_returns_doc_id|run",
+  "n": "tests/api/test_sessions.py::test_config_get_returns_defaults|run",
+  "o": "tests/api/test_sessions.py::test_config_update|run",
+  "p": "tests/api/test_sessions.py::test_session_messages_after_chat|run",
+  "q": "tests/api/test_sessions.py::test_sessions_requires_admin|run",
+  "r": "tests/api/test_sessions.py::test_sessions_returns_list|run",
+  "s": "tests/api/test_auth.py::test_admin_endpoints_reject_widget_token|setup",
+  "t": "tests/api/test_auth.py::test_chat_rejects_wrong_token|setup",
+  "u": "tests/api/test_auth.py::test_widget_token_cannot_access_admin_sessions|setup",
+  "v": "tests/api/test_chat.py::test_chat_non_stream_returns_answer|setup",
+  "w": "tests/api/test_chat.py::test_chat_requires_widget_token|setup",
+  "x": "tests/api/test_chat.py::test_chat_saves_message_to_db|setup",
+  "y": "tests/api/test_chat.py::test_chat_stream_returns_sse|setup",
+  "z": "tests/api/test_health.py::test_health_ok|setup",
+  "A": "tests/api/test_knowledge.py::test_list_documents_requires_admin|setup",
+  "B": "tests/api/test_knowledge.py::test_list_documents_returns_list|setup",
+  "C": "tests/api/test_knowledge.py::test_qa_entry_stored|setup",
+  "D": "tests/api/test_knowledge.py::test_upload_requires_admin_key|setup",
+  "E": "tests/api/test_knowledge.py::test_upload_returns_doc_id|setup",
+  "F": "tests/api/test_sessions.py::test_config_get_returns_defaults|setup",
+  "G": "tests/api/test_sessions.py::test_config_update|setup",
+  "H": "tests/api/test_sessions.py::test_session_messages_after_chat|setup",
+  "I": "tests/api/test_sessions.py::test_sessions_requires_admin|setup",
+  "J": "tests/api/test_sessions.py::test_sessions_returns_list|setup"
+}
+    </script>
     <script src="coverage_html_cb_dd2e7eb5.js" defer></script>
 </head>
 <body class="pyfile">
@@ -12,7 +52,7 @@
     <div class="content">
         <h1>
             <span class="text">Coverage for </span><b>db&#8201;/&#8201;session.py</b>:
-            <span class="pc_cov">0%</span>
+            <span class="pc_cov">82%</span>
         </h1>
         <aside id="help_panel_wrapper">
             <input id="help_panel_state" type="checkbox">
@@ -55,8 +95,8 @@
         </aside>
         <h2>
             <span class="text">17 statements &nbsp;</span>
-            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">0<span class="text"> run</span></button>
-            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">17<span class="text"> missing</span></button>
+            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">14<span class="text"> run</span></button>
+            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">3<span class="text"> missing</span></button>
             <button type="button" class="exc show_exc button_toggle_exc" value="exc" data-shortcut="x" title="Toggle lines excluded">0<span class="text"> excluded</span></button>
         </h2>
         <p class="text">
@@ -65,7 +105,7 @@
             <a id="nextFileLink" class="nav" href="index.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.13.5">coverage.py v7.13.5</a>,
-            created at 2026-04-05 16:19 +0800
+            created at 2026-04-06 07:52 +0800
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -81,33 +121,33 @@
 </header>
 <main id="source">
     <p class="pln"><span class="n"><a id="t1" href="#t1">1</a></span><span class="t"><span class="str">"""SQLAlchemy async session management."""</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t2" href="#t2">2</a></span><span class="t"><span class="key">import</span> <span class="nam">os</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t3" href="#t3">3</a></span><span class="t"><span class="key">from</span> <span class="nam">sqlalchemy</span><span class="op">.</span><span class="nam">ext</span><span class="op">.</span><span class="nam">asyncio</span> <span class="key">import</span> <span class="nam">create_async_engine</span><span class="op">,</span> <span class="nam">AsyncSession</span><span class="op">,</span> <span class="nam">async_sessionmaker</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t4" href="#t4">4</a></span><span class="t"><span class="key">from</span> <span class="nam">db</span><span class="op">.</span><span class="nam">models</span> <span class="key">import</span> <span class="nam">Base</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t2" href="#t2">2</a></span><span class="t"><span class="key">import</span> <span class="nam">os</span>&nbsp;</span><input type="checkbox" id="ctxs2"><span class="r"><label for="ctxs2" class="ctx">1 ctx</label></span><span class="ctxs">1a</span></p>
+    <p class="run"><span class="n"><a id="t3" href="#t3">3</a></span><span class="t"><span class="key">from</span> <span class="nam">sqlalchemy</span><span class="op">.</span><span class="nam">ext</span><span class="op">.</span><span class="nam">asyncio</span> <span class="key">import</span> <span class="nam">create_async_engine</span><span class="op">,</span> <span class="nam">AsyncSession</span><span class="op">,</span> <span class="nam">async_sessionmaker</span>&nbsp;</span><input type="checkbox" id="ctxs3"><span class="r"><label for="ctxs3" class="ctx">1 ctx</label></span><span class="ctxs">1a</span></p>
+    <p class="run"><span class="n"><a id="t4" href="#t4">4</a></span><span class="t"><span class="key">from</span> <span class="nam">db</span><span class="op">.</span><span class="nam">models</span> <span class="key">import</span> <span class="nam">Base</span>&nbsp;</span><input type="checkbox" id="ctxs4"><span class="r"><label for="ctxs4" class="ctx">1 ctx</label></span><span class="ctxs">1a</span></p>
     <p class="pln"><span class="n"><a id="t5" href="#t5">5</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t6" href="#t6">6</a></span><span class="t"><span class="nam">DATABASE_URL</span> <span class="op">=</span> <span class="nam">os</span><span class="op">.</span><span class="nam">getenv</span><span class="op">(</span><span class="str">"DATABASE_URL"</span><span class="op">,</span> <span class="str">"sqlite+aiosqlite:///./data/cs.db"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t6" href="#t6">6</a></span><span class="t"><span class="nam">DATABASE_URL</span> <span class="op">=</span> <span class="nam">os</span><span class="op">.</span><span class="nam">getenv</span><span class="op">(</span><span class="str">"DATABASE_URL"</span><span class="op">,</span> <span class="str">"sqlite+aiosqlite:///./data/cs.db"</span><span class="op">)</span>&nbsp;</span><input type="checkbox" id="ctxs6"><span class="r"><label for="ctxs6" class="ctx">1 ctx</label></span><span class="ctxs">1a</span></p>
     <p class="pln"><span class="n"><a id="t7" href="#t7">7</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t8" href="#t8">8</a></span><span class="t"><span class="nam">engine</span> <span class="op">=</span> <span class="nam">create_async_engine</span><span class="op">(</span><span class="nam">DATABASE_URL</span><span class="op">,</span> <span class="nam">echo</span><span class="op">=</span><span class="key">False</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t8" href="#t8">8</a></span><span class="t"><span class="nam">engine</span> <span class="op">=</span> <span class="nam">create_async_engine</span><span class="op">(</span><span class="nam">DATABASE_URL</span><span class="op">,</span> <span class="nam">echo</span><span class="op">=</span><span class="key">False</span><span class="op">)</span>&nbsp;</span><input type="checkbox" id="ctxs8"><span class="r"><label for="ctxs8" class="ctx">1 ctx</label></span><span class="ctxs">1a</span></p>
     <p class="pln"><span class="n"><a id="t9" href="#t9">9</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t10" href="#t10">10</a></span><span class="t"><span class="nam">AsyncSessionLocal</span> <span class="op">=</span> <span class="nam">async_sessionmaker</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t11" href="#t11">11</a></span><span class="t">    <span class="nam">engine</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t12" href="#t12">12</a></span><span class="t">    <span class="nam">class_</span><span class="op">=</span><span class="nam">AsyncSession</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t13" href="#t13">13</a></span><span class="t">    <span class="nam">expire_on_commit</span><span class="op">=</span><span class="key">False</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t14" href="#t14">14</a></span><span class="t"><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t10" href="#t10">10</a></span><span class="t"><span class="nam">AsyncSessionLocal</span> <span class="op">=</span> <span class="nam">async_sessionmaker</span><span class="op">(</span>&nbsp;</span><input type="checkbox" id="ctxs10"><span class="r"><label for="ctxs10" class="ctx">1 ctx</label></span><span class="ctxs">1a</span></p>
+    <p class="run run2"><span class="n"><a id="t11" href="#t11">11</a></span><span class="t">    <span class="nam">engine</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t12" href="#t12">12</a></span><span class="t">    <span class="nam">class_</span><span class="op">=</span><span class="nam">AsyncSession</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t13" href="#t13">13</a></span><span class="t">    <span class="nam">expire_on_commit</span><span class="op">=</span><span class="key">False</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t14" href="#t14">14</a></span><span class="t"><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t15" href="#t15">15</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t16" href="#t16">16</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t17" href="#t17">17</a></span><span class="t"><span class="key">async</span> <span class="key">def</span> <span class="nam">init_db</span><span class="op">(</span><span class="op">)</span> <span class="op">-></span> <span class="key">None</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t17" href="#t17">17</a></span><span class="t"><span class="key">async</span> <span class="key">def</span> <span class="nam">init_db</span><span class="op">(</span><span class="op">)</span> <span class="op">-></span> <span class="key">None</span><span class="op">:</span>&nbsp;</span><input type="checkbox" id="ctxs17"><span class="r"><label for="ctxs17" class="ctx">1 ctx</label></span><span class="ctxs">1a</span></p>
     <p class="pln"><span class="n"><a id="t18" href="#t18">18</a></span><span class="t">    <span class="str">"""Create all tables. Called on startup."""</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t19" href="#t19">19</a></span><span class="t">    <span class="key">async</span> <span class="key">with</span> <span class="nam">engine</span><span class="op">.</span><span class="nam">begin</span><span class="op">(</span><span class="op">)</span> <span class="key">as</span> <span class="nam">conn</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t20" href="#t20">20</a></span><span class="t">        <span class="key">await</span> <span class="nam">conn</span><span class="op">.</span><span class="nam">run_sync</span><span class="op">(</span><span class="nam">Base</span><span class="op">.</span><span class="nam">metadata</span><span class="op">.</span><span class="nam">create_all</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t19" href="#t19">19</a></span><span class="t">    <span class="key">async</span> <span class="key">with</span> <span class="nam">engine</span><span class="op">.</span><span class="nam">begin</span><span class="op">(</span><span class="op">)</span> <span class="key">as</span> <span class="nam">conn</span><span class="op">:</span>&nbsp;</span><input type="checkbox" id="ctxs19"><span class="r"><label for="ctxs19" class="ctx">19 ctx</label></span><span class="ctxs">1satuvwxyzABCDEFGHIJ</span></p>
+    <p class="run"><span class="n"><a id="t20" href="#t20">20</a></span><span class="t">        <span class="key">await</span> <span class="nam">conn</span><span class="op">.</span><span class="nam">run_sync</span><span class="op">(</span><span class="nam">Base</span><span class="op">.</span><span class="nam">metadata</span><span class="op">.</span><span class="nam">create_all</span><span class="op">)</span>&nbsp;</span><input type="checkbox" id="ctxs20"><span class="r"><label for="ctxs20" class="ctx">19 ctx</label></span><span class="ctxs">1satuvwxyzABCDEFGHIJ</span></p>
     <p class="pln"><span class="n"><a id="t21" href="#t21">21</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t22" href="#t22">22</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t23" href="#t23">23</a></span><span class="t"><span class="key">async</span> <span class="key">def</span> <span class="nam">get_db</span><span class="op">(</span><span class="op">)</span> <span class="op">-></span> <span class="nam">AsyncSession</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t23" href="#t23">23</a></span><span class="t"><span class="key">async</span> <span class="key">def</span> <span class="nam">get_db</span><span class="op">(</span><span class="op">)</span> <span class="op">-></span> <span class="nam">AsyncSession</span><span class="op">:</span>&nbsp;</span><input type="checkbox" id="ctxs23"><span class="r"><label for="ctxs23" class="ctx">1 ctx</label></span><span class="ctxs">1a</span></p>
     <p class="pln"><span class="n"><a id="t24" href="#t24">24</a></span><span class="t">    <span class="str">"""FastAPI dependency: yields an async database session."""</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t25" href="#t25">25</a></span><span class="t">    <span class="key">async</span> <span class="key">with</span> <span class="nam">AsyncSessionLocal</span><span class="op">(</span><span class="op">)</span> <span class="key">as</span> <span class="nam">session</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t26" href="#t26">26</a></span><span class="t">        <span class="key">try</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t27" href="#t27">27</a></span><span class="t">            <span class="key">yield</span> <span class="nam">session</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t28" href="#t28">28</a></span><span class="t">            <span class="key">await</span> <span class="nam">session</span><span class="op">.</span><span class="nam">commit</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t25" href="#t25">25</a></span><span class="t">    <span class="key">async</span> <span class="key">with</span> <span class="nam">AsyncSessionLocal</span><span class="op">(</span><span class="op">)</span> <span class="key">as</span> <span class="nam">session</span><span class="op">:</span>&nbsp;</span><input type="checkbox" id="ctxs25"><span class="r"><label for="ctxs25" class="ctx">17 ctx</label></span><span class="ctxs">1bcdefghijklmnopqr</span></p>
+    <p class="run"><span class="n"><a id="t26" href="#t26">26</a></span><span class="t">        <span class="key">try</span><span class="op">:</span>&nbsp;</span><input type="checkbox" id="ctxs26"><span class="r"><label for="ctxs26" class="ctx">17 ctx</label></span><span class="ctxs">1bcdefghijklmnopqr</span></p>
+    <p class="run"><span class="n"><a id="t27" href="#t27">27</a></span><span class="t">            <span class="key">yield</span> <span class="nam">session</span>&nbsp;</span><input type="checkbox" id="ctxs27"><span class="r"><label for="ctxs27" class="ctx">17 ctx</label></span><span class="ctxs">1bcdefghijklmnopqr</span></p>
+    <p class="run"><span class="n"><a id="t28" href="#t28">28</a></span><span class="t">            <span class="key">await</span> <span class="nam">session</span><span class="op">.</span><span class="nam">commit</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><input type="checkbox" id="ctxs28"><span class="r"><label for="ctxs28" class="ctx">17 ctx</label></span><span class="ctxs">1bcdefghijklmnopqr</span></p>
     <p class="mis show_mis"><span class="n"><a id="t29" href="#t29">29</a></span><span class="t">        <span class="key">except</span> <span class="nam">Exception</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t30" href="#t30">30</a></span><span class="t">            <span class="key">await</span> <span class="nam">session</span><span class="op">.</span><span class="nam">rollback</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t31" href="#t31">31</a></span><span class="t">            <span class="key">raise</span>&nbsp;</span><span class="r"></span></p>
@@ -120,7 +160,7 @@
             <a class="nav" href="index.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.13.5">coverage.py v7.13.5</a>,
-            created at 2026-04-05 16:19 +0800
+            created at 2026-04-06 07:52 +0800
         </p>
     </div>
 </footer>

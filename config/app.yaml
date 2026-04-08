@@ -1,0 +1,54 @@
+# 应用配置文件（项目级，随代码一起版本化）
+#
+# 这里存放"业务策略"相关配置，与技术实现解耦：
+#   - 意图分类的服务范围（scope）：定义系统接受/拒绝哪类问题
+#   - LLM 默认模型
+#   - 各组件默认 prompt variant
+#
+# 与 DB Config 表的分工：
+#   - app.yaml：部署时固定的基础配置，需要重启生效（走 git 管理）
+#   - DB Config：运营人员线上动态调整的配置，热更新无需重启
+
+version: "1.0"
+
+# ─────────────────────────────────────────────────────────────
+# 意图分类器
+# ─────────────────────────────────────────────────────────────
+intent_classifier:
+  variant: domain_aware           # ecommerce | product_support | domain_aware
+  domain_name: "AI 客服系统"
+  scope_description: |
+    退款申请、订单查询、发货时效、换货流程、积分使用、
+    物流追踪、账号密码、产品使用、故障排查、保修政策
+
+  # 扩展示例（音响产品线）：
+  # variant: domain_aware
+  # domain_name: "桌面近场音响客服"
+  # scope_description: |
+  #   产品使用方法、蓝牙连接、音质调节（EQ/低音）、
+  #   故障排查（无声/杂音/爆音）、保修政策、退换货
+
+# ─────────────────────────────────────────────────────────────
+# 查询改写
+# ─────────────────────────────────────────────────────────────
+query_rewriter:
+  variant: normalize              # normalize | synonym_expansion | domain_aware | contextual
+  # 推荐生产环境改为 synonym_expansion，提升近义词召回率
+
+# ─────────────────────────────────────────────────────────────
+# 回答生成
+# ─────────────────────────────────────────────────────────────
+generator:
+  variant: default                # default | branded | technical
+  # branded 示例：
+  # variant: branded
+  # bot_name: "小音"
+  # brand_name: "声浪桌面音响"
+
+# ─────────────────────────────────────────────────────────────
+# LLM
+# ─────────────────────────────────────────────────────────────
+llm:
+  default_model: "claude-haiku-4-5-20251001"
+  # 生产降本选项：deepseek/deepseek-chat（$0.27/M tokens，中文强）
+  # fallback: null

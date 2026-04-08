@@ -16,6 +16,14 @@ class HybridRetriever(BaseRetriever):
         self._bm25_store = bm25_store
         self._rrf_k = rrf_k
 
+    @property
+    def vector_store(self) -> ChromaVectorStore:
+        return self._vector_store
+
+    @property
+    def bm25_store(self) -> Bm25Store:
+        return self._bm25_store
+
     async def retrieve(
         self,
         query_vec: list[float],

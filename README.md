@@ -13,6 +13,7 @@
 | [docs/data-model.md](./docs/data-model.md) | ER 图、ChromaDB 元数据约定、sources 格式、trace_id 日志 |
 | [docs/llm-guide.md](./docs/llm-guide.md) | LLM 配置指南：LiteLLM 机制、模型切换、Fallback、成本优化 |
 | [docs/ingestion-guide.md](./docs/ingestion-guide.md) | 知识库构建：解析文档、写入向量库、BM25 索引、数据结构说明 |
+| [CHANGELOG.md](./CHANGELOG.md) | 版本迭代记录：每个版本新增内容、修复项 |
 
 ### 产品与设计文档
 
@@ -109,14 +110,42 @@ export ANTHROPIC_API_KEY=sk-ant-...
 
 ```bash
 # 开发模式（热重载）
-.venv/bin/uvicorn api.main:app --reload --port 8000
+ADMIN_API_KEY=your-admin-key WIDGET_TOKEN_SECRET=your-widget-token \
+  .venv/bin/uvicorn api.main:app --reload --port 8000
 
-# 验证服务正常
+# 验证服务
 curl http://localhost:8000/health
-# {"status":"ok"}
+# {"status":"ok","vector_db":"ok","llm":"unknown"}
 ```
 
-> **注意**：API 路由层（`api/routes/`）为 Week 2 任务，当前仅有 `/health` 和 `/docs`。
+**主要接口**：
+
+| 接口 | 认证 | 说明 |
+|------|------|------|
+| `POST /chat` | Widget Token | 提问，支持 SSE 流式和非流式 |
+| `POST /knowledge/upload` | Admin Key | 上传文档（后台异步索引） |
+| `POST /knowledge/qa` | Admin Key | 写入 Q&A 条目 |
+| `GET  /knowledge/documents` | Admin Key | 列出所有文档 |
+| `GET  /sessions` | Admin Key | 列出会话历史 |
+| `GET  /config` | Admin Key | 读取系统配置 |
+| `PUT  /config` | Admin Key | 更新配置项 |
+| `GET  /health` | 无 | 组件健康状态 |
+| `GET  /docs` | 无 | Swagger UI |
+
+**示例请求**：
+
+```bash
+# 上传知识库文档
+curl -X POST http://localhost:8000/knowledge/upload \
+  -H "x-api-key: your-admin-key" \
+  -F "file=@docs/samples/faq_example.txt"
+
+# 提问（非流式）
+curl -X POST http://localhost:8000/chat \
+  -H "x-widget-token: your-widget-token" \
+  -H "Content-Type: application/json" \
+  -d '{"question": "退款需要多久", "session_id": "s1", "stream": false}'
+```
 
 ---
 
@@ -142,7 +171,9 @@ open test-reports/report.html       # 测试通过/失败详情
 open test-reports/coverage/index.html  # 代码覆盖率（哪些行被执行过）
 ```
 
-当前状态：**160 passed，覆盖率 91%**
+当前状态：**179 passed，覆盖率 93%**（已知缺口见 [test-validation-plan.md §Phase1现状](./test-validation-plan.md#phase-1-测试现状与已知缺口2026-04-05)）
+
+> **⚠️ 关于 Reranker**：单元/集成测试默认使用 `NoopReranker`（直通，不加载模型），通过环境变量 `USE_NOOP_RERANKER=true` 控制。**生产部署和检索质量评估必须使用 `BGEReranker`**（需本地缓存 `bge-reranker-v2-m3`，~2.1GB）。参见「检索质量实验」一节。
 
 ---
 
@@ -236,6 +267,30 @@ open test-reports/coverage/index.html
 
 ---
 
+## 检索质量实验
+
+```bash
+# 运行 BGEReranker × SynonymAugmentor 2×2 对比实验（音响客服场景）
+# 需要：gte-Qwen2-1.5B（~3.2GB）+ bge-reranker-v2-m3（~2.1GB）均已本地缓存
+.venv/bin/python scripts/test_synonym_retrieval.py
+```
+
+输出 4 种配置的 Top-1 命中率对比表：
+
+| 配置 | 说明 |
+|------|------|
+| A：基线 | NoopReranker（直通），知识库无同义词扩展 |
+| B：BGEReranker | 开启精排（cross-encoder），替代 NoopReranker |
+| C：SynonymAug | 知识库写入时追加同义词标注，NoopReranker |
+| D：全部开启 | BGEReranker + SynonymAugmentor 同时启用 |
+
+**NoopReranker vs BGEReranker**：
+- `NoopReranker`：不加载任何模型，直接截断候选列表。用于本地开发/CI 测试，避免下载 2.1GB 模型。
+- `BGEReranker`：生产级精排，用 cross-encoder 逐对打分，召回率和排名质量显著提升。
+- 切换：`pipeline_builder.py` 的 `use_noop_reranker` 参数，或启动时 `USE_NOOP_RERANKER=false`。
+
+---
+
 ## 技术栈
 
 - **核心**：Python 3.12 + FastAPI + RAG 全链路手搓
@@ -247,7 +302,10 @@ open test-reports/coverage/index.html
 
 ## 项目状态
 
-Phase 1 完成（2026-04）：RAG 核心链路 + 基础组件，160 tests passing，覆盖率 91%
+- **v0.1.0**（2026-04）Phase 1：RAG 核心链路 + 基础组件，160 tests，覆盖率 91%
+- **v0.2.0**（2026-04）Week 2：完整 API 层（/chat SSE + 知识库管理 + 会话历史 + 配置），179 tests，覆盖率 93%
+
+完整版本记录见 [CHANGELOG.md](./CHANGELOG.md)
 
 ---
 

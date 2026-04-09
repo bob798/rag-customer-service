@@ -64,7 +64,14 @@ class FAQParser(BaseParser):
                     "chunk_id": chunk_id,
                     "doc_id": doc_id,
                     "content": content,
-                    "metadata": {**metadata, "type": "faq", "question": question},
+                    "metadata": {
+                        **metadata,
+                        "type": "faq",
+                        "content_type": "text",
+                        "question": question,
+                        "page": None,
+                        "section": None,
+                    },
                 }
             )
         return chunks

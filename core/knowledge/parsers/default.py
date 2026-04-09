@@ -13,7 +13,12 @@ class DefaultParser(BaseParser):
     def parse(self, file_path: str, doc_id: str, metadata: dict) -> list[dict]:
         ext = file_path.rsplit(".", 1)[-1].lower() if "." in file_path else "txt"
         text = self._extract_text(file_path, ext)
-        return self.chunker.chunk(text, doc_id, metadata)
+        chunks = self.chunker.chunk(text, doc_id, metadata)
+        for chunk in chunks:
+            chunk["metadata"].setdefault("content_type", "text")
+            chunk["metadata"].setdefault("page", None)
+            chunk["metadata"].setdefault("section", None)
+        return chunks
 
     def _extract_text(self, file_path: str, file_type: str) -> str:
         if file_type == "pdf":

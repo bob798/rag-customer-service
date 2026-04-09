@@ -235,3 +235,34 @@ async def startup():
 | **embedding 模型** | GteQwen2Embedder 首次使用会下载约 3GB 模型文件（`~/.cache/huggingface/`）。下载后本地缓存，无需联网。 |
 | **向量维度** | GteQwen2 输出 1536 维向量，ChromaDB 集合创建时自动确定，不可更改。切换 embedding 模型需重建集合。 |
 | **重复导入** | ChromaDB 用 chunk_id 去重。重复调用 `add()` 同 chunk_id 会报错，需先 `delete_by_doc_id()` 再重新导入。 |
+
+---
+
+## 八、解析能力现状
+
+> 更新日期：2026-04-09。多模态升级规划见 `docs/research/multimodal-document-parsing.md`
+
+### 8.1 已修复的问题（v0.3）
+
+| 原问题 | 修复方案 | 状态 |
+|--------|---------|------|
+| 中文 token 计数失效（`len(text.split())` 对中文返回 ~0） | 改为字符计数 `len(text)`，默认 chunk_size=500 | ✅ 已修复 |
+| 中文 overlap 无效（空格分词导致 overlap 为整个 chunk） | 改为字符切片 `chunks[i-1][-overlap:]` | ✅ 已修复 |
+| 长段落无法拆分（只按 `\n\n`） | 新增 `_split_long_paragraph()` 按 `。！？；` 切分 | ✅ 已修复 |
+| Metadata 不统一 | DefaultParser/FAQParser 统一输出 content_type/page/section | ✅ 已修复 |
+
+### 8.2 MinerU Parser（代码就绪，待部署）
+
+`core/knowledge/parsers/mineru.py` 已实现，安装 MinerU 后自动启用：
+- PDF → MinerU CLI → content_list.json → 多模态分流（text/table/image/formula/code）
+- 表格保留 HTML 结构，图片提取文件 + caption，公式输出 LaTeX
+- 标题层级追踪（section path），header/footer 自动丢弃
+- **部署限制**：本机 torch 2.2.2（macOS x86_64 上限），MinerU 需 Docker 或 Linux 运行
+
+### 8.3 DefaultParser 剩余限制
+
+| 组件 | 问题 | 升级路径 |
+|------|------|---------|
+| PDF 解析 | 表格拉平、图片丢失、无 OCR | 安装 MinerU 后自动替代 |
+| DOCX 解析 | 只遍历 paragraphs，丢失表格 | 待补充 `table.rows` 遍历 |
+| FAQParser | 只支持 Q:/A: 和 问：/答： | 待扩展编号式和英文格式 |

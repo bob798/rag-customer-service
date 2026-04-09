@@ -21,52 +21,110 @@ Port 接口在 `core/interfaces/`，所有组件通过依赖注入组装（`core
 
 ## 开发规范
 
-### 测试优先
+### 测试规范（必读）
 
-- 先写测试，再写实现（TDD）
-- 单元测试 mock 所有外部依赖（LLM、Embedding 模型）
-- 集成测试用 `NoopReranker` + `KeywordEmbedder`，不依赖真实模型
-- smoke 测试用真实 jieba/BM25/Chunker，标记 `@pytest.mark.smoke`
+#### 测试金字塔 — 四个层级
 
-### Reranker 说明（重要，新开发者必读）
+```
+              ╱╲           E2E 质量评测 — scripts/eval_*.py
+             ╱  ╲          真实模型 + 真实 LLM API，手动触发
+            ╱────╲
+           ╱      ╲        冒烟测试 — tests/smoke/
+          ╱ smoke  ╲       真实 jieba/BM25，@pytest.mark.smoke
+         ╱──────────╲
+        ╱            ╲     集成测试 — tests/integration/
+       ╱ integration  ╲    DeterministicEmbedder + NoopReranker，CI 可跑
+      ╱────────────────╲
+     ╱                  ╲   单元测试 — tests/core/
+    ╱    unit tests      ╲  全 mock，最快
+   ╱──────────────────────╲
+```
+
+| 层级 | 位置 | Embedder | Reranker | LLM | CI 可跑 | 用途 |
+|------|------|----------|----------|-----|---------|------|
+| **单元测试** | `tests/core/` | mock | mock | mock | ✅ | 验证单个函数/类逻辑 |
+| **集成测试** | `tests/integration/` | DeterministicEmbedder | **NoopReranker** | mock | ✅ | 验证组件协作、数据流、回归 |
+| **冒烟测试** | `tests/smoke/` | 无/真实 jieba | 无 | 无 | ✅ | 真实依赖不崩溃 |
+| **E2E 评测** | `scripts/eval_*.py` | **GteQwen2** | **BGEReranker** | **真实 API** | ❌ | 检索质量、端到端效果 |
+
+#### 核心规则
+
+1. **CI 测试（单元+集成+冒烟）强制 NoopReranker + DeterministicEmbedder**，不加载 GPU 模型
+2. **E2E 评测用真实全链路**：GteQwen2Embedder + BGEReranker + LLM API，手动触发
+3. **先写测试再写实现（TDD）**
+4. **新增 parser/chunker/retriever 必须同时新增对应的单元测试 + 集成测试**
+5. **集成测试验证"不破坏"，E2E 评测验证"效果好"**，两者不互相替代
+6. **测试结果文件带版本号**，格式 `qa_eval_results_v{版本}.json`
+
+#### Reranker 选型
 
 | | NoopReranker | BGEReranker |
 |-|-------------|-------------|
-| 用途 | 测试/开发（默认） | 生产 / 检索质量评估 |
-| 模型加载 | 无 | bge-reranker-v2-m3（~2.1GB） |
-| 切换方式 | `USE_NOOP_RERANKER=true` | `USE_NOOP_RERANKER=false` |
-| 效果 | 直通，Top-K 截断 | cross-encoder 精排，质量显著提升 |
+| 用途 | CI 测试 / 开发 | 生产 / E2E 评测 |
+| 模型 | 无 | bge-reranker-v2-m3（~2.1GB） |
+| 效果 | 直通（score 不变） | cross-encoder 精排 |
 
-**CI 和所有单元/集成测试强制使用 NoopReranker**，避免在无模型的 CI 环境报错。
-检索质量实验（`scripts/test_synonym_retrieval.py`）必须切为 BGEReranker。
-
-### 运行测试
+#### 运行命令
 
 ```bash
-# 快速验证（不生成报告）
+# CI 自动化（每次提交必跑）
 .venv/bin/pytest tests/core/ tests/integration/ -q --no-cov
 
-# 全量（生成 HTML 报告 + 覆盖率，约 60s）
+# 全量 + 覆盖率报告
 .venv/bin/pytest
 
-# 冒烟测试（真实依赖）
+# 冒烟测试
 .venv/bin/pytest tests/smoke/ -v -m smoke --no-cov
 
-# 单个测试
-.venv/bin/pytest tests/core/test_pipeline.py::test_out_of_scope_triggers_fallback -v
+# E2E 质量评测（手动，需模型+API）
+.venv/bin/python scripts/eval_production_pipeline.py
 ```
 
-当前状态：**160 passed，覆盖率 91%**
+当前状态：**284 passed，覆盖率 91%**
 
-### 测试文件对应关系
+#### 测试目录结构
 
-| 核心逻辑 | 单元测试 | 集成测试 |
-|---------|---------|---------|
-| `core/rag/pipeline.py` | `tests/core/test_pipeline.py` | `tests/integration/test_pipeline_flow.py` |
-| `core/rag/retriever.py` | `tests/core/test_hybrid_retriever.py` | `tests/integration/test_hybrid_retriever.py` |
-| `core/rag/confidence.py` | `tests/core/test_confidence.py` | — |
-| `core/rag/intent.py` | `tests/core/test_intent.py` | — |
-| `core/knowledge/` | `tests/core/test_retriever.py` | `tests/integration/test_ingestion_pipeline.py` |
+```
+tests/
+├── core/                           # 单元测试（165 用例）
+│   ├── test_chunker.py             # SemanticChunker 字符计数/中文分块
+│   ├── test_mineru_parser.py       # MinerU content_list 分流逻辑
+│   ├── test_document_processor.py  # FAQParser/DefaultParser/Registry
+│   ├── test_pipeline.py            # RAG Pipeline 流程
+│   ├── test_hybrid_retriever.py    # RRF 融合逻辑
+│   └── ...
+├── integration/                    # 集成测试（78 用例）
+│   ├── test_pdf_parsing.py         # PDF 解析回归（10 个场景，68 用例）
+│   ├── test_ingestion_pipeline.py  # FAQ 导入端到端
+│   ├── test_pipeline_flow.py       # Pipeline 全流程
+│   └── test_hybrid_retriever.py    # 混合检索集成
+├── smoke/                          # 冒烟测试（6 用例）
+├── api/                            # API 接口测试（19 用例）
+├── data/                           # 测试数据
+│   ├── 功放说明书.pdf               # 测试 PDF
+│   ├── golden_amplifier_default.json  # Golden data 基线
+│   ├── eval_amplifier_qa.json      # QA 评测集（10 题）
+│   └── qa_eval_results_v*.json     # E2E 评测结果（带版本号）
+└── conftest.py                     # 全局 fixtures
+
+scripts/
+├── eval_production_pipeline.py     # E2E 质量评测（真实全链路）
+├── ingest.py                       # 知识库导入
+└── demo_pipeline.py                # RAG 链路演示
+```
+
+### 文档同步规则
+
+以下文件修改时，必须同步更新 README.md 对应章节：
+
+| 触发变更 | 同步到 README |
+|---------|--------------|
+| `tests/` 目录结构变化（新增/删除测试文件） | "测试 > 测试结构" 章节 |
+| 测试数量变化（新增/删除用例） | "当前状态：N passed" |
+| `scripts/eval_*.py` 新增或改动 | "测试 > 运行命令" E2E 评测部分 |
+| `.env` 配置项变化 | "快速开始" 环境变量说明 |
+| API 接口新增或变更 | "主要接口" 表格 |
+| `docs/*.md` 新增文档 | "文档导航" 表格 |
 
 ### 代码规范
 
@@ -104,7 +162,7 @@ Port 接口在 `core/interfaces/`，所有组件通过依赖注入组装（`core
 
 | 版本 | 里程碑 | 状态 |
 |---|---|---|
-| v0.1.0 | Phase 1：RAG 核心链路 | ✅ 完成，160 tests，91% 覆盖率 |
+| v0.1.0 | Phase 1：RAG 核心链路 | ✅ 完成，284 tests，91% 覆盖率 |
 | v0.2.0 | Week 2：完整 API 层 | 🔄 PR #3 待合并 |
 | v0.3.0 | Week 3：Widget + Docker | 📋 计划中 |
 

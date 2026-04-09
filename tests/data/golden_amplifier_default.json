@@ -1,0 +1,148 @@
+{
+  "chunk_count": 13,
+  "chunks": [
+    {
+      "content": "设计\n\n\nBLV-D1\n\n\n音频放大器\n\n\n用户手册\n\n\nBLV-D1 2 x50W蓝牙v5.\n\n0可启用音频放\n\n\n大器- TPA3116\n\n\nBLV-D1音频放大器，壮举的高功耗输出，蓝牙v5.\n\n0连接，用户友好的功能\n\n\n，如音量控制电位计和蓝牙解除按钮，以及LED指示灯，集成DSP和配备散\n\n\n热器，同时利用TPA3116放大器IC。\n\n特点：\n\n\n• LEDIndicators:\n\n\n.\n\n绿色显示的电源状态。\n\n.\n\nBlueLED为蓝牙连接状态。\n\n• PowerON/OFFSwitch:\n\n\n.\n\n允许您打开和关闭该单元。\n\n蓝牙配对按钮：\n\n\n.\n\n用于蓝牙配对和与兼容设备解除配对。\n\nSubarag音频控制：\n\n\n.\n\n允许您微调音频输出您的偏好。\n\n.\n\n低音控制电位计。\n\n中心频率120Hz，±6dB。\n\n.\n\n三倍控制电位器。\n\n中心频率5kHz，±6dB。\n\n.\n\n音量控制电位器。\n\nSubab蓝牙天线：\n\n\n.\n\n增强蓝牙信号接收和范围。\n\n线路输入和线路输出：\n\n\n.\n\n用于连接音频源到BLV-D1的线路输入。\n\n.\n\n线输出与AUX连接器连接BLV-D1连接到外部设备。\n\n规范(s)\n\n\n蓝牙版本\n\n\n蓝牙名称\n\n\n电源\n\n\n音频输入\n\n\n5.\n\n0\n\n\nBerryBakBLV-D1\n\n\nDC12V - 24V\n\n\n蓝牙/线路输入\n",
+      "metadata": {
+        "source_title": "功放说明书.pdf",
+        "source_path": "tests/data/功放说明书.pdf",
+        "file_type": "pdf",
+        "content_type": "text",
+        "page": null,
+        "section": null
+      }
+    },
+    {
+      "content": "\n\n\n5.\n\n0\n\n\nBerryBakBLV-D1\n\n\nDC12V - 24V\n\n\n蓝牙/线路输入\n\n\n扬声器输出螺钉-自由推式接线盒\n\n\n机械图纸\n\n\n（标称尺寸，英寸（mm）)\n\n\n3.\n\n500\" (89.\n\n00 mm)\n\n\n3.\n\n575\"(90.\n\n81 mm)\n\n\n输出信道(s)输出\n\n\n功率\n\n\n产品尺寸\n\n\n产品尺寸\n\n\n权重\n\n\n权重\n\n\n2.\n\n0CH\n\n\n2 x 50W\n\n\n3.\n\n575英寸x3.\n\n500英寸x1.\n\n075英寸（\n\n\n英寸）\n\n\n90.\n\n81 x 89.\n\n00 x 27.\n\n31(mm)\n\n\n6.\n\n0盎司± 0.\n\n3盎司（盎\n\n\n*产品尺寸不包括后面板上的蓝牙天线和前面板上的电位计旋\n\n\n钮。\n\n规格如有更改，恕不另行通知。\n\n版权所有：©2023，由BerryBak Sdn提供。\n\nBhd .\n\n保留所有权利。\n\n欲了解更多信息，请联系我们的信息\n\n\n@berrybak。\n\ncom\n\n设计\n\n\nBLV-D1\n\n\n音频放大器\n\n\n用户手册\n\n\n面板布局\n\n\n前面板\n\n\n1\n\n\n3\n\n\n注：二维插图以1：1的比例尺提供。\n\n请确保您的打印设置被设置为“实际尺寸”或\n\n\n“100%”，以保持准确的尺寸。\n\n1.\n\nLED指示灯-纯绿灯表示电源状态，当设备没有连接时，蓝色LED闪烁，但连接到任何蓝牙源时，稳定建立蓝牙连接。\n\n2.\n\n电源开关-blv-D1的一个电源开关，允许控制设备的电源状态。\n\n3.",
+      "metadata": {
+        "source_title": "功放说明书.pdf",
+        "source_path": "tests/data/功放说明书.pdf",
+        "file_type": "pdf",
+        "content_type": "text",
+        "page": null,
+        "section": null
+      }
+    },
+    {
+      "content": "稳定建立蓝牙连接。\n\n2.\n\n电源开关-blv-D1的一个电源开关，允许控制设备的电源状态。\n\n3.\n\n蓝牙解除按钮-BLV-D1上的蓝牙解除按钮的目的：它允许您断开取消blv-d1和任何配对蓝牙设备之间的蓝牙连接。\n\n4.\n\n低音控制电位计-blv-d1配备了一个低音控制电位计，它允许用户根据您的喜好调整低音输出的水平。\n\n5.\n\n高音控制电位器-BLV-D1包括一个高音控制电位器，它使用户可以微调高音或高频音频输出，以适应您的音频偏好。\n\n6.\n\n音量控制电位计-blv-d1配备了一个音量控制电压计，允许用户调整音频输出音量到您期望的水平，为您提供精确的控制声音输出。\n\n面板布局\n\n\n后面板\n\n\n1\n\n\n4\n\n\n注：二维插图以1：1的比例尺提供。\n\n请确保您的打印设置被设置为“实际尺寸”或\n\n\n“100%”，以保持准确的尺寸。\n\n1.\n\n蓝牙天线-蓝牙天线确保了一个扩展的操作范围，允许您享受不间断的音频流，甚至从一个距离，从而扩大了蓝牙连接的范围。\n\n2.\n\nPC UI编程端口-与PC UI编程端口，blv-d1提供了个性化和定制的音频体验，为任何应用程序提供卓越的音质，无论是娱乐或专业音频\n\n\n。\n\n3.\n\n线路输入-blv-D1具有3.\n\n5mm的线路输入，它允许您连接各种音频源，如智能手机，MP3播放器，或其他兼容的设备，使您能够通过蓝\n",
+      "metadata": {
+        "source_title": "功放说明书.pdf",
+        "source_path": "tests/data/功放说明书.pdf",
+        "file_type": "pdf",
+        "content_type": "text",
+        "page": null,
+        "section": null
+      }
+    },
+    {
+      "content": "mm的线路输入，它允许您连接各种音频源，如智能手机，MP3播放器，或其他兼容的设备，使您能够通过蓝\n\n\n牙接收器享受您最喜欢的音频内容。\n\nInputImpedance:10kΩ, 500mV = 0dB@ 4Ω, 25W.\n\n4.\n\n线路输出-blv-D1配备了3.\n\n5mm的线路输出，使您能够将蓝牙接收器连接到外部音频设备，如扬声器或放大器，以传输音频信号，以增\n\n\n强听力体验或将音频播放扩展到其他设备。\n\n输出阻抗- 600Ω，不适合驾驶耳机。\n\n5.\n\n扬声器输出-blv-D1配备了一个强大的扬声器输出，利用了TPA3116 AMPIC的前置能力，它提供了2 x 50瓦的总功率。\n\n6.\n\nUSB类型-C端口电源-BLV-D1配备了一个多功能的USB类型-C端口电源交付，允许方便和高效的充电或电源的设备。\n\n这个端口确保了\n\n\nblv-d1可以使用现代的高容量电源供电，使其与各种USBc型适配器和电源组兼容。\n\nUSBType-C端口提供稳定和可靠的电源输入，\n\n\n以确保最佳性能，即使在延长使用期间。\n\n7.\n\n直流电源输入12V-24V-TheBLV-D1具有灵活的电源输入选项，接受直流电电压范围为12-24伏的直流（DC）电源，最低电流要求为2\n\n\n安培，3安培或以上。\n\n规格如有更改，恕不另行通知。",
+      "metadata": {
+        "source_title": "功放说明书.pdf",
+        "source_path": "tests/data/功放说明书.pdf",
+        "file_type": "pdf",
+        "content_type": "text",
+        "page": null,
+        "section": null
+      }
+    },
+    {
+      "content": "24伏的直流（DC）电源，最低电流要求为2\n\n\n安培，3安培或以上。\n\n规格如有更改，恕不另行通知。\n\n版权所有：©2023，由BerryBak Sdn提供。\n\nBhd .\n\n保留所有权利。\n\n欲了解更多信息，请联系我们的信息\n\n\n@berrybak。\n\ncom\n\n\n2\n\n\n3\n\n\n2\n\n\n6\n\n\n5\n\n\n4\n\n\n7\n\n\n5\n\n\n6\n\n设计\n\n\nBLV-D1\n\n\n音频放大器\n\n\n用户手册\n\n\n电源输入选项\n\n\n通过直流插孔和USB型的柔性电源连接\n\n\nblv-D1支持双向输入方法。\n\n首先，它接受在12V到24V范围内的DC功率，需要至少2安培，与3安培或更多推荐的稳定操作。\n\n此外，该设\n\n\n备还包括一个专门用于电源传输的USBType-C端口。\n\n这允许用户使用现代USBType-C适配器和电源组为blv-d1供电，提供电源选项的灵\n\n\n活性，同时保持一致的性能。\n\n音频输入源选项\n\n\n3.\n\n5mm线输入和蓝牙连接\n\n\n2\n\n\n1\n\n\nblv-d1提供了两种主要的音频输入选项：3.\n\n5米的线输入和蓝牙连接。\n\n3.\n\n5毫米的输入提供了一个可靠的有线连接，直接从各种设备，如智\n\n\n能手机、个人电脑或音频播放器。\n\n这确保了低强度，高质量的质量。\n\n当两个输入同时连接时，3.\n\n5mm输入由于其针脚检测机制而优先考虑。\n\n这种设计确保blv-d1自动选择3.\n\n5mm的音频源进行播放，提供无\n\n\n缝的使用优势，无需固定的共振峰切换。\n\n音频输出选项\n",
+      "metadata": {
+        "source_title": "功放说明书.pdf",
+        "source_path": "tests/data/功放说明书.pdf",
+        "file_type": "pdf",
+        "content_type": "text",
+        "page": null,
+        "section": null
+      }
+    },
+    {
+      "content": "择3.\n\n5mm的音频源进行播放，提供无\n\n\n缝的使用优势，无需固定的共振峰切换。\n\n音频输出选项\n\n\n连接到扬声器或外部放大器\n\n\n到扬声器放\n\n\n大器\n\n\nblv-d1的音频输出设计为连接扬声器或外部放大器。\n\n这种输出是优化的高可靠性复制，确保与各种扬声器系统的兼容性。\n\n输出阻抗为600Ω，不适合直接驱动耳机。\n\n用户应将该设备连接到扬声器和一个放大器上，以达到最佳的音频性能，并防止对耳机的潜在\n\n\n损害。\n\n规格如有更改，恕不另行通知。\n\n版权所有：©2023，由BerryBak Sdn提供。\n\nBhd .\n\n保留所有权利。\n\n欲了解更多信息，请联系我们的信息\n\n\n@berrybak。\n\ncom\n\n设计\n\n\nBLV-D1\n\n\n音频放大器\n\n\n用户手册\n\n\n启动ACP工作台\n\n\n图1：将BLV-D1连接到个人电脑或笔记本电脑上，并确保\n\n\n您已经安装了ACP工作台应用程序。\n\nWhenACPWorkbench.\n\nexe启动后，它将通过连接的UART（串\n\n\n行）或USB（HID）端口自动查找并连接BLV-D1音频放大器。\n\n在连接后，ACPWork-bench.\n\nexe将读取芯片中的所有配置，并\n\n\n相应地更新其GUI控件。\n\n请确保BLV-D1音频放大器已连接到PC\n\n\n上并已启动。\n\n每当blv-D1 音频放大器被关闭时，\n\n\nACPWorkbench将总是尝试撕裂连接它。\n\n1\n\n\n2\n",
+      "metadata": {
+        "source_title": "功放说明书.pdf",
+        "source_path": "tests/data/功放说明书.pdf",
+        "file_type": "pdf",
+        "content_type": "text",
+        "page": null,
+        "section": null
+      }
+    },
+    {
+      "content": "lv-D1 音频放大器被关闭时，\n\n\nACPWorkbench将总是尝试撕裂连接它。\n\n1\n\n\n2\n\n\n图2：音频效果页面。\n\n3\n\n\n图3：针对的效果列表1\n\n\n音乐Pre EQ。\n\n4\n\n\n图4：预设的EQ列表。\n\n5\n\n\n6\n\n\n图5：保存操作。\n\n1.\n\n通过PCUI接口连接编程端口和计算机，使用支持通信的USB\n\n\n电缆，轻松控制BLV-D1。\n\n2.\n\n在下载和启动软件后，您将被定向到“音频模块”页面，其中基\n\n\n本的配置将自动加载。\n\n通常，这些设置将保持不变。\n\n3.\n\n对于定制调整，海军吃“音频效果”，然后选择“效果列表1”来访\n\n\n问一系列功能，如延迟，低音增强，EQ，和更多。\n\n选择你\n\n\n想要的功能，然后主动吃掉它来定制你的听力体验。\n\n4.\n\n要保存您的配置，请点击“下载器”，然后选择“保存配置到\n\n\nFlash”。\n\n此操作可确保存储您的设置以供将来使用。\n\n5.\n\n在弹出窗口中单击“确定”。\n\n此操作确保即使设备关闭，进程也\n\n\n会继续运行。\n\n你在哪里可以买到ACPWorkbench.\n\nex的e\n\n\n？\n\n你可以在下面的链接上下载（ACPWorkb\n\n\nench.\n\nexe）：\n\n\nhttp://files.\n\nsure-electronics.\n\ncom/download/BDM&BRU_PCUI_ACPWorkbench_V2.\n\n24.\n\n2(2).\n\nzip\n",
+      "metadata": {
+        "source_title": "功放说明书.pdf",
+        "source_path": "tests/data/功放说明书.pdf",
+        "file_type": "pdf",
+        "content_type": "text",
+        "page": null,
+        "section": null
+      }
+    },
+    {
+      "content": "ad/BDM&BRU_PCUI_ACPWorkbench_V2.\n\n24.\n\n2(2).\n\nzip\n\n\n你可以在下面的链接上观看PCUI控制教程系列：\n\n\nhttps://www.\n\nyoutube.\n\ncom/watch?\n\nv=GR lUdU670HI\n\n\n规格如有更改，恕不另行通知。\n\n版权所有：©2023，由BerryBak Sdn提供。\n\nBhd .\n\n保留所有权利。\n\n欲了解更多信息，请联系我们的信息\n\n\n@berrybak。\n\ncom\n\n设计\n\n\nBLV-D1\n\n\n音频放大器\n\n\n用户手册\n\n\n电气和音频技术规范\n\n\n电气和音频性能规格是典型的+25℃，经过21V直流处理，恕不另行通知。\n\n参数\n\n\n条件\n\n\n最小。\n\n类型。\n\n最高的\n\n\n单位\n\n\n安培增益\n\n\n线，电位器设置在最小和最大位置\n\n\nL&R\n\n\n24.\n\n4\n\n\n25.\n\n0\n\n\n25.\n\n8\n\n\ndB\n\n\nSNR\n\n\n线条输入，2 x 50W@ 4Ω，A加权\n\n\nL&R\n\n\n96.\n\n2\n\n\n97.\n\n3\n\n\n98.\n\n0\n\n\ndB\n\n\nTHD+ N\n\n\n线入，1W@4Ω，1 kHz\n\n\nL&R\n\n\n0.\n\n08\n\n\n0.\n\n10\n\n\n0.\n\n11\n\n\n%\n\n\n蓝牙，1W@ 4Ω，1 kHz\n\n\nL&R\n\n\n0.\n\n08\n\n\n0.\n\n10\n\n\n0.\n\n11\n\n\n%\n\n\n输出噪声水平\n\n\n线输入，a-加权，输入连接到GND\n\n\nL&R\n\n\n165.\n\n2\n\n\n171.\n\n9\n\n\n175.\n\n0\n\n\nuV\n\n\nBT，A-加权，输入连接到GND\n\n\nL&R\n\n\n168.\n\n7\n\n\n170.\n\n0\n\n\n172.\n\n5\n\n\nuV\n",
+      "metadata": {
+        "source_title": "功放说明书.pdf",
+        "source_path": "tests/data/功放说明书.pdf",
+        "file_type": "pdf",
+        "content_type": "text",
+        "page": null,
+        "section": null
+      }
+    },
+    {
+      "content": "输入连接到GND\n\n\nL&R\n\n\n168.\n\n7\n\n\n170.\n\n0\n\n\n172.\n\n5\n\n\nuV\n\n\n输入阻抗\n\n\n行@4Ω，1 kHz\n\n\n9.\n\n5\n\n\n10.\n\n0\n\n\n10.\n\n5\n\n\nkΩ\n\n\n直流偏移\n\n\n-\n\n\n9.\n\n0\n\n\n10.\n\n0\n\n\n11.\n\n0\n\n\nmV\n\n\n参数\n\n\n条件\n\n\n最小。\n\n类型。\n\n最高的\n\n\n单位\n\n\n最小负载阻抗\n\n\n-\n\n\n-\n\n\n4\n\n\n-\n\n\nΩ\n\n\n标称功率要求\n\n\n@1kHz, THD + N1-%\n\n\n-\n\n\n2x50W\n\n\n-\n\n\nW\n\n\n工作电压\n\n\n@1kHz, 8Ω\n\n\n12.\n\n0\n\n\n21.\n\n0\n\n\n24.\n\n0\n\n\nV\n\n\n空闲功率\n\n\n24V时检测到信号\n\n\n-\n\n\n2.\n\n4\n\n\n-\n\n\nW\n\n\n开关频率\n\n\nSD浮动\n\n\n-\n\n\n400.\n\n0\n\n\n-\n\n\nkHz\n\n\nBLV-D1 AudioParameters &Performance Gra ph\n\n\nBLV-D1测试条件包括以下条件：频率响应，VDD设置为21V，负载为2x5W，负载为4欧姆；\n\n对于噪声水平测试，VDD为21V，电压为0W，负\n\n\n载为4欧姆，利用A加权滤波器，输入短波为GND；\n\n对于THD+N比率评估，VDD电压为21V，负载为2x1W，负载为4欧姆。\n\n对于所有的测试，\n\n\n都使用模拟输入源进行测量。\n\n规格如有更改，恕不另行通知。\n\n版权所有：©2023，由B erryBak Sdn提供。\n\n必和必拓。\n\n保留所有权利。\n\n欲了解更多信息，请联系\n\n\nusinfo@berrybak.\n\ncom\n\n设计\n",
+      "metadata": {
+        "source_title": "功放说明书.pdf",
+        "source_path": "tests/data/功放说明书.pdf",
+        "file_type": "pdf",
+        "content_type": "text",
+        "page": null,
+        "section": null
+      }
+    },
+    {
+      "content": "\n保留所有权利。\n\n欲了解更多信息，请联系\n\n\nusinfo@berrybak.\n\ncom\n\n设计\n\n\nBLV-D1\n\n\n音频放大器\n\n\n用户手册\n\n\n保修条款和产品使用限制\n\n\nBerryBak产品从购买之日起提供一年的保修期。\n\n客户负责将货物退\n\n\n还给卖方的费用，通过购买，您同意此条件。\n\n由于DIY产品的性质\n\n\n，可见的损坏或使用在螺钉孔或镀锡of焊料垫直接使保修无效。\n\n由\n\n\n于使用不正确的电源而造成的损坏，如超过规定的电压范围或反向\n\n\n极性，不属于保修范围。\n\n所有的BerryBak产品在出厂前都要经过彻\n\n\n底的测试。\n\n我们不接受批量购买后的散装货。\n\n如果您不确定您需要\n\n\n的数量，请购买适当的数量，如您所需要的。\n\n所有BerryBak产品仅\n\n\n供DIY使用，不支持任何工业应用。\n\n规定的工作温度范围为0-40°C\n\n\n。\n\n请避免在工业或任何特殊的工业环境中使用莓式烘焙产品。\n\n如果\n\n\n您需要针对工业运行温度范围的产品测试，我们建议寻找明确标记\n\n\n的产品以支持运行范围的产品，如-20-65°C或-40-85°C。\n\n批量购买权\n\n\n批量采购的所有权利仅限于在一次性交易中购买的数量，且与年度或累计\n\n\n采购数量无关。\n\n由于成本考虑，任何定制和定价都是根据在单个交易中购\n\n\n买的数量来确定的。\n\n折扣购买只能通过亚马逊的电子商务平台进行，而且\n\n\n没有其他的购买渠道。",
+      "metadata": {
+        "source_title": "功放说明书.pdf",
+        "source_path": "tests/data/功放说明书.pdf",
+        "file_type": "pdf",
+        "content_type": "text",
+        "page": null,
+        "section": null
+      }
+    },
+    {
+      "content": "\n\n\n买的数量来确定的。\n\n折扣购买只能通过亚马逊的电子商务平台进行，而且\n\n\n没有其他的购买渠道。\n\n平台上列出的价格是零售价格，可以随时波动。\n\n我们不提供对现有产品的任何形式的修改或数量低于100件的附加价格折扣\n\n\n。\n\n对于满足最少100件数量的购买，您可以发送电子邮件定制丝网印刷，并将\n\n\n您的品牌标识放在面板或外壳上。\n\nBerryBak不提供任何其他形式的定制服\n\n\n务，如更改面板尺寸或添加/重新移动端口。\n\n有一个标准的价格表购买100\n\n\n单位或更多，可以从我们的联系电子邮件要求。\n\n你可以以你认为合适的价\n\n\n格出售，但基于10件的散装价格和捆绑价格之间没有显著的区别。\n\n发行单位：\n\n\nstore.\n\nsure-electronics.\n\ncom\n\n\n设计人：\n\n\n贝里巴克”\n\n\n58-7-2威斯玛财富高度，\n\n\n贾兰营地，10250地理镇，槟城，Malaysia.\n\n+6017 344\n\n\n0643 linfo@berrybak.\n\ncom\n\n\n（请使用电话或电子邮件代替WhatsApp或iMessage。\n\n）\n\n\n要查看我们的产品和购买我们的产品，请通过搜索产品名称（例如：BLV-\n\n\nD1）来查询该网站。\n\n关于手册\n\n\n本手册显示了一般的安装指南。\n\n但是，请注意，为BLV-D1音\n\n\n频放大器正确安装有线电缆需要合格的经验。\n\n如果您不知道\n",
+      "metadata": {
+        "source_title": "功放说明书.pdf",
+        "source_path": "tests/data/功放说明书.pdf",
+        "file_type": "pdf",
+        "content_type": "text",
+        "page": null,
+        "section": null
+      }
+    },
+    {
+      "content": "。\n\n但是，请注意，为BLV-D1音\n\n\n频放大器正确安装有线电缆需要合格的经验。\n\n如果您不知道\n\n\n任何知识和工具来成功地完成这个安装，我们强烈建议向授\n\n\n权的bak经销商咨询您的安装选项。\n\n保留所有的销售说明和\n\n\n销售记录，以供参考。\n\n规格如有更改，恕不另行通知。\n\n版权所有：©2023，由BerryBak Sdn提供。\n\nBhd .\n\n保留所有权利。\n\n欲了解更多信息，请联系我们的信息\n\n\n@berrybak。\n\ncom\n\n\n苏瑞电子有限公司\n\n\n专业的工业音频Soluti在供应商上\n\n\n中国南京石家庄区仙林魏地路9号6\n\n\n楼3层。\n\n+86(25)8526-0046 | info@sure-electronics.\n\ncom\n\n\n如欲浏览我们的产品及购买资料，\n\n\n请访问我们的网站：\n\n\nstore sure electronics com\n\n计\n\n\nBLV-D1\n\n\n音频放大器\n\n\n用户手册\n\n\n该设备符合面心立方规则的第15部分。\n\n操作符合以下两种条件：(1)该设备可能不会造成有害干扰，(2)该设备\n\n\n必须接受接收到的任何干扰，包括可能导致预期操作的干扰。\n\n任何未经合规责任部门明确批准的变更或修改，都可能使用户操作设备的权力无效。\n\n该设备已被测试，并被发现符合B类数字设备的限制\n\n\nFCC规则的15条。\n\n这些隔离设施的设计是为了在住宅设施中提供防止有害干扰的合理保护。",
+      "metadata": {
+        "source_title": "功放说明书.pdf",
+        "source_path": "tests/data/功放说明书.pdf",
+        "file_type": "pdf",
+        "content_type": "text",
+        "page": null,
+        "section": null
+      }
+    },
+    {
+      "content": "的限制\n\n\nFCC规则的15条。\n\n这些隔离设施的设计是为了在住宅设施中提供防止有害干扰的合理保护。\n\n该设备产生、使用\n\n\n和可以产生无线电通信频率能量，如果不按照说明安装和使用，可能会对无线电通信造成有害干扰。\n\n但是，并不能保证在特定的安装中不会发生干扰。\n\n如果该设备确实造成了有害的干扰无线电台或电视接收，这\n\n\n可以通过关闭和打开设备来确定，则鼓励用户尝试通过以下一个或多个措施来纠正干扰：\n\n\n——重新定位或重新定位接收天线。\n\n——增加设备与接收器之间的间距。\n\n--将设备连接到与接收器连接器不同的插座上的出口。\n\n--请咨询经销商或高级无线电/电视技术员寻求帮助。\n\n为了符合FCC的射频暴露指南，该设备的安装和操作应在散热器和您的身体之间至少20厘米的距离：只使用提\n\n\n供的天线。\n\n规格如有更改，恕不另行通知。\n\n版权所有：©2023，由BerryBak Sdn提供。\n\nBhd .\n\n保留所有权利。\n\n欲了解更多信息，请联系我们的信息\n\n\n@berrybak。\n\ncom",
+      "metadata": {
+        "source_title": "功放说明书.pdf",
+        "source_path": "tests/data/功放说明书.pdf",
+        "file_type": "pdf",
+        "content_type": "text",
+        "page": null,
+        "section": null
+      }
+    }
+  ]
+}

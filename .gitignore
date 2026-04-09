@@ -47,6 +47,8 @@ temp/
 
 # Runtime data (DO NOT commit)
 data/
+# But keep test data (golden data, eval QA, eval results)
+!tests/data/
 
 # Pytest / coverage raw artifacts (keep test-reports/ which has HTML)
 .coverage

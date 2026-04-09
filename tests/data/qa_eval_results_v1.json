@@ -1,0 +1,161 @@
+{
+  "config": {
+    "llm_model": "openai/deepseek-v3-250324",
+    "embedding": "GteQwen2-1.5B-instruct",
+    "retriever": "HybridRetriever(Vector+BM25+RRF)",
+    "reranker": "BGEReranker(bge-reranker-v2-m3)",
+    "chunker": "SemanticChunker(500chars, 50overlap)",
+    "pdf": "tests/data/功放说明书.pdf"
+  },
+  "summary": {
+    "total_questions": 10,
+    "questions_with_keywords": 9,
+    "hits": 3,
+    "recall_rate": "3/9 (33%)",
+    "avg_confidence": 0.223,
+    "avg_latency": 50.59
+  },
+  "details": [
+    {
+      "id": "amp-001",
+      "question": "BLV-D1 的输出功率是多少？",
+      "category": "specs",
+      "expected_keywords": [
+        "50W",
+        "输出"
+      ],
+      "hit": true,
+      "confidence": 0.769,
+      "uncertain": false,
+      "source_count": 5,
+      "answer_preview": "根据参考资料，BLV-D1的输出功率为：\n- 总功率：2 x 50W（双声道）\n- 标称功率要求：在1kHz频率、THD+N为1%时，每声道50W（资料[4]）\n- 最小负载阻抗：4Ω（资料[4]）\n\n该设备采用TPA3116放大器芯片实现这一功率输出（资料[3]）。",
+      "elapsed_seconds": 67.85
+    },
+    {
+      "id": "amp-002",
+      "question": "如何连接蓝牙？",
+      "category": "usage",
+      "expected_keywords": [
+        "蓝牙"
+      ],
+      "hit": true,
+      "confidence": 0.0,
+      "uncertain": false,
+      "source_count": 0,
+      "answer_preview": "您是想了解如何连接蓝牙设备到我们的产品吗？",
+      "elapsed_seconds": 1.27
+    },
+    {
+      "id": "amp-003",
+      "question": "支持什么电压供电？",
+      "category": "specs",
+      "expected_keywords": [
+        "12",
+        "24"
+      ],
+      "hit": false,
+      "confidence": 0.317,
+      "uncertain": true,
+      "source_count": 0,
+      "answer_preview": "抱歉，我对这个问题没有足够把握，建议联系人工客服。",
+      "elapsed_seconds": 59.01
+    },
+    {
+      "id": "amp-004",
+      "question": "怎么切换到有线输入？",
+      "category": "usage",
+      "expected_keywords": [
+        "线"
+      ],
+      "hit": false,
+      "confidence": 0.195,
+      "uncertain": true,
+      "source_count": 0,
+      "answer_preview": "抱歉，我对这个问题没有足够把握，建议联系人工客服。",
+      "elapsed_seconds": 56.95
+    },
+    {
+      "id": "amp-005",
+      "question": "这个放大器用的什么芯片？",
+      "category": "specs",
+      "expected_keywords": [
+        "TPA3116"
+      ],
+      "hit": false,
+      "confidence": 0.26,
+      "uncertain": true,
+      "source_count": 0,
+      "answer_preview": "抱歉，我对这个问题没有足够把握，建议联系人工客服。",
+      "elapsed_seconds": 54.5
+    },
+    {
+      "id": "amp-006",
+      "question": "蓝牙版本是多少？",
+      "category": "specs",
+      "expected_keywords": [
+        "5.0",
+        "蓝牙"
+      ],
+      "hit": false,
+      "confidence": 0.155,
+      "uncertain": true,
+      "source_count": 0,
+      "answer_preview": "抱歉，我对这个问题没有足够把握，建议联系人工客服。",
+      "elapsed_seconds": 57.81
+    },
+    {
+      "id": "amp-007",
+      "question": "扬声器怎么接线？",
+      "category": "usage",
+      "expected_keywords": [
+        "扬声器"
+      ],
+      "hit": false,
+      "confidence": 0.215,
+      "uncertain": true,
+      "source_count": 0,
+      "answer_preview": "抱歉，我对这个问题没有足够把握，建议联系人工客服。",
+      "elapsed_seconds": 60.63
+    },
+    {
+      "id": "amp-008",
+      "question": "产品有什么认证？",
+      "category": "compliance",
+      "expected_keywords": [
+        "FCC"
+      ],
+      "hit": false,
+      "confidence": 0.159,
+      "uncertain": true,
+      "source_count": 0,
+      "answer_preview": "抱歉，我对这个问题没有足够把握，建议联系人工客服。",
+      "elapsed_seconds": 74.89
+    },
+    {
+      "id": "amp-009",
+      "question": "电源开关在哪里？",
+      "category": "usage",
+      "expected_keywords": [
+        "电源"
+      ],
+      "hit": true,
+      "confidence": 0.0,
+      "uncertain": false,
+      "source_count": 0,
+      "answer_preview": "您是指某个产品的电源开关位置吗？",
+      "elapsed_seconds": 1.21
+    },
+    {
+      "id": "amp-010",
+      "question": "如何恢复出厂设置？",
+      "category": "usage",
+      "expected_keywords": [],
+      "hit": null,
+      "confidence": 0.159,
+      "uncertain": true,
+      "source_count": 0,
+      "answer_preview": "抱歉，我对这个问题没有足够把握，建议联系人工客服。",
+      "elapsed_seconds": 71.8
+    }
+  ]
+}

@@ -48,10 +48,16 @@ async def ingest_file(
     from core.knowledge.chunker import SemanticChunker
     from core.knowledge.parsers.default import DefaultParser
     from core.knowledge.parsers.faq import FAQParser
+    from core.knowledge.parsers.mineru import MinerUParser
     from core.knowledge.parsers.registry import ParserRegistry
 
     registry = ParserRegistry()
     registry.register(FAQParser())
+
+    # MinerU: high-quality PDF parsing (when installed)
+    if MinerUParser.is_available():
+        registry.register(MinerUParser(chunker=SemanticChunker()))
+
     registry.register(DefaultParser(chunker=SemanticChunker()))
 
     ext = file_path.suffix.lstrip(".").lower()
@@ -70,7 +76,17 @@ async def ingest_file(
         "file_type": ext,
     }
 
-    chunks = parser.parse(str(file_path), doc_id=doc_id, metadata=metadata)
+    try:
+        chunks = parser.parse(str(file_path), doc_id=doc_id, metadata=metadata)
+    except Exception as e:
+        if type(parser).__name__ == "MinerUParser":
+            print(f"  [降级] MinerU 失败，使用 DefaultParser: {e}")
+            from core.knowledge.parsers.default import DefaultParser
+            from core.knowledge.chunker import SemanticChunker
+            fallback = DefaultParser(chunker=SemanticChunker())
+            chunks = fallback.parse(str(file_path), doc_id=doc_id, metadata=metadata)
+        else:
+            raise
 
     if not chunks:
         print(f"  [空] 未解析出任何 chunk：{file_path.name}")

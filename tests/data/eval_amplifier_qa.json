@@ -1,0 +1,63 @@
+[
+  {
+    "id": "amp-001",
+    "question": "BLV-D1 的输出功率是多少？",
+    "expected_source_keywords": ["50W", "输出"],
+    "category": "specs"
+  },
+  {
+    "id": "amp-002",
+    "question": "如何连接蓝牙？",
+    "expected_source_keywords": ["蓝牙"],
+    "category": "usage"
+  },
+  {
+    "id": "amp-003",
+    "question": "支持什么电压供电？",
+    "expected_source_keywords": ["12", "24"],
+    "category": "specs"
+  },
+  {
+    "id": "amp-004",
+    "question": "怎么切换到有线输入？",
+    "expected_source_keywords": ["线"],
+    "category": "usage"
+  },
+  {
+    "id": "amp-005",
+    "question": "这个放大器用的什么芯片？",
+    "expected_source_keywords": ["TPA3116"],
+    "category": "specs"
+  },
+  {
+    "id": "amp-006",
+    "question": "蓝牙版本是多少？",
+    "expected_source_keywords": ["5.0", "蓝牙"],
+    "category": "specs"
+  },
+  {
+    "id": "amp-007",
+    "question": "扬声器怎么接线？",
+    "expected_source_keywords": ["扬声器"],
+    "category": "usage"
+  },
+  {
+    "id": "amp-008",
+    "question": "产品有什么认证？",
+    "expected_source_keywords": ["FCC"],
+    "category": "compliance"
+  },
+  {
+    "id": "amp-009",
+    "question": "电源开关在哪里？",
+    "expected_source_keywords": ["电源"],
+    "category": "usage"
+  },
+  {
+    "id": "amp-010",
+    "question": "如何恢复出厂设置？",
+    "expected_source_keywords": [],
+    "category": "usage",
+    "note": "文档中可能没有此信息，测试无关查询的处理"
+  }
+]

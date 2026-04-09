@@ -106,6 +106,19 @@ export ANTHROPIC_API_KEY=sk-ant-...
 
 > **完整说明**见 [docs/ingestion-guide.md](./docs/ingestion-guide.md)
 
+**当前解析能力**：
+
+| 内容类型 | 支持情况 |
+|---------|---------|
+| 纯文字（段落文本） | ✅ 正常，按段落 + 中文句终符分块 |
+| FAQ 格式（Q:/A: 或 问：/答：） | ✅ 每对问答一个 chunk，检索精度最高 |
+| 中文分块 | ✅ 字符计数，中文标点句终符切分，overlap 正常 |
+| 表格（PDF/DOCX） | ⚠️ DefaultParser 拉平为文本；MinerU 安装后保留 HTML 结构 |
+| 图片/扫描件 | ⚠️ DefaultParser 不支持；MinerU 安装后支持 OCR + 图片提取 |
+| MinerU 高质量解析 | ✅ 代码就绪，安装 MinerU 后自动启用（需 Docker/Linux，本机 torch 限制） |
+
+多模态升级路线图见 [docs/research/multimodal-document-parsing.md](./docs/research/multimodal-document-parsing.md)。
+
 ### 4. 启动 API 服务
 
 ```bash
@@ -151,143 +164,50 @@ curl -X POST http://localhost:8000/chat \
 
 ## 测试
 
-### 运行测试
+### 测试结构
+
+```
+tests/
+├── core/                 165 用例  单元测试（全 mock，最快）
+├── integration/           78 用例  集成测试（DeterministicEmbedder + NoopReranker）
+├── smoke/                  6 用例  冒烟测试（真实 jieba/BM25）
+├── api/                   19 用例  API 接口测试
+└── data/                           测试数据 + Golden data + QA 评测集
+
+scripts/
+└── eval_production_pipeline.py     E2E 质量评测（真实模型 + 真实 LLM API）
+```
+
+| 层级 | 位置 | Embedder | Reranker | LLM | CI | 用途 |
+|------|------|----------|----------|-----|-----|------|
+| 单元测试 | `tests/core/` | mock | mock | mock | ✅ | 验证每个函数逻辑 |
+| 集成测试 | `tests/integration/` | Deterministic | Noop | mock | ✅ | 验证组件协作、回归 |
+| 冒烟测试 | `tests/smoke/` | 无 | 无 | 无 | ✅ | 真实依赖不崩溃 |
+| E2E 评测 | `scripts/eval_*.py` | **GteQwen2** | **BGEReranker** | **真实 API** | ❌ | 检索质量 |
+
+### 运行命令
 
 ```bash
-# 全量测试（自动生成 HTML 报告 + 覆盖率报告）
-.venv/bin/pytest
-
-# 单元 + 集成测试（不生成报告，快速验证）
+# CI 自动化（每次提交）
 .venv/bin/pytest tests/core/ tests/integration/ -q --no-cov
 
-# 冒烟测试（真实 jieba + BM25 + Chunker，需要真实依赖）
-.venv/bin/pytest tests/smoke/ -v -m smoke --no-cov
+# 全量 + 覆盖率
+.venv/bin/pytest
+
+# E2E 质量评测（手动，需模型 + API key）
+.venv/bin/python scripts/eval_production_pipeline.py
 ```
 
-### 查看 HTML 测试报告
+当前状态：**284 passed，覆盖率 91%**
+
+### 测试报告
 
 ```bash
-open test-reports/report.html       # 测试通过/失败详情
-open test-reports/coverage/index.html  # 代码覆盖率（哪些行被执行过）
+open test-reports/report.html          # 用例 pass/fail 详情
+open test-reports/coverage/index.html  # 覆盖率（点击行号可溯源到测试）
 ```
 
-当前状态：**179 passed，覆盖率 93%**（已知缺口见 [test-validation-plan.md §Phase1现状](./test-validation-plan.md#phase-1-测试现状与已知缺口2026-04-05)）
-
-> **⚠️ 关于 Reranker**：单元/集成测试默认使用 `NoopReranker`（直通，不加载模型），通过环境变量 `USE_NOOP_RERANKER=true` 控制。**生产部署和检索质量评估必须使用 `BGEReranker`**（需本地缓存 `bge-reranker-v2-m3`，~2.1GB）。参见「检索质量实验」一节。
-
----
-
-## 如何阅读测试报告
-
-### report.html — 测试用例报告
-
-打开后看到三列：
-
-| 列 | 含义 |
-|----|------|
-| **Test** | 测试用例名，格式 `文件::类::方法` |
-| **Result** | `Passed` / `Failed` / `Error` |
-| **Duration** | 执行时长（ms） |
-
-**如何找到关键测试**：
-
-```
-tests/core/test_pipeline.py         ← RAGPipeline 编排逻辑（最核心）
-tests/integration/test_pipeline_flow.py  ← 端到端集成流程
-tests/core/test_confidence.py       ← 置信度三路信号
-tests/core/test_intent.py           ← 意图识别
-tests/core/test_hybrid_retriever.py ← RRF 混合检索
-```
-
-点击任意失败测试 → 展开看 `AssertionError` 详情，精确定位哪行代码出问题。
-
-### coverage/index.html — 覆盖率报告（含测试溯源）
-
-> 覆盖率数字（91%）只说明"代码被执行过"，不等于"逻辑被验证过"。
-
-**如何真正判断核心逻辑是否被测试覆盖**：
-
-打开 `coverage/index.html` → 点击 `core/rag/pipeline.py` → 查看每行颜色：
-
-- **绿色** — 该行被测试执行过。**点击该行**可展开看是哪些测试覆盖了它。
-- **红色** — 该行从未执行（测试盲区）
-- **黄色** — 分支只走了一半（如 `if` 只测了 True，没测 False）
-
-**测试溯源（核心功能）**：点击任意绿色行右侧的展开按钮，弹出覆盖该行的测试列表：
-
-```
-core/rag/intent.py 第 47 行  ← 点击展开
-  ✓ test_intent.py::test_in_scope_classification
-  ✓ test_intent.py::test_ambiguous_returns_clarification_question
-  ✓ test_pipeline_flow.py::test_out_of_scope_triggers_fallback
-  ... 共 15 个测试
-```
-
-这样可以回答："IntentClassifier 的 classify() 方法被哪些测试覆盖了？" 直接在 HTML 里点击对应行查看，零额外操作。
-
-**核心逻辑对应的测试位置**：
-
-| 要验证的逻辑 | 看这个文件 | 关键测试方法 |
-|------------|-----------|------------|
-| `out_of_scope` 走 fallback，不调用 LLM | `test_pipeline_flow.py` | `test_out_of_scope_triggers_fallback` |
-| 低置信度走 fallback | `test_pipeline_flow.py` | `test_low_confidence_triggers_fallback` |
-| medium 置信度加"仅供参考"前缀 | `test_generator.py` | `test_generate_medium_confidence_adds_disclaimer` |
-| ambiguous 意图返回澄清问题 | `test_pipeline_flow.py` | `test_ambiguous_returns_clarification` |
-| RRF 融合排序正确 | `test_hybrid_retriever.py` | `test_rrf_score_combines_both_sources` |
-| 置信度三路信号权重 | `test_confidence.py` | `test_high_confidence_...` / `test_low_confidence_...` |
-| trace_id 每次唯一 | `test_pipeline_flow.py` | `test_trace_id_present_in_result` |
-
-**实际操作**：如果想验证"低置信度触发 fallback"这条核心逻辑确实被覆盖：
-
-```bash
-# 1. 运行单个测试，确认它通过
-.venv/bin/pytest tests/integration/test_pipeline_flow.py::test_low_confidence_triggers_fallback -v
-
-# 2. 在覆盖率报告里查看 pipeline.py 第 121-131 行是否绿色
-#    （那是 if tier == "low": return fallback 的代码）
-open test-reports/coverage/index.html
-```
-
-**覆盖率 91% 意味着什么**：
-
-```
-被覆盖的内容：
-✓ RAGPipeline 所有分支（in_scope/out_of_scope/ambiguous/low_confidence/medium）
-✓ HybridRetriever RRF 算法
-✓ SignalFusionConfidenceEvaluator 三路信号计算
-✓ LLMGenerator 流式 + 非流式
-✓ StructuredLogTracer ContextVar 并发安全
-✓ 数据库 CRUD 操作
-
-未覆盖的 9%：
-✗ BGEReranker（需要下载真实模型，smoke 测试不运行）
-✗ GteQwen2Embedder（同上）
-✗ ChromaDB 错误路径（空集合边界条件）
-```
-
----
-
-## 检索质量实验
-
-```bash
-# 运行 BGEReranker × SynonymAugmentor 2×2 对比实验（音响客服场景）
-# 需要：gte-Qwen2-1.5B（~3.2GB）+ bge-reranker-v2-m3（~2.1GB）均已本地缓存
-.venv/bin/python scripts/test_synonym_retrieval.py
-```
-
-输出 4 种配置的 Top-1 命中率对比表：
-
-| 配置 | 说明 |
-|------|------|
-| A：基线 | NoopReranker（直通），知识库无同义词扩展 |
-| B：BGEReranker | 开启精排（cross-encoder），替代 NoopReranker |
-| C：SynonymAug | 知识库写入时追加同义词标注，NoopReranker |
-| D：全部开启 | BGEReranker + SynonymAugmentor 同时启用 |
-
-**NoopReranker vs BGEReranker**：
-- `NoopReranker`：不加载任何模型，直接截断候选列表。用于本地开发/CI 测试，避免下载 2.1GB 模型。
-- `BGEReranker`：生产级精排，用 cross-encoder 逐对打分，召回率和排名质量显著提升。
-- 切换：`pipeline_builder.py` 的 `use_noop_reranker` 参数，或启动时 `USE_NOOP_RERANKER=false`。
+> 详细测试规范见 [CLAUDE.md](./CLAUDE.md) "测试规范" 章节，E2E 评测结果见 `tests/data/qa_eval_results_v*.json`
 
 ---
 
@@ -302,8 +222,9 @@ open test-reports/coverage/index.html
 
 ## 项目状态
 
-- **v0.1.0**（2026-04）Phase 1：RAG 核心链路 + 基础组件，160 tests，覆盖率 91%
-- **v0.2.0**（2026-04）Week 2：完整 API 层（/chat SSE + 知识库管理 + 会话历史 + 配置），179 tests，覆盖率 93%
+- **v0.1.0**（2026-04）Phase 1：RAG 核心链路 + 基础组件
+- **v0.2.0**（2026-04）Week 2：完整 API 层（/chat SSE + 知识库管理 + 会话历史 + 配置）
+- **v0.3.0-dev**（2026-04）中文分块修复 + MinerU Parser + 回归测试体系，284 tests
 
 完整版本记录见 [CHANGELOG.md](./CHANGELOG.md)
 

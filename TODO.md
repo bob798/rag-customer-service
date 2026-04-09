@@ -102,6 +102,38 @@
 
 ---
 
+## 文档解析改进（分阶段）
+
+> 升级方案见 `docs/research/multimodal-document-parsing.md`
+
+### 阶段 0：纯文本解析修复 ✅ 已完成
+
+- [x] **修复中文分块**：`SemanticChunker` 改为字符计数 `len(text)`，默认 chunk_size=500, overlap=50
+- [x] **修复中文 overlap**：`_add_overlap` 改为字符切片 `chunks[i-1][-overlap:]`
+- [x] **中文句终符切分**：新增 `_split_long_paragraph()`，按 `。！？；` 切分超长段落
+- [x] **Metadata 统一**：DefaultParser/FAQParser 输出统一包含 content_type/page/section
+- [x] **MinerU Parser**：新建 `core/knowledge/parsers/mineru.py`，content_list 多模态分流
+- [x] **回归测试**：284 用例全通过（含 68 个 PDF 解析专项测试）
+- [ ] **DOCX 表格提取**：`DefaultParser._extract_docx` 补充 `table.rows` 遍历
+- [ ] **FAQParser 格式扩展**：支持编号式 `1. Q: ...` 和英文 `Question:/Answer:` 格式
+
+### 阶段 1：MinerU 部署（需 Docker，本机 torch 2.2.2 不支持）
+
+- [ ] Docker 容器中安装 MinerU（`uv pip install "mineru[pipeline]"`）
+- [ ] 验证 MinerU CLI 解析功放说明书.pdf → content_list.json
+- [ ] 将真实 content_list.json 加入 tests/data/ 作为 smoke test 输入
+- [ ] 表格 HTML 结构保留、图片提取、section path 端到端验证
+
+### 阶段 2：图片 OCR + Vision LLM 增强
+
+- [ ] MinerU 内置 PaddleOCR 处理图片文字
+- [ ] Vision LLM (claude-haiku-4-5) 描述无文字图片（成本可控）
+- [ ] 图文关系标注：识别 "如图X所示" 等引用
+
+### 阶段 3：Contextual Retrieval
+
+- [ ] 导入时用 LLM 给每个 chunk 加上下文前缀（Anthropic 方案，-67% 检索失败率）
+
 ## 待评估（想法池）
 
 - [ ] 支持 PDF/DOCX 完整文档上传（当前有 DefaultParser 但未充分测试）

@@ -55,7 +55,10 @@ class ChromaVectorStore:
             ids=[c["chunk_id"] for c in chunks],
             embeddings=embeddings,
             documents=texts,
-            metadatas=[{"doc_id": c["doc_id"], **c.get("metadata", {})} for c in chunks],
+            metadatas=[
+                {k: v for k, v in {"doc_id": c["doc_id"], **c.get("metadata", {})}.items() if v is not None}
+                for c in chunks
+            ],
         )
         logger.info(f"Added {len(chunks)} chunks to vector store")
 

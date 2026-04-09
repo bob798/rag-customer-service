@@ -1,0 +1,14 @@
+output_guardrails:
+  forbidden_patterns:
+    - pattern: "退款|退钱|赔偿"
+      action: "fallback"
+      message: "关于退款事宜，请联系人工客服为您处理。"
+    - pattern: "承诺|保证|一定能"
+      action: "add_disclaimer"
+      message: "以上为 AI 建议，不构成正式承诺。"
+
+  auto_disclaimer_triggers:
+    - pattern: "价格|报价|费用|多少钱"
+      message: "以上价格信息仅供参考，以官方报价为准。"
+    - pattern: "地址|寄送|邮寄|发货"
+      message: "请以订单实际信息为准。"

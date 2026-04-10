@@ -8,6 +8,18 @@
 | 2 | [02-multimodal-pipeline-design.md](./02-multimodal-pipeline-design.md) | **怎么组合？** 五层 Pipeline 设计（解析→分类→模态处理→关系建模→Chunk），开源替代方案 | 2026-04-09 |
 | 3 | [03-chinese-chunking-strategy.md](./03-chinese-chunking-strategy.md) | **怎么切块？** 中文分块策略、Contextual Retrieval、CRUD-RAG benchmark | 2026-04-08 |
 
+## RAG 检索质量
+
+| 文档 | 内容 | 日期 |
+|------|------|------|
+| [procedural-qa-in-rag.md](./procedural-qa-in-rag.md) | **流程类问答**：学术定义（ProPara/TechQA/Lost in the Middle）、开源方案（LlamaIndex/LangChain/RAGFlow）、四层解决路径 | 2026-04-10 |
+
+## 架构设计
+
+| 文档 | 内容 | 日期 |
+|------|------|------|
+| [multimodal-output-design.md](./multimodal-output-design.md) | **多模态输出**：ContentBlock 协议、图片存储三阶段（本地→Docker→S3）、全栈改动清单 | 2026-04-10 |
+
 ## 测试标准
 
 | 文档 | 内容 | 日期 |

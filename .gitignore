@@ -45,6 +45,11 @@ temp/
 # Git worktrees
 .worktrees/
 
+# Local experiment data (not for GitHub)
+docs/research/experiments/
+scripts/test_audio_retrieval.py
+scripts/test_ecommerce_retrieval.py
+
 # Runtime data (DO NOT commit)
 data/
 # But keep test data (golden data, eval QA, eval results)

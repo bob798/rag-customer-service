@@ -1,5 +1,7 @@
 # 中文文本分块最佳实践
 
+> 系列文档 3/3 | [① 工具选型](./01-parsing-tools-selection.md) → [② 多模态 Pipeline 设计](./02-multimodal-pipeline-design.md) ← 本文
+>
 > 调研日期：2026-04-08 | 定位：通用技术选型参考
 > 信息来源：NVIDIA RAG Benchmark 2024、Anthropic Contextual Retrieval、CRUD-RAG ACM TOIS 2024、Chroma 2024 评测
 

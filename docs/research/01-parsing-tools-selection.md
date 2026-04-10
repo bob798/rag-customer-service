@@ -1,5 +1,7 @@
 # 中文文档解析工具选型
 
+> 系列文档 1/3 | [② 多模态 Pipeline 设计](./02-multimodal-pipeline-design.md) → [③ 中文分块策略](./03-chinese-chunking-strategy.md)
+>
 > 调研日期：2026-04-08 | 定位：通用技术选型参考
 > 信息来源：OmniDocBench CVPR 2025、PDF Parsing Comparative Study (arxiv 2410.09871)、各工具官方文档
 
@@ -141,7 +143,72 @@
 
 ---
 
-## 六、关键参考资料
+## 六、PP-StructureV3 vs MinerU 深度对比
+
+> 更新日期：2026-04-10
+
+### 6.1 基准评测对比
+
+| 指标 | PP-StructureV3 (PaddleOCR 3.0) | MinerU 2.5 |
+|------|-------------------------------|------------|
+| OmniDocBench 综合 | **92.86（第 1）** | 90.67（第 3） |
+| 表格 TEDS | **93.52** | 未公开 |
+| 布局检测 mAP | 未公开 | **97.5** |
+| 文本 Edit Distance | **0.145** | 0.166 |
+| 公式 CDM | **91.43** | 未公开 |
+| 推理速度 | **快 14.2%**（vs MinerU 2.5） | 基准 |
+
+### 6.2 工程特性对比
+
+| 维度 | PP-StructureV3 | MinerU |
+|------|---------------|--------|
+| **框架** | PaddlePaddle | PyTorch |
+| **torch 依赖** | ❌ **不需要** | ✅ 需要 ≥ 2.2.2 |
+| **macOS x86_64** | ✅ **可安装** | ❌ torch 2.2.2 上限，pipeline 依赖编译失败 |
+| **安装** | `pip install paddleocr` | `uv pip install "mineru[pipeline]"` |
+| **CPU 推理** | ✅ ~3.7s/页 | ✅（pipeline 后端） |
+| **GPU 推理** | ✅ CUDA 11.8+ | ✅ CUDA |
+| **输出格式** | Markdown | Markdown + **content_list.json**（结构化 JSON） |
+| **内容类型** | text/table/formula/chart/seal/阅读顺序 | text/table/image/formula/code/list |
+| **Python API** | `paddleocr` 一行调用 | CLI wrapper / API server |
+| **Docker** | 有官方镜像 | 有官方镜像 |
+| **社区** | PaddlePaddle 生态（百度） | OpenDataLab 生态 |
+
+### 6.3 输出格式差异（关键）
+
+**MinerU** 输出 `content_list.json`，每个元素有明确的 type/page_idx/bbox/caption 字段，下游解析简单：
+```json
+[{"type": "table", "table_body": "<table>...</table>", "table_caption": ["表1"], "page_idx": 2}]
+```
+
+**PP-StructureV3** 输出 Markdown 文件，需要自己解析标题/表格/图片：
+```markdown
+## 技术规格
+
+| 参数 | 值 |
+|------|------|
+| 输出功率 | 2x50W |
+
+![图1](images/fig1.jpg)
+```
+
+MinerU 的 content_list 结构化程度更高，省去了 Markdown 解析的工作。但 Markdown 解析也不复杂（正则匹配 `<table>`/`![]()`/`$$`/`# ` 即可）。
+
+### 6.4 选型建议
+
+| 场景 | 推荐 | 理由 |
+|------|------|------|
+| **本机开发/测试（Intel Mac）** | **PP-StructureV3** | 唯一能装上的方案 |
+| **Docker / Linux 生产** | 均可，MinerU 结构化输出更好 | content_list.json 省解析 |
+| **中文场景优先** | **PP-StructureV3** | 百度出品，中文原生优化 |
+| **需要 content_list 结构化** | MinerU | JSON 字段明确 |
+| **安装简单性** | **PP-StructureV3** | `pip install paddleocr` vs 复杂依赖链 |
+
+**本项目推荐**：优先 PP-StructureV3（本机可用 + 评测分更高），MinerU 作为 Docker 环境备选。代码层面两者共存，通过 ParserRegistry 自动选择。
+
+---
+
+## 七、关键参考资料
 
 | 资料 | 价值 |
 |------|------|

@@ -49,13 +49,16 @@ async def ingest_file(
     from core.knowledge.parsers.default import DefaultParser
     from core.knowledge.parsers.faq import FAQParser
     from core.knowledge.parsers.mineru import MinerUParser
+    from core.knowledge.parsers.paddleocr import PaddleOCRParser
     from core.knowledge.parsers.registry import ParserRegistry
 
     registry = ParserRegistry()
     registry.register(FAQParser())
 
-    # MinerU: high-quality PDF parsing (when installed)
-    if MinerUParser.is_available():
+    # PDF parsers: PaddleOCR > MinerU > Default (first available wins)
+    if PaddleOCRParser.is_available():
+        registry.register(PaddleOCRParser(chunker=SemanticChunker()))
+    elif MinerUParser.is_available():
         registry.register(MinerUParser(chunker=SemanticChunker()))
 
     registry.register(DefaultParser(chunker=SemanticChunker()))

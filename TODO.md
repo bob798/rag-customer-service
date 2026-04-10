@@ -6,42 +6,51 @@
 
 ## 当前版本状态
 
-| 版本 | 里程碑 | 测试 | 覆盖率 | 分支 |
-|------|--------|------|--------|------|
-| v0.1.0 | Phase 1：RAG 核心链路 | 160 passed | 91% | main |
-| v0.2.0 | Week 2：完整 API 层 | 179 passed | 93% | feat/week2-api-layer (PR #3) |
+| 版本 | 里程碑 | 测试 | 分支 |
+|------|--------|------|------|
+| v0.1.0 | RAG 核心链路 | 160 passed | main |
+| v0.2.0 | 完整 API 层 | 179 passed | main (PR #3 已合并) |
+| v0.3.0-dev | 中文解析改造 + MinerU/PaddleOCR Parser + 回归测试 | 284 passed | main + feat/paddleocr-parser |
 
 ---
 
-## 进行中
+## 🔥 今晚推进（按优先级排序）
 
-### PR #3 合并前待确认
-- [ ] Week 2 API 层 PR review 通过后合并到 main
-- [ ] 合并后打 tag `v0.2.0`
+### P0：让系统能正常回答问题（0.5 天）
 
----
+> E2E 评测 33% 召回率的根因不是解析质量，是阈值和 prompt 太保守
 
-## Week 3 计划
+- [ ] **调 ConfidenceEvaluator 阈值**：当前 rerank_score < 0.3 就判低信心走 fallback，调低阈值或改为 multi-chunk 评估
+  - 文件：`core/rag/confidence.py`
+  - 参考：`docs/research/procedural-qa-in-rag.md` 断点 5
+- [ ] **调 Generator prompt**：当前"只根据参考资料回答"太严，加"尽量基于资料回答，不确定时标注"
+  - 文件：`prompts/generator.yaml`
+- [ ] **top_k 从 5 提到 8**：流程类问题需要更多 chunk 覆盖
+  - 文件：`core/rag/pipeline.py:118`
+- [ ] **重跑 E2E 评测**，目标：召回率 70%+
+  - 命令：`.venv/bin/python scripts/eval/eval_production_pipeline.py`
 
-### 前端：Widget JS（聊天气泡）
-- [ ] 实现可嵌入的聊天气泡组件（`widget/chat.js`）
-  - 展开/收起动画
-  - 消息列表渲染
-  - SSE 流式打字机效果
-  - 发送/回车提交
-- [ ] Widget Token 注入（`data-token` attribute）
-- [ ] 跨域 CORS 配置验证
+### P1：合并代码，清理分支（0.5 小时）
 
-### 容器化：Docker Compose
-- [ ] `Dockerfile`（`python:3.12-slim`，`--platform linux/amd64`）
-- [ ] `docker-compose.yml`（API + ChromaDB volume）
-- [ ] `~/.cache/huggingface` bind mount（避免重复下载模型）
-- [ ] `.env.example` 完善（ADMIN_API_KEY / WIDGET_TOKEN_SECRET / ANTHROPIC_API_KEY）
+- [ ] 合并 `feat/paddleocr-parser` worktree 到 main（311 passed，PaddleOCRParser + .env.example + mermaid 架构图）
+- [ ] 清理 worktree：`git worktree remove ../.worktrees/rag-paddleocr`
+- [ ] 推送 main
 
-### 端到端验证
-- [ ] 完整流程测试：上传 FAQ → 提问 → 查看会话历史
-- [ ] Widget JS + API 联调
-- [ ] `git tag v0.3.0`
+### P2：Windows 跑 PaddleOCR 真实评测
+
+- [ ] Windows 机器 clone + checkout `main`
+- [ ] 运行 `scripts/eval/setup_windows.bat`
+- [ ] 运行 `scripts/eval/eval_paddleocr_parsing.py`
+- [ ] 拷回 `paddleocr_parsing_result.json`，对比 DefaultParser 差异
+
+### P3：流程类 QA 的 prompt 优化（1 小时）
+
+- [ ] Generator prompt 加"操作类问题按步骤输出"
+  - 文件：`prompts/generator.yaml`，新增 `procedural` variant
+- [ ] 检索结果按 `(doc_id, chunk_index)` 排序恢复原文顺序
+  - 文件：`core/rag/generator.py` 的 `_build_context()`
+- [ ] QueryRewriter 切换 `synonym_expansion` variant
+  - 文件：`core/rag/pipeline_builder.py`
 
 ---
 

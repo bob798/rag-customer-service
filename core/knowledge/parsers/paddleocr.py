@@ -30,12 +30,10 @@ class PaddleOCRParser(BaseParser):
     def __init__(
         self,
         chunker: BaseChunker,
-        lang: str = "ch",
-        use_gpu: bool = False,
+        device: str = "cpu",
     ) -> None:
         self.chunker = chunker
-        self.lang = lang
-        self.use_gpu = use_gpu
+        self.device = device
         self._engine = None
 
     def can_handle(self, file_type: str, content_hint: str = "") -> bool:
@@ -54,13 +52,14 @@ class PaddleOCRParser(BaseParser):
     def _get_engine(self):
         """Lazy-load PaddleOCR engine."""
         if self._engine is None:
+            import os
+            os.environ.setdefault("PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK", "True")
             from paddleocr import PaddleOCR
             self._engine = PaddleOCR(
                 use_doc_orientation_classify=False,
                 use_doc_unwarping=False,
                 use_textline_orientation=False,
-                lang=self.lang,
-                use_gpu=self.use_gpu,
+                device=self.device,
             )
         return self._engine
 

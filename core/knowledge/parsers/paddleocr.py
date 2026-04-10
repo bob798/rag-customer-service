@@ -50,34 +50,31 @@ class PaddleOCRParser(BaseParser):
     # ------------------------------------------------------------------
 
     def _get_engine(self):
-        """Lazy-load PaddleOCR engine."""
+        """Lazy-load PP-StructureV3 pipeline via paddlex."""
         if self._engine is None:
             import os
             os.environ.setdefault("PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK", "True")
-            from paddleocr import PaddleOCR
-            self._engine = PaddleOCR(
-                use_doc_orientation_classify=False,
-                use_doc_unwarping=False,
-                use_textline_orientation=False,
-                device=self.device,
-            )
+            from paddlex import create_pipeline
+            # Use mobile config if available, otherwise default
+            mobile_cfg = Path(__file__).parent.parent.parent.parent / "scripts" / "eval" / "PP-StructureV3-mobile.yaml"
+            config = str(mobile_cfg) if mobile_cfg.exists() else "PP-StructureV3"
+            self._engine = create_pipeline(config, device=self.device)
         return self._engine
 
     def _run_paddleocr(self, file_path: str) -> str:
-        """Run PaddleOCR on a PDF and return markdown string."""
+        """Run PP-StructureV3 on a PDF and return markdown string."""
         engine = self._get_engine()
-        result = engine.predict(file_path, return_markdown=True)
+        result = list(engine.predict(file_path))
 
-        # PaddleOCR returns list of page results
-        # Each page result contains markdown text
         md_parts = []
         for page_result in result:
-            if hasattr(page_result, "markdown") and page_result.markdown:
-                md_parts.append(page_result.markdown)
-            elif isinstance(page_result, dict) and "markdown" in page_result:
-                md_parts.append(page_result["markdown"])
-            elif isinstance(page_result, str):
-                md_parts.append(page_result)
+            md = page_result.markdown if hasattr(page_result, "markdown") else None
+            if isinstance(md, dict):
+                text = md.get("markdown_texts", "")
+                if text:
+                    md_parts.append(text)
+            elif isinstance(md, str) and md:
+                md_parts.append(md)
 
         return "\n\n".join(md_parts)
 
@@ -273,9 +270,9 @@ class PaddleOCRParser(BaseParser):
 
     @staticmethod
     def is_available() -> bool:
-        """Check if paddleocr is installed."""
+        """Check if paddlex (PP-StructureV3) is installed."""
         try:
-            import paddleocr  # noqa: F401
+            import paddlex  # noqa: F401
             return True
         except ImportError:
             return False

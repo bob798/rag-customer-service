@@ -2,6 +2,45 @@
 
 企业级 RAG 知识库客服系统。RAG 全链路手搓，Ports & Adapters 架构，可独立部署或作为组件接入。
 
+## 系统架构
+
+```mermaid
+graph LR
+    User[用户提问] --> API[FastAPI]
+    API --> IC[IntentClassifier]
+    IC -->|in_scope| QR[QueryRewriter]
+    IC -->|out_of_scope| FB[Fallback]
+    QR --> EMB[GteQwen2 Embedding]
+    EMB --> HR[HybridRetriever]
+    HR --> VS[(ChromaDB<br/>向量检索)]
+    HR --> BM[BM25<br/>关键词检索]
+    HR -->|RRF 融合| RR[BGEReranker]
+    RR --> CE[ConfidenceEvaluator]
+    CE -->|high/medium| GEN[LLMGenerator]
+    CE -->|low| FB
+    GEN --> User
+    FB --> User
+```
+
+```mermaid
+graph LR
+    subgraph 文档导入
+        DOC[PDF/DOCX/TXT] --> PR{ParserRegistry}
+        PR -->|PDF+PaddleOCR| PO[PaddleOCRParser]
+        PR -->|PDF+MinerU| MU[MinerUParser]
+        PR -->|PDF fallback| DP[DefaultParser]
+        PR -->|FAQ txt| FQ[FAQParser]
+        PR -->|DOCX/TXT| DP
+        PO --> CK[SemanticChunker]
+        MU --> CK
+        DP --> CK
+        FQ --> chunks[(Chunks)]
+        CK --> chunks
+        chunks --> VS2[(ChromaDB)]
+        chunks --> BM2[BM25 Index]
+    end
+```
+
 ## 文档导航
 
 ### 技术文档（代码同步更新）

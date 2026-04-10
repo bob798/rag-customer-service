@@ -45,10 +45,9 @@ temp/
 # Git worktrees
 .worktrees/
 
-# Local experiment data (not for GitHub)
+# Local experiment scripts (not for GitHub, need real models)
 docs/research/experiments/
-scripts/test_audio_retrieval.py
-scripts/test_ecommerce_retrieval.py
+scripts/eval/test_*
 
 # Runtime data (DO NOT commit)
 data/

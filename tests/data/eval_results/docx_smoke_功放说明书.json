@@ -1,0 +1,100 @@
+{
+  "doc": "功放说明书.docx",
+  "doc_type": "simple",
+  "total_chunks": 9,
+  "type_distribution": {
+    "table": 1,
+    "text": 6,
+    "image": 2
+  },
+  "sections": [
+    "BLV-D1 蓝牙功放说明书",
+    "BLV-D1 蓝牙功放说明书 > 产品外观",
+    "BLV-D1 蓝牙功放说明书 > 安装步骤",
+    "BLV-D1 蓝牙功放说明书 > 常见问题",
+    "BLV-D1 蓝牙功放说明书 > 技术规格"
+  ],
+  "checks": {
+    "文本完整性": {
+      "pass": true,
+      "detail": "命中 4/4"
+    },
+    "表格提取": {
+      "pass": true,
+      "detail": "1 个表格, 关键词 5/5"
+    },
+    "图片检测": {
+      "pass": true,
+      "detail": "检测到 2 张（期望 ≥2）"
+    },
+    "图片OCR中文": {
+      "pass": true,
+      "detail": "关键词 7/7: ['BLV', '蓝牙', '功放', '50W', '步骤', '电源', '12V']"
+    },
+    "元素顺序": {
+      "pass": true,
+      "detail": "types=['text', 'text', 'table', 'text', 'image', 'text', 'image', 'text', 'text']"
+    },
+    "章节传播": {
+      "pass": true,
+      "detail": "找到 4/4"
+    }
+  },
+  "all_pass": true,
+  "chunks": [
+    {
+      "index": 0,
+      "content_type": "text",
+      "section": "BLV-D1 蓝牙功放说明书",
+      "content": "BLV-D1 是一款高性能蓝牙数字功放，支持蓝牙 5.0 和 USB 音频输入。适用于家庭影院、桌面音箱等场景。"
+    },
+    {
+      "index": 1,
+      "content_type": "text",
+      "section": "BLV-D1 蓝牙功放说明书 > 技术规格",
+      "content": "以下是 BLV-D1 的主要技术参数："
+    },
+    {
+      "index": 2,
+      "content_type": "table",
+      "section": "BLV-D1 蓝牙功放说明书 > 技术规格",
+      "content": "技术规格\n以下是 BLV-D1 的主要技术参数：\n\n[表格]\n| 参数 | 规格 |\n| --- | --- |\n| 输出功率 | 50W × 2 |\n| 输入电压 | DC 12-24V |\n| 蓝牙版本 | 5.0 |\n| 信噪比 | ≥95dB |\n\n产品外观"
+    },
+    {
+      "index": 3,
+      "content_type": "text",
+      "section": "BLV-D1 蓝牙功放说明书 > 产品外观",
+      "content": "下图展示了产品面板上的标识信息："
+    },
+    {
+      "index": 4,
+      "content_type": "image",
+      "section": "BLV-D1 蓝牙功放说明书 > 产品外观",
+      "content": "产品外观\n下图展示了产品面板上的标识信息：\n\n[图片] BLV-D1蓝牙功放50W\n\n安装步骤"
+    },
+    {
+      "index": 5,
+      "content_type": "text",
+      "section": "BLV-D1 蓝牙功放说明书 > 安装步骤",
+      "content": "请按照以下步骤完成安装："
+    },
+    {
+      "index": 6,
+      "content_type": "image",
+      "section": "BLV-D1 蓝牙功放说明书 > 安装步骤",
+      "content": "安装步骤\n请按照以下步骤完成安装：\n\n[图片] 步骤一连接电源DC12V\n\n连接完成后，蓝色指示灯将亮起，表示设备已就绪。\n常见问题"
+    },
+    {
+      "index": 7,
+      "content_type": "text",
+      "section": "BLV-D1 蓝牙功放说明书 > 安装步骤",
+      "content": "连接完成后，蓝色指示灯将亮起，表示设备已就绪。"
+    },
+    {
+      "index": 8,
+      "content_type": "text",
+      "section": "BLV-D1 蓝牙功放说明书 > 常见问题",
+      "content": "问：设备无法开机怎么办？\n\n答：请检查电源适配器是否连接正确，确认输入电压在 12-24V 范围内。"
+    }
+  ]
+}

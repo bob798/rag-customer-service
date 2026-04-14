@@ -1,0 +1,186 @@
+{
+  "doc": "功放说明书_复杂版.docx",
+  "doc_type": "complex",
+  "total_chunks": 20,
+  "type_distribution": {
+    "image": 6,
+    "text": 11,
+    "table": 3
+  },
+  "sections": [
+    "BLV-D1 蓝牙数字功放 完整技术手册",
+    "BLV-D1 蓝牙数字功放 完整技术手册 > 产品外观",
+    "BLV-D1 蓝牙数字功放 完整技术手册 > 保修条款",
+    "BLV-D1 蓝牙数字功放 完整技术手册 > 包装清单",
+    "BLV-D1 蓝牙数字功放 完整技术手册 > 安装步骤",
+    "BLV-D1 蓝牙数字功放 完整技术手册 > 技术规格 > 基本参数",
+    "BLV-D1 蓝牙数字功放 完整技术手册 > 技术规格 > 接口定义",
+    "BLV-D1 蓝牙数字功放 完整技术手册 > 指示灯说明",
+    "BLV-D1 蓝牙数字功放 完整技术手册 > 故障排除"
+  ],
+  "checks": {
+    "文本完整性": {
+      "pass": true,
+      "detail": "命中 5/5"
+    },
+    "表格提取": {
+      "pass": true,
+      "detail": "3 个表格, 关键词 6/6"
+    },
+    "图片检测": {
+      "pass": true,
+      "detail": "检测到 6 张（期望 ≥6）"
+    },
+    "图片OCR中文": {
+      "pass": true,
+      "detail": "关键词 9/10: ['BLV', '50W', 'USB-C', 'SPK', '步骤', '电源', '音箱', '保修', '12个月']"
+    },
+    "元素顺序": {
+      "pass": true,
+      "detail": "types=['text', 'text', 'table', 'text', 'table', 'text', 'image', 'text', 'image', 'text', 'image', 'image', 'text', 'table', 'image', 'text', 'text', 'text', 'image', 'text']"
+    },
+    "章节传播": {
+      "pass": true,
+      "detail": "找到 7/7"
+    },
+    "合并单元格去重": {
+      "pass": true,
+      "detail": "\"音频输入\"出现 1 次"
+    },
+    "Heading层级嵌套": {
+      "pass": true,
+      "detail": "有 '技术规格 > 子标题' 路径"
+    },
+    "连续图片上下文": {
+      "pass": true,
+      "detail": "步骤图片有关联上下文"
+    },
+    "列表内容提取": {
+      "pass": true,
+      "detail": "包含包装清单内容"
+    }
+  },
+  "all_pass": true,
+  "chunks": [
+    {
+      "index": 0,
+      "content_type": "text",
+      "section": "BLV-D1 蓝牙数字功放 完整技术手册",
+      "content": "本手册详细介绍 BLV-D1 蓝牙数字功放的技术规格、安装步骤、故障排除及维护保养指南。请在使用前仔细阅读。"
+    },
+    {
+      "index": 1,
+      "content_type": "text",
+      "section": "BLV-D1 蓝牙数字功放 完整技术手册 > 技术规格 > 基本参数",
+      "content": "以下为产品的核心技术指标："
+    },
+    {
+      "index": 2,
+      "content_type": "table",
+      "section": "BLV-D1 蓝牙数字功放 完整技术手册 > 技术规格 > 基本参数",
+      "content": "基本参数\n以下为产品的核心技术指标：\n\n[表格]\n| 参数名称 | 规格值 |\n| --- | --- |\n| 型号 | BLV-D1 |\n| 输出功率 | 50W × 2（4Ω负载） |\n| 频率响应 | 20Hz - 20kHz (±1dB) |\n| 信噪比 | ≥95dB (A加权) |\n| 输入电压 | DC 12-24V / 3A |\n| 蓝牙版本 | 5.0 (支持 SBC/AAC/aptX) |\n| 工作温度 | -10°C ~ 50°C |\n\n接口定义"
+    },
+    {
+      "index": 3,
+      "content_type": "text",
+      "section": "BLV-D1 蓝牙数字功放 完整技术手册 > 技术规格 > 接口定义",
+      "content": "下表描述了设备的所有物理接口："
+    },
+    {
+      "index": 4,
+      "content_type": "table",
+      "section": "BLV-D1 蓝牙数字功放 完整技术手册 > 技术规格 > 接口定义",
+      "content": "接口定义\n下表描述了设备的所有物理接口：\n\n[表格]\n| 接口类型 | 位置 | 说明 |\n| --- | --- | --- |\n| 音频输入 | 后面板 | 3.5mm AUX 模拟输入 |\n|  | 后面板 | USB Type-C 数字输入 |\n| 音频输出 | 后面板 | 左声道 香蕉插座 |\n|  | 后面板 | 右声道 香蕉插座 |\n| 电源 | 后面板 | DC 5.5×2.1mm 电源座 |\n\n产品外观"
+    },
+    {
+      "index": 5,
+      "content_type": "text",
+      "section": "BLV-D1 蓝牙数字功放 完整技术手册 > 产品外观",
+      "content": "图 1：产品正面面板标识"
+    },
+    {
+      "index": 6,
+      "content_type": "image",
+      "section": "BLV-D1 蓝牙数字功放 完整技术手册 > 产品外观",
+      "content": "产品外观\n图 1：产品正面面板标识\n\n[图片] BLV-D1蓝牙功放50Wx2\n\n图 2：产品背面接口标注"
+    },
+    {
+      "index": 7,
+      "content_type": "text",
+      "section": "BLV-D1 蓝牙数字功放 完整技术手册 > 产品外观",
+      "content": "图 2：产品背面接口标注"
+    },
+    {
+      "index": 8,
+      "content_type": "image",
+      "section": "BLV-D1 蓝牙数字功放 完整技术手册 > 产品外观",
+      "content": "图 2：产品背面接口标注\n\n[图片] N/USB-C/SPKL/R/DC12-24V\n\n安装步骤"
+    },
+    {
+      "index": 9,
+      "content_type": "text",
+      "section": "BLV-D1 蓝牙数字功放 完整技术手册 > 安装步骤",
+      "content": "请严格按照以下步骤操作："
+    },
+    {
+      "index": 10,
+      "content_type": "image",
+      "section": "BLV-D1 蓝牙数字功放 完整技术手册 > 安装步骤",
+      "content": "安装步骤\n请严格按照以下步骤操作：\n\n[图片] 骤1：连接电源适配器DC12V"
+    },
+    {
+      "index": 11,
+      "content_type": "image",
+      "section": "BLV-D1 蓝牙数字功放 完整技术手册 > 安装步骤",
+      "content": "[图片] 步骤2：连接音箱线左右声道\n\n步骤 3：打开电源开关，蓝色指示灯亮起表示设备就绪。长按配对键 3 秒进入蓝牙配对模式，白色指示灯闪烁。\n指示灯说明"
+    },
+    {
+      "index": 12,
+      "content_type": "text",
+      "section": "BLV-D1 蓝牙数字功放 完整技术手册 > 安装步骤",
+      "content": "步骤 3：打开电源开关，蓝色指示灯亮起表示设备就绪。长按配对键 3 秒进入蓝牙配对模式，白色指示灯闪烁。"
+    },
+    {
+      "index": 13,
+      "content_type": "table",
+      "section": "BLV-D1 蓝牙数字功放 完整技术手册 > 指示灯说明",
+      "content": "指示灯说明\n\n[表格]\n| 指示灯 | 颜色 | 含义 |\n| --- | --- | --- |\n| 电源 | 蓝色常亮 | 设备已开机 |\n| 蓝牙 | 白色闪烁 | 配对模式 |\n| 蓝牙 | 白色常亮 | 已连接设备 |"
+    },
+    {
+      "index": 14,
+      "content_type": "image",
+      "section": "BLV-D1 蓝牙数字功放 完整技术手册 > 指示灯说明",
+      "content": "[图片] 指示灯位置示意图前面板左侧\n\n故障排除"
+    },
+    {
+      "index": 15,
+      "content_type": "text",
+      "section": "BLV-D1 蓝牙数字功放 完整技术手册 > 故障排除",
+      "content": "如果设备无法开机，请首先检查电源适配器是否正确连接，确认适配器输出电压在 12V 至 24V 范围内，电流不低于 3A。如果使用第三方适配器，请确认极性为中心正极。尝试更换电源线或适配器进行排除。如果电源指示灯亮起但无声音输出，请检查音箱线是否牢固连接，确认左右声道未接反。可以尝试切换到 AUX 输入模式，使用 3.5mm 音频线连接手机播放音乐，以排除蓝牙模块故障。如果蓝牙无法配对，请长按配对键 5 秒以上恢复出厂设置，然后重新进入配对模式。部分手机可能需要在蓝牙设置中手动删除旧的配对记录后重新搜索。如果出现杂音或底噪，可能是电源干扰导致，建议使用随机附带的原装适配器，或尝试在适配器和设备之间加装磁环滤波器。如果以上方法均无法解决问题，请联系售后服务：400-888-1234（工作日 9:00-18:00），或发送邮件至 support@blv-audio.com，附上购买凭证和故障描述。"
+    },
+    {
+      "index": 16,
+      "content_type": "text",
+      "section": "BLV-D1 蓝牙数字功放 完整技术手册 > 包装清单",
+      "content": "BLV-D1 功放主机 × 1\n\nDC 12V/3A 电源适配器 × 1\n\n3.5mm 音频线 × 1\n\nUSB-C 数据线 × 1\n\n产品说明书 × 1\n\n保修卡 × 1"
+    },
+    {
+      "index": 17,
+      "content_type": "text",
+      "section": "BLV-D1 蓝牙数字功放 完整技术手册 > 保修条款",
+      "content": "以下为保修条款的扫描件："
+    },
+    {
+      "index": 18,
+      "content_type": "image",
+      "section": "BLV-D1 蓝牙数字功放 完整技术手册 > 保修条款",
+      "content": "保修条款\n以下为保修条款的扫描件：\n\n[图片] 买修期限12个月自购买之日起计算人为损坏不在保修\n\n如有疑问，请拨打客服热线 400-888-1234。"
+    },
+    {
+      "index": 19,
+      "content_type": "text",
+      "section": "BLV-D1 蓝牙数字功放 完整技术手册 > 保修条款",
+      "content": "如有疑问，请拨打客服热线 400-888-1234。"
+    }
+  ]
+}

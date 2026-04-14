@@ -47,6 +47,7 @@ async def ingest_file(
     """解析单个文件并写入知识库。返回写入的 chunk 数量。"""
     from core.knowledge.chunker import SemanticChunker
     from core.knowledge.parsers.default import DefaultParser
+    from core.knowledge.parsers.docx_parser import DocxParser
     from core.knowledge.parsers.faq import FAQParser
     from core.knowledge.parsers.mineru import MinerUParser
     from core.knowledge.parsers.paddleocr import PaddleOCRParser
@@ -60,6 +61,9 @@ async def ingest_file(
         registry.register(PaddleOCRParser(chunker=SemanticChunker()))
     elif MinerUParser.is_available():
         registry.register(MinerUParser(chunker=SemanticChunker()))
+
+    # DOCX parser: python-docx + PaddleOCR for image OCR
+    registry.register(DocxParser(chunker=SemanticChunker()))
 
     registry.register(DefaultParser(chunker=SemanticChunker()))
 

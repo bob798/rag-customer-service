@@ -133,13 +133,28 @@
 - [ ] 将真实 content_list.json 加入 tests/data/ 作为 smoke test 输入
 - [ ] 表格 HTML 结构保留、图片提取、section path 端到端验证
 
-### 阶段 2：图片 OCR + Vision LLM 增强
+### 阶段 2：DOCX 解析（python-docx + PaddleOCR）
 
-- [ ] MinerU 内置 PaddleOCR 处理图片文字
+> 调研记录见 `.omc/research/docx-parsing-research.md`
+
+- [x] **DocxParser 核心**：python-docx 提取文本/表格 + PaddleOCR OCR 图片中文字
+- [x] **图文位置保留**：遍历 `doc._element.body` 保持文档顺序（参考 RAGFlow）
+- [x] **上下文融合**：图片/表格 chunk 包含前后文本（context_above/below, 150 字符）
+- [x] **合并单元格去重**：`id(cell._tc)` 去重，避免 markdown 表格重复内容
+- [x] **图片大小保护**：超过 20MP 的图片跳过 OCR，防止 OOM
+- [x] **单元测试 25 个 + 真实文档冒烟测试 6 项全通过**
+- [ ] **嵌套表格**：表格内嵌套的子表格当前只提取 `.text`（结构丢失）
+- [ ] **VML 旧格式图片**：Word 2003 兼容模式的 `<v:imagedata>` 未处理
+- [ ] **脚注/尾注**：存储在独立 OOXML part 中，当前未遍历
+- [ ] **文本框**：`<w:txbxContent>` 浮动文本框内容未提取
+- [ ] **图文关系标注**：识别 "如图X所示" 等引用，建立显式关联
+
+### 阶段 3：Vision LLM 增强
+
 - [ ] Vision LLM (claude-haiku-4-5) 描述无文字图片（成本可控）
-- [ ] 图文关系标注：识别 "如图X所示" 等引用
+- [ ] MinerU 内置 PaddleOCR 处理 PDF 图片文字
 
-### 阶段 3：Contextual Retrieval
+### 阶段 4：Contextual Retrieval
 
 - [ ] 导入时用 LLM 给每个 chunk 加上下文前缀（Anthropic 方案，-67% 检索失败率）
 

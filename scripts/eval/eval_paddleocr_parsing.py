@@ -33,6 +33,7 @@ os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 PDF_PATH = ROOT / "tests" / "data" / "功放说明书.pdf"
 RESULT_PATH = ROOT / "tests" / "data" / "paddleocr_parsing_result.json"
 MARKDOWN_PATH = ROOT / "tests" / "data" / "paddleocr_raw_markdown.md"
+PADDLEOCR_OUT_DIR = ROOT / "tests" / "data" / "paddleocr_output"
 QA_PATH = ROOT / "tests" / "data" / "eval_amplifier_qa.json"
 
 
@@ -148,14 +149,16 @@ def main():
 
     parser = PaddleOCRParser(chunker=SemanticChunker(), device="cpu")
 
-    # 1a: 获取原始 markdown 并保存
+    # 1a: 获取原始 markdown 并保存（含图片）
     t0 = time.monotonic()
-    raw_md = parser._run_paddleocr(str(PDF_PATH))
+    raw_md = parser._run_paddleocr(str(PDF_PATH), save_dir=str(PADDLEOCR_OUT_DIR))
     ocr_time = time.monotonic() - t0
 
+    # 同时保存一份到 tests/data/ 根目录方便引用
     MARKDOWN_PATH.write_text(raw_md, encoding="utf-8")
     print(f"  OCR 完成: {ocr_time:.1f}s, {len(raw_md)} 字符")
-    print(f"  原始 Markdown 已保存: {MARKDOWN_PATH}")
+    print(f"  输出目录: {PADDLEOCR_OUT_DIR}")
+    print(f"  原始 Markdown: {MARKDOWN_PATH}")
 
     # 1b: 分段 + 分块
     t0 = time.monotonic()

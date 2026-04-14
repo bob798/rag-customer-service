@@ -61,22 +61,47 @@ class PaddleOCRParser(BaseParser):
             self._engine = create_pipeline(config, device=self.device)
         return self._engine
 
-    def _run_paddleocr(self, file_path: str) -> str:
-        """Run PP-StructureV3 on a PDF and return markdown string."""
+    def _run_paddleocr(self, file_path: str, save_dir: Optional[str] = None) -> str:
+        """Run PP-StructureV3 on a PDF and return markdown string.
+
+        Args:
+            file_path: Path to PDF file.
+            save_dir: If provided, save raw markdown and extracted images here.
+        """
         engine = self._get_engine()
         result = list(engine.predict(file_path))
 
         md_parts = []
+        all_images: dict = {}  # path -> PIL.Image
+
         for page_result in result:
             md = page_result.markdown if hasattr(page_result, "markdown") else None
             if isinstance(md, dict):
                 text = md.get("markdown_texts", "")
                 if text:
                     md_parts.append(text)
+                # Collect images
+                images = md.get("markdown_images", {})
+                all_images.update(images)
             elif isinstance(md, str) and md:
                 md_parts.append(md)
 
-        return "\n\n".join(md_parts)
+        markdown = "\n\n".join(md_parts)
+
+        # Save markdown + images to disk
+        if save_dir:
+            out = Path(save_dir)
+            out.mkdir(parents=True, exist_ok=True)
+            (out / "output.md").write_text(markdown, encoding="utf-8")
+            if all_images:
+                img_dir = out / "imgs"
+                img_dir.mkdir(exist_ok=True)
+                for img_path, img in all_images.items():
+                    dest = out / img_path
+                    dest.parent.mkdir(parents=True, exist_ok=True)
+                    img.save(str(dest))
+
+        return markdown
 
     # ------------------------------------------------------------------
     # Markdown → typed segments

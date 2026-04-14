@@ -59,5 +59,111 @@
     "expected_source_keywords": [],
     "category": "usage",
     "note": "文档中可能没有此信息，测试无关查询的处理"
+  },
+
+  {
+    "id": "amp-011",
+    "question": "蓝牙和有线同时连接时，哪个优先？",
+    "expected_source_keywords": ["3.5mm", "优先"],
+    "category": "multi-hop",
+    "note": "需要理解输入优先级机制，信息分散在音频输入段落"
+  },
+  {
+    "id": "amp-012",
+    "question": "这个设备能直接带耳机吗？",
+    "expected_source_keywords": ["耳机", "600"],
+    "category": "negation",
+    "note": "答案是否定的——输出阻抗600Ω不适合驱动耳机，考验对否定信息的检索"
+  },
+  {
+    "id": "amp-013",
+    "question": "信噪比是多少？",
+    "expected_source_keywords": ["97", "SNR"],
+    "category": "table-extraction",
+    "note": "答案在HTML表格中，测试OCR表格提取+检索能力"
+  },
+  {
+    "id": "amp-014",
+    "question": "产品尺寸多大？",
+    "expected_source_keywords": ["90.81", "89.00"],
+    "category": "specs",
+    "note": "尺寸数据在产品概览段落，混合中英文+数字"
+  },
+  {
+    "id": "amp-015",
+    "question": "保修期多长时间？",
+    "expected_source_keywords": ["一年", "保修"],
+    "category": "policy",
+    "note": "答案在保修条款段落，非技术类问题"
+  },
+  {
+    "id": "amp-016",
+    "question": "怎么用电脑调音？",
+    "expected_source_keywords": ["ACP", "PCUI"],
+    "category": "usage-complex",
+    "note": "需要关联 PCUI 编程端口 + ACP Workbench 软件，信息跨两个 chunk"
+  },
+  {
+    "id": "amp-017",
+    "question": "最低负载阻抗是多少欧姆？",
+    "expected_source_keywords": ["4"],
+    "category": "table-extraction",
+    "note": "答案在技术规格HTML表格中的一行，测试精确数值检索"
+  },
+  {
+    "id": "amp-018",
+    "question": "用手机蓝牙播放音乐，功放最大能输出多大功率？",
+    "expected_source_keywords": ["50W", "蓝牙"],
+    "category": "reasoning",
+    "note": "需要综合蓝牙输入+功率输出两部分信息，测试多信息融合"
+  },
+  {
+    "id": "amp-019",
+    "question": "这个设备支持 USB-C 供电吗？",
+    "expected_source_keywords": ["USB", "Type-C"],
+    "category": "synonym",
+    "note": "用户说USB-C，文档写USB Type-C，测试同义词匹配"
+  },
+  {
+    "id": "amp-020",
+    "question": "如果设备干扰了收音机怎么办？",
+    "expected_source_keywords": ["干扰", "间距"],
+    "category": "troubleshooting",
+    "note": "答案在FCC NOTE段落，非典型技术问答，考验长尾问题检索"
+  },
+  {
+    "id": "amp-021",
+    "question": "100台以上批量采购有什么优惠？",
+    "expected_source_keywords": ["100", "丝网印刷"],
+    "category": "commercial",
+    "note": "答案在批量购买权段落，商务类问题"
+  },
+  {
+    "id": "amp-022",
+    "question": "THD+N 失真率是多少？",
+    "expected_source_keywords": ["0.10", "THD"],
+    "category": "table-extraction",
+    "note": "专业音频术语，答案在HTML表格"
+  },
+  {
+    "id": "amp-023",
+    "question": "放大器的工作温度范围？",
+    "expected_source_keywords": ["0", "40"],
+    "category": "specs-implicit",
+    "note": "答案藏在保修条款中提到的工作温度 0-40°C，非独立段落"
+  },
+  {
+    "id": "amp-024",
+    "question": "怎么保存调音设置不丢失？",
+    "expected_source_keywords": ["Flash", "保存"],
+    "category": "usage-complex",
+    "note": "需要找到ACP Workbench操作步骤第4步，信息在操作指南深处"
+  },
+  {
+    "id": "amp-025",
+    "question": "这个功放和JBL音箱比怎么样？",
+    "expected_source_keywords": [],
+    "category": "out-of-scope",
+    "note": "文档中无竞品对比信息，测试系统对无关/超范围问题的处理"
   }
 ]

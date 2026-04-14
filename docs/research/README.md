@@ -12,6 +12,7 @@
 
 | 文档 | 内容 | 日期 |
 |------|------|------|
+| [04-ambiguous-query-disambiguation.md](./04-ambiguous-query-disambiguation.md) | **模糊查询消歧**：一词多模块问题（"静音"→5个模块），5种开源方案对比，推荐 Metadata Filtering + 检索后聚类澄清 | 2026-04-14 |
 | [procedural-qa-in-rag.md](./procedural-qa-in-rag.md) | **流程类问答**：学术定义（ProPara/TechQA/Lost in the Middle）、开源方案（LlamaIndex/LangChain/RAGFlow）、四层解决路径 | 2026-04-10 |
 
 ## 架构设计

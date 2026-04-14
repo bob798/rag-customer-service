@@ -1,0 +1,708 @@
+{
+  "source": "paddleocr_raw_markdown.md",
+  "chunk_count": 19,
+  "qa_count": 25,
+  "embedder": "GteQwen2Embedder (gte-Qwen2-1.5B-instruct)",
+  "embed_load_time_seconds": 22.39,
+  "index_time_seconds": 526.1,
+  "metrics": {
+    "bm25_only": {
+      "hit_at_1": "14/23",
+      "hit_at_3": "20/23",
+      "mrr": 0.733
+    },
+    "vector_only": {
+      "hit_at_1": "19/23",
+      "hit_at_3": "21/23",
+      "mrr": 0.862
+    },
+    "hybrid_rrf": {
+      "hit_at_1": "19/23",
+      "hit_at_3": "21/23",
+      "mrr": 0.871
+    }
+  },
+  "qa_details": {
+    "bm25": [
+      {
+        "id": "amp-001",
+        "question": "BLV-D1 的输出功率是多少？",
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "rr": 0.2,
+        "top1_score": 6.2543,
+        "top1_preview": "批量采购的所有权利仅限于在一次性交易中购买的数量，且与年度或累计采购数量无关。由于成本考虑，任何定制和定价都是根据在单个"
+      },
+      {
+        "id": "amp-002",
+        "question": "如何连接蓝牙？",
+        "hit_at_1": false,
+        "hit_at_3": true,
+        "rr": 0.5,
+        "top1_score": 2.5352,
+        "top1_preview": "1.通过PCUI接口连接编程端口和计算机，使用支持通信的USB 电缆，轻松控制BLV-D1。 2.在下载和启动软件后，"
+      },
+      {
+        "id": "amp-003",
+        "question": "支持什么电压供电？",
+        "hit_at_1": false,
+        "hit_at_3": true,
+        "rr": 0.5,
+        "top1_score": 4.376,
+        "top1_preview": "BerryBak产品从购买之日起提供一年的保修期。客户负责将货物退还给卖方的费用，通过购买，您同意此条件。由于DIY产品"
+      },
+      {
+        "id": "amp-004",
+        "question": "怎么切换到有线输入？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 5.6714,
+        "top1_preview": "<img src=\"imgs/img_in_image"
+      },
+      {
+        "id": "amp-005",
+        "question": "这个放大器用的什么芯片？",
+        "hit_at_1": false,
+        "hit_at_3": true,
+        "rr": 0.333,
+        "top1_score": 5.4039,
+        "top1_preview": "接驱动耳机。用户应将该设备连接到扬声器和一个放大器上，以达到最佳的音频性能，并防止对耳机的潜在损害。 启动ACP工作台"
+      },
+      {
+        "id": "amp-006",
+        "question": "蓝牙版本是多少？",
+        "hit_at_1": false,
+        "hit_at_3": true,
+        "rr": 0.333,
+        "top1_score": 3.4784,
+        "top1_preview": "批量采购的所有权利仅限于在一次性交易中购买的数量，且与年度或累计采购数量无关。由于成本考虑，任何定制和定价都是根据在单个"
+      },
+      {
+        "id": "amp-007",
+        "question": "扬声器怎么接线？",
+        "hit_at_1": false,
+        "hit_at_3": true,
+        "rr": 0.5,
+        "top1_score": 2.2629,
+        "top1_preview": "1.通过PCUI接口连接编程端口和计算机，使用支持通信的USB 电缆，轻松控制BLV-D1。 2.在下载和启动软件后，"
+      },
+      {
+        "id": "amp-008",
+        "question": "产品有什么认证？",
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "rr": 0.0,
+        "top1_score": 3.8897,
+        "top1_preview": "批量采购的所有权利仅限于在一次性交易中购买的数量，且与年度或累计采购数量无关。由于成本考虑，任何定制和定价都是根据在单个"
+      },
+      {
+        "id": "amp-009",
+        "question": "电源开关在哪里？",
+        "hit_at_1": false,
+        "hit_at_3": true,
+        "rr": 0.5,
+        "top1_score": 5.0835,
+        "top1_preview": "1.通过PCUI接口连接编程端口和计算机，使用支持通信的USB 电缆，轻松控制BLV-D1。 2.在下载和启动软件后，"
+      },
+      {
+        "id": "amp-010",
+        "question": "如何恢复出厂设置？",
+        "hit_at_1": null,
+        "hit_at_3": null,
+        "rr": null,
+        "top1_score": 3.5467,
+        "top1_preview": "1.通过PCUI接口连接编程端口和计算机，使用支持通信的USB 电缆，轻松控制BLV-D1。 2.在下载和启动软件后，"
+      },
+      {
+        "id": "amp-011",
+        "question": "蓝牙和有线同时连接时，哪个优先？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 10.1893,
+        "top1_preview": "<img src=\"imgs/img_in_image"
+      },
+      {
+        "id": "amp-012",
+        "question": "这个设备能直接带耳机吗？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 4.9891,
+        "top1_preview": "，以传输音频信号，以增 强听力体验或将音频播放扩展到其他设备。输出阻抗-600Q，不适合驾驶耳机。 6.USB类型-"
+      },
+      {
+        "id": "amp-013",
+        "question": "信噪比是多少？",
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "rr": 0.0,
+        "top1_score": 3.4784,
+        "top1_preview": "批量采购的所有权利仅限于在一次性交易中购买的数量，且与年度或累计采购数量无关。由于成本考虑，任何定制和定价都是根据在单个"
+      },
+      {
+        "id": "amp-014",
+        "question": "产品尺寸多大？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 3.6706,
+        "top1_preview": "Subarag音频控制： 允许您微调音频输出您的偏好。 Subab蓝牙天线： .增强蓝牙信号接收和范围。 线路输"
+      },
+      {
+        "id": "amp-015",
+        "question": "保修期多长时间？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 2.6666,
+        "top1_preview": "BerryBak产品从购买之日起提供一年的保修期。客户负责将货物退还给卖方的费用，通过购买，您同意此条件。由于DIY产品"
+      },
+      {
+        "id": "amp-016",
+        "question": "怎么用电脑调音？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 2.2629,
+        "top1_preview": "1.通过PCUI接口连接编程端口和计算机，使用支持通信的USB 电缆，轻松控制BLV-D1。 2.在下载和启动软件后，"
+      },
+      {
+        "id": "amp-017",
+        "question": "最低负载阻抗是多少欧姆？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 8.0923,
+        "top1_preview": "BLV-D1测试条件包括以下条件：频率响应，VDD设置为21V，负载为2x5W，负载为4欧姆；对于噪声水平测试，VDD为"
+      },
+      {
+        "id": "amp-018",
+        "question": "用手机蓝牙播放音乐，功放最大能输出多大功率？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 5.3849,
+        "top1_preview": "_804_855_996.jpg\" alt=\"Image\" width=\"51%\" /> 注：二维插图以1"
+      },
+      {
+        "id": "amp-019",
+        "question": "这个设备支持 USB-C 供电吗？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 12.6521,
+        "top1_preview": "，以传输音频信号，以增 强听力体验或将音频播放扩展到其他设备。输出阻抗-600Q，不适合驾驶耳机。 6.USB类型-"
+      },
+      {
+        "id": "amp-020",
+        "question": "如果设备干扰了收音机怎么办？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 8.325,
+        "top1_preview": "该设备已被测试，并被发现符合B类数字设备的限制 但是，并不能保证在特定的安装中不会发生干扰。如果该设备确实造成了有害的"
+      },
+      {
+        "id": "amp-021",
+        "question": "100台以上批量采购有什么优惠？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 11.8326,
+        "top1_preview": "批量采购的所有权利仅限于在一次性交易中购买的数量，且与年度或累计采购数量无关。由于成本考虑，任何定制和定价都是根据在单个"
+      },
+      {
+        "id": "amp-022",
+        "question": "THD+N 失真率是多少？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 7.2867,
+        "top1_preview": "BLV-D1测试条件包括以下条件：频率响应，VDD设置为21V，负载为2x5W，负载为4欧姆；对于噪声水平测试，VDD为"
+      },
+      {
+        "id": "amp-023",
+        "question": "放大器的工作温度范围？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 6.3348,
+        "top1_preview": "BerryBak产品从购买之日起提供一年的保修期。客户负责将货物退还给卖方的费用，通过购买，您同意此条件。由于DIY产品"
+      },
+      {
+        "id": "amp-024",
+        "question": "怎么保存调音设置不丢失？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 6.8738,
+        "top1_preview": "1.通过PCUI接口连接编程端口和计算机，使用支持通信的USB 电缆，轻松控制BLV-D1。 2.在下载和启动软件后，"
+      },
+      {
+        "id": "amp-025",
+        "question": "这个功放和JBL音箱比怎么样？",
+        "hit_at_1": null,
+        "hit_at_3": null,
+        "rr": null,
+        "top1_score": 4.2399,
+        "top1_preview": "，以传输音频信号，以增 强听力体验或将音频播放扩展到其他设备。输出阻抗-600Q，不适合驾驶耳机。 6.USB类型-"
+      }
+    ],
+    "vector": [
+      {
+        "id": "amp-001",
+        "question": "BLV-D1 的输出功率是多少？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.716,
+        "top1_preview": "BLV-D1音频放大器，壮举的高功耗输出，蓝牙v5.0连接，用户友好的功能，如音量控制电位计和蓝牙解除按钮，以及LED指"
+      },
+      {
+        "id": "amp-002",
+        "question": "如何连接蓝牙？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.5188,
+        "top1_preview": "<img src=\"imgs/img_in_image"
+      },
+      {
+        "id": "amp-003",
+        "question": "支持什么电压供电？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.5852,
+        "top1_preview": "<img src=\"imgs/img_in_formu"
+      },
+      {
+        "id": "amp-004",
+        "question": "怎么切换到有线输入？",
+        "hit_at_1": false,
+        "hit_at_3": true,
+        "rr": 0.5,
+        "top1_score": 0.4585,
+        "top1_preview": "接驱动耳机。用户应将该设备连接到扬声器和一个放大器上，以达到最佳的音频性能，并防止对耳机的潜在损害。 启动ACP工作台"
+      },
+      {
+        "id": "amp-005",
+        "question": "这个放大器用的什么芯片？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.6551,
+        "top1_preview": "BLV-D1音频放大器，壮举的高功耗输出，蓝牙v5.0连接，用户友好的功能，如音量控制电位计和蓝牙解除按钮，以及LED指"
+      },
+      {
+        "id": "amp-006",
+        "question": "蓝牙版本是多少？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.5762,
+        "top1_preview": "_804_855_996.jpg\" alt=\"Image\" width=\"51%\" /> 注：二维插图以1"
+      },
+      {
+        "id": "amp-007",
+        "question": "扬声器怎么接线？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.5866,
+        "top1_preview": "<img src=\"imgs/img_in_image"
+      },
+      {
+        "id": "amp-008",
+        "question": "产品有什么认证？",
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "rr": 0.0,
+        "top1_score": 0.4446,
+        "top1_preview": "BerryBak产品从购买之日起提供一年的保修期。客户负责将货物退还给卖方的费用，通过购买，您同意此条件。由于DIY产品"
+      },
+      {
+        "id": "amp-009",
+        "question": "电源开关在哪里？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.4629,
+        "top1_preview": "<img src=\"imgs/img_in_image"
+      },
+      {
+        "id": "amp-010",
+        "question": "如何恢复出厂设置？",
+        "hit_at_1": null,
+        "hit_at_3": null,
+        "rr": null,
+        "top1_score": 0.4596,
+        "top1_preview": "任何未经合规责任部门明确批准的变更或修改，都可能使用户操作设备的权力无效。"
+      },
+      {
+        "id": "amp-011",
+        "question": "蓝牙和有线同时连接时，哪个优先？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.4381,
+        "top1_preview": "_804_855_996.jpg\" alt=\"Image\" width=\"51%\" /> 注：二维插图以1"
+      },
+      {
+        "id": "amp-012",
+        "question": "这个设备能直接带耳机吗？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.6136,
+        "top1_preview": "<img src=\"imgs/img_in_image"
+      },
+      {
+        "id": "amp-013",
+        "question": "信噪比是多少？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.5674,
+        "top1_preview": "[表格] <table bor"
+      },
+      {
+        "id": "amp-014",
+        "question": "产品尺寸多大？",
+        "hit_at_1": false,
+        "hit_at_3": true,
+        "rr": 0.333,
+        "top1_score": 0.5321,
+        "top1_preview": "（标称尺寸，英寸（mm）） <img src=\"im"
+      },
+      {
+        "id": "amp-015",
+        "question": "保修期多长时间？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.511,
+        "top1_preview": "BerryBak产品从购买之日起提供一年的保修期。客户负责将货物退还给卖方的费用，通过购买，您同意此条件。由于DIY产品"
+      },
+      {
+        "id": "amp-016",
+        "question": "怎么用电脑调音？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.4772,
+        "top1_preview": "接驱动耳机。用户应将该设备连接到扬声器和一个放大器上，以达到最佳的音频性能，并防止对耳机的潜在损害。 启动ACP工作台"
+      },
+      {
+        "id": "amp-017",
+        "question": "最低负载阻抗是多少欧姆？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.5968,
+        "top1_preview": "BLV-D1测试条件包括以下条件：频率响应，VDD设置为21V，负载为2x5W，负载为4欧姆；对于噪声水平测试，VDD为"
+      },
+      {
+        "id": "amp-018",
+        "question": "用手机蓝牙播放音乐，功放最大能输出多大功率？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.6601,
+        "top1_preview": "<img src=\"imgs/img_in_image"
+      },
+      {
+        "id": "amp-019",
+        "question": "这个设备支持 USB-C 供电吗？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.6103,
+        "top1_preview": "，以传输音频信号，以增 强听力体验或将音频播放扩展到其他设备。输出阻抗-600Q，不适合驾驶耳机。 6.USB类型-"
+      },
+      {
+        "id": "amp-020",
+        "question": "如果设备干扰了收音机怎么办？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.6274,
+        "top1_preview": "该设备已被测试，并被发现符合B类数字设备的限制 但是，并不能保证在特定的安装中不会发生干扰。如果该设备确实造成了有害的"
+      },
+      {
+        "id": "amp-021",
+        "question": "100台以上批量采购有什么优惠？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.4256,
+        "top1_preview": "批量采购的所有权利仅限于在一次性交易中购买的数量，且与年度或累计采购数量无关。由于成本考虑，任何定制和定价都是根据在单个"
+      },
+      {
+        "id": "amp-022",
+        "question": "THD+N 失真率是多少？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.6518,
+        "top1_preview": "BLV-D1测试条件包括以下条件：频率响应，VDD设置为21V，负载为2x5W，负载为4欧姆；对于噪声水平测试，VDD为"
+      },
+      {
+        "id": "amp-023",
+        "question": "放大器的工作温度范围？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.5241,
+        "top1_preview": "[表格] <table bor"
+      },
+      {
+        "id": "amp-024",
+        "question": "怎么保存调音设置不丢失？",
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "rr": 0.0,
+        "top1_score": 0.4639,
+        "top1_preview": "接驱动耳机。用户应将该设备连接到扬声器和一个放大器上，以达到最佳的音频性能，并防止对耳机的潜在损害。 启动ACP工作台"
+      },
+      {
+        "id": "amp-025",
+        "question": "这个功放和JBL音箱比怎么样？",
+        "hit_at_1": null,
+        "hit_at_3": null,
+        "rr": null,
+        "top1_score": 0.5824,
+        "top1_preview": "BLV-D1音频放大器，壮举的高功耗输出，蓝牙v5.0连接，用户友好的功能，如音量控制电位计和蓝牙解除按钮，以及LED指"
+      }
+    ],
+    "hybrid": [
+      {
+        "id": "amp-001",
+        "question": "BLV-D1 的输出功率是多少？",
+        "hit_at_1": false,
+        "hit_at_3": true,
+        "rr": 0.5,
+        "top1_score": 0.0323,
+        "top1_preview": "BLV-D1测试条件包括以下条件：频率响应，VDD设置为21V，负载为2x5W，负载为4欧姆；对于噪声水平测试，VDD为"
+      },
+      {
+        "id": "amp-002",
+        "question": "如何连接蓝牙？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.0323,
+        "top1_preview": "<img src=\"imgs/img_in_image"
+      },
+      {
+        "id": "amp-003",
+        "question": "支持什么电压供电？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.0328,
+        "top1_preview": "<img src=\"imgs/img_in_formu"
+      },
+      {
+        "id": "amp-004",
+        "question": "怎么切换到有线输入？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.0331,
+        "top1_preview": "<img src=\"imgs/img_in_image"
+      },
+      {
+        "id": "amp-005",
+        "question": "这个放大器用的什么芯片？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.0328,
+        "top1_preview": "BLV-D1音频放大器，壮举的高功耗输出，蓝牙v5.0连接，用户友好的功能，如音量控制电位计和蓝牙解除按钮，以及LED指"
+      },
+      {
+        "id": "amp-006",
+        "question": "蓝牙版本是多少？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.0325,
+        "top1_preview": "_804_855_996.jpg\" alt=\"Image\" width=\"51%\" /> 注：二维插图以1"
+      },
+      {
+        "id": "amp-007",
+        "question": "扬声器怎么接线？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.0331,
+        "top1_preview": "<img src=\"imgs/img_in_image"
+      },
+      {
+        "id": "amp-008",
+        "question": "产品有什么认证？",
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "rr": 0.0,
+        "top1_score": 0.0331,
+        "top1_preview": "BerryBak产品从购买之日起提供一年的保修期。客户负责将货物退还给卖方的费用，通过购买，您同意此条件。由于DIY产品"
+      },
+      {
+        "id": "amp-009",
+        "question": "电源开关在哪里？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.0331,
+        "top1_preview": "<img src=\"imgs/img_in_image"
+      },
+      {
+        "id": "amp-010",
+        "question": "如何恢复出厂设置？",
+        "hit_at_1": null,
+        "hit_at_3": null,
+        "rr": null,
+        "top1_score": 0.0328,
+        "top1_preview": "BerryBak产品从购买之日起提供一年的保修期。客户负责将货物退还给卖方的费用，通过购买，您同意此条件。由于DIY产品"
+      },
+      {
+        "id": "amp-011",
+        "question": "蓝牙和有线同时连接时，哪个优先？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.0331,
+        "top1_preview": "<img src=\"imgs/img_in_image"
+      },
+      {
+        "id": "amp-012",
+        "question": "这个设备能直接带耳机吗？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.0331,
+        "top1_preview": "<img src=\"imgs/img_in_image"
+      },
+      {
+        "id": "amp-013",
+        "question": "信噪比是多少？",
+        "hit_at_1": false,
+        "hit_at_3": true,
+        "rr": 0.333,
+        "top1_score": 0.0301,
+        "top1_preview": "1.通过PCUI接口连接编程端口和计算机，使用支持通信的USB 电缆，轻松控制BLV-D1。 2.在下载和启动软件后，"
+      },
+      {
+        "id": "amp-014",
+        "question": "产品尺寸多大？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.0328,
+        "top1_preview": "Subarag音频控制： 允许您微调音频输出您的偏好。 Subab蓝牙天线： .增强蓝牙信号接收和范围。 线路输"
+      },
+      {
+        "id": "amp-015",
+        "question": "保修期多长时间？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.0333,
+        "top1_preview": "BerryBak产品从购买之日起提供一年的保修期。客户负责将货物退还给卖方的费用，通过购买，您同意此条件。由于DIY产品"
+      },
+      {
+        "id": "amp-016",
+        "question": "怎么用电脑调音？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.0302,
+        "top1_preview": "1.通过PCUI接口连接编程端口和计算机，使用支持通信的USB 电缆，轻松控制BLV-D1。 2.在下载和启动软件后，"
+      },
+      {
+        "id": "amp-017",
+        "question": "最低负载阻抗是多少欧姆？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.0333,
+        "top1_preview": "BLV-D1测试条件包括以下条件：频率响应，VDD设置为21V，负载为2x5W，负载为4欧姆；对于噪声水平测试，VDD为"
+      },
+      {
+        "id": "amp-018",
+        "question": "用手机蓝牙播放音乐，功放最大能输出多大功率？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.0328,
+        "top1_preview": "_804_855_996.jpg\" alt=\"Image\" width=\"51%\" /> 注：二维插图以1"
+      },
+      {
+        "id": "amp-019",
+        "question": "这个设备支持 USB-C 供电吗？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.0333,
+        "top1_preview": "，以传输音频信号，以增 强听力体验或将音频播放扩展到其他设备。输出阻抗-600Q，不适合驾驶耳机。 6.USB类型-"
+      },
+      {
+        "id": "amp-020",
+        "question": "如果设备干扰了收音机怎么办？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.0333,
+        "top1_preview": "该设备已被测试，并被发现符合B类数字设备的限制 但是，并不能保证在特定的安装中不会发生干扰。如果该设备确实造成了有害的"
+      },
+      {
+        "id": "amp-021",
+        "question": "100台以上批量采购有什么优惠？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.0333,
+        "top1_preview": "批量采购的所有权利仅限于在一次性交易中购买的数量，且与年度或累计采购数量无关。由于成本考虑，任何定制和定价都是根据在单个"
+      },
+      {
+        "id": "amp-022",
+        "question": "THD+N 失真率是多少？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.0333,
+        "top1_preview": "BLV-D1测试条件包括以下条件：频率响应，VDD设置为21V，负载为2x5W，负载为4欧姆；对于噪声水平测试，VDD为"
+      },
+      {
+        "id": "amp-023",
+        "question": "放大器的工作温度范围？",
+        "hit_at_1": true,
+        "hit_at_3": true,
+        "rr": 1.0,
+        "top1_score": 0.0328,
+        "top1_preview": "BerryBak产品从购买之日起提供一年的保修期。客户负责将货物退还给卖方的费用，通过购买，您同意此条件。由于DIY产品"
+      },
+      {
+        "id": "amp-024",
+        "question": "怎么保存调音设置不丢失？",
+        "hit_at_1": false,
+        "hit_at_3": false,
+        "rr": 0.2,
+        "top1_score": 0.0313,
+        "top1_preview": "<img src=\"imgs/img_in_image"
+      },
+      {
+        "id": "amp-025",
+        "question": "这个功放和JBL音箱比怎么样？",
+        "hit_at_1": null,
+        "hit_at_3": null,
+        "rr": null,
+        "top1_score": 0.0328,
+        "top1_preview": "BLV-D1音频放大器，壮举的高功耗输出，蓝牙v5.0连接，用户友好的功能，如音量控制电位计和蓝牙解除按钮，以及LED指"
+      }
+    ]
+  }
+}

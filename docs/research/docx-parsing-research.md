@@ -207,3 +207,199 @@ tests/data/
 ├── 功放说明书.pdf                      # PDF 测试文档
 └── ...                                # 其他已有文件
 ```
+
+## 10. .doc vs .docx 格式差异（2026-04-16）
+
+### 10.1 本质区别
+
+| | .doc (OLE2) | .docx (OOXML) |
+|---|---|---|
+| **诞生** | 1997，Word 97 | 2007，Word 2007 |
+| **格式** | **二进制复合文档**（OLE2 容器） | **ZIP 压缩包**（内含 XML + 媒体文件） |
+| **图片存储** | 嵌入在 `Data` 二进制流中，无标准路径 | `word/media/image1.png` 独立文件 |
+| **表格** | 二进制结构体（TAP），需专用解析器 | `<w:tbl>` XML 节点，结构清晰 |
+| **样式** | 二进制样式表（`0Table`/`1Table` 流） | `word/styles.xml` |
+| **可读性** | 不可读，必须用专用库 | 解压即可看到 XML |
+
+两种**完全不同的文件格式**，只是都叫 "Word 文档"。
+
+### 10.2 .doc 内部 OLE2 结构
+
+```
+.doc (OLE2 复合文档)
+├── WordDocument      ← 主文档流（二进制，文字+格式混在一起）
+├── 0Table / 1Table   ← 格式信息（表格属性也在这里）
+├── Data              ← 嵌入的图片/OLE对象（二进制 blob）
+├── CompObj           ← 复合对象信息
+└── \001Ole           ← OLE 元信息
+```
+
+对比 .docx：
+```
+.docx (ZIP)
+├── word/document.xml     ← 文字（XML，结构清晰）
+├── word/media/image1.png ← 图片（独立文件，直接读取）
+└── word/styles.xml       ← 样式（XML）
+```
+
+### 10.3 .doc 各提取方案可行性
+
+| 方案 | 文本 | 图片 | 表格 | 样式 | 部署成本 |
+|------|------|------|------|------|---------|
+| **textutil**（macOS 自带） | ✅ 有域代码污染 | ❌ | ❌ | ❌ | 零 |
+| **Apache Tika** | ✅ 干净 | ❌ | ❌ | ❌ | 中（需 JRE ~300MB） |
+| **LibreOffice 转 .docx** | ✅ 干净 | ✅ | ✅ | ✅ | 高（~1.5GB） |
+| **olefile 手动提取** | 部分 | 部分 ✅ | ❌ | ❌ | 轻量（pip） |
+| **用户手动另存 .docx** | ✅ | ✅ | ✅ | ✅ | 零（但需人工） |
+
+### 10.4 olefile 图片提取验证
+
+用 `internet-file.doc`（10.4MB，WPS 创建）验证：
+
+```
+OLE2 内部流：
+  WordDocument   7,668,690 bytes
+  Data           3,078,569 bytes  ← 图片在这里
+  0Table            43,709 bytes
+```
+
+从 `Data` 流按 PNG 签名（`\x89PNG...IEND`）扫描，成功提取 11 张图片：
+
+| 图片 | 尺寸 | 大小 | 内容 |
+|------|------|------|------|
+| 0 | 680×680 | 8KB | 公司 Logo |
+| 1 | 865×193 | 130KB | 产品图 |
+| 2 | 865×1589 | 1.2MB | 产品详情图 |
+| 3 | 501×298 | 186KB | 教室示意图 |
+| ... | ... | ... | ... |
+| 10 | 1647×1092 | 184KB | 布局方案图 |
+
+**结论**：olefile + 签名扫描提取 PNG/JPEG 完全可行，但有两个局限：
+1. **无法关联到具体段落**（只知道文档内的大致顺序）
+2. **WMF/EMF 矢量图**需要额外转换
+
+## 11. DocxParser 代码审查（Critic Review，2026-04-16）
+
+### 11.1 审查结论：REVISE
+
+核心架构正确（body 遍历保序、heading 层级栈、表格合并处理、图片提取 + OCR、上下文融合），对**规范的 .docx** 工作良好。问题在于对**真实世界脏输入零防御**。
+
+### 11.2 问题责任划分
+
+| 责任方 | 问题 |
+|--------|------|
+| **textutil 转换** | 图片丢失（10.4MB→11KB）、表格消失、Heading 样式丢失 |
+| **DocxParser 自身** | 域代码泄漏、无输入校验、无降级检测 |
+
+### 11.3 必须修复（Critical）
+
+**C1: 零文本清洗 — 域代码直接灌入 RAG 向量库**
+
+`docx_parser.py:125` 的 `para.text.strip()` 不做任何过滤。当 textutil/WPS 等工具把域指令（`TOC \o "1-2"`、`HYPERLINK \l _Toc...`、`PAGEREF ... \h 2`、`PAGE 37`）平铺成 `w:t` 文本时，垃圾直接成为 chunk 内容，污染嵌入向量和检索结果。
+
+**修复方向**：增加 `_clean_text()` 方法，正则过滤 `TOC \o`、`HYPERLINK \l`、`PAGEREF`、`NUMPAGES`、`PAGE \d+` 等域标记。
+
+**C2: 无 .doc 格式支持策略**
+
+`can_handle` 只认 `"docx"`，pipeline 没有 `.doc` 的检测、拒绝或转换路径。用户使用 textutil 等工具自行转换，产生劣质输入且系统无任何提示。
+
+**修复方向**：检测 `.doc` 明确报错推荐转换方案，或集成 olefile 文本+图片提取作为降级路径。
+
+### 11.4 建议改进（Major）
+
+| # | 问题 | 说明 | 改进方向 |
+|---|------|------|---------|
+| M1 | Heading 检测无降级 | `para.style.name.startswith("Heading")` 在非标准 .docx 中失败 | 增加后备：`pPr/outlineLvl`、字号/加粗启发式、中文结构模式 |
+| M2 | 无解析质量检测 | 大文档 0 图片 + 0 表格 + 0 标题完全沉默 | `_walk_body` 后统计类型分布，异常时 WARNING |
+| M3 | OCR 引擎 `False` 哨兵值 | `None`（未初始化）和 `False`（失败）用 truthy/falsy 区分 | 用显式枚举或 sentinel 对象 |
+| M4 | 无文本标准化 | 全角空格、NFC/NFKC 未处理 | 参考 RAGFlow 的 `\u3000` 替换 |
+
+## 12. RAGFlow vs MinerU 深度对比（2026-04-16）
+
+### 12.1 架构对比
+
+| 模块 | RAGFlow | MinerU | 我们的 DocxParser |
+|------|---------|--------|-------------------|
+| **核心库** | python-docx | python-docx + mammoth + lxml | python-docx |
+| **表格** | python-docx → HTML，colspan 启发式 | **mammoth 全文档预解析** → HTML，失败回退 XML | python-docx → Markdown，vMerge XML |
+| **图片** | `pic:pic` XPath + LazyImage | `a:blip` XPath + Pillow 格式转换 | `pic:pic` XPath + PaddleOCR |
+| **标题** | `Heading\s*\d+` 正则，无降级 | 样式名 + **列表编号预扫描**（`heading_list_numids`） | 样式名，无降级 |
+| **域代码/TOC** | 不处理，依赖 `p.text` 自动跳过 | **预收集 `_Toc` 锚点**，TOC 转 INDEX block | 不处理 |
+| **公式** | 不处理 | OMML → LaTeX（`oMath2Latex`） | 不处理 |
+| **超链接** | `document.part.rels` 提取 URL | 三种形式：`w:hyperlink` / `fldChar` / TOC 锚点 | 不处理 |
+| **图片 OCR** | Vision LLM（需 API） | 不做 OCR | **PaddleOCR 本地 OCR** ✅ |
+| **.doc 支持** | Apache Tika 纯文本 | ❌ 不支持 | ❌ 不支持 |
+| **代码量** | ~400 行 | ~2700 行（DocxConverter） | ~460 行 |
+
+### 12.2 MinerU 值得借鉴的 3 个设计
+
+**① 表格用 mammoth 全文档预解析**
+
+mammoth 在完整文档上下文中转换表格，能正确处理：
+- 表格内的列表项（需要 `word/numbering.xml`）
+- 表格内的图片（需要关系文件）
+- 表格内的样式继承
+
+逐个表格孤立解析会丢失这些上下文。
+
+**② TOC 锚点预收集**
+
+```python
+self.toc_anchor_set = self._collect_toc_anchor_set()
+# 遇到 TOC 段落 → 识别为 INDEX block，不当正文处理
+```
+
+解决域代码泄漏的另一种思路：不是清洗域代码，而是**识别并归类为目录 block**。
+
+**③ 列表编号标题检测**
+
+很多中文文档用编号列表做标题（"一、概述"、"1.1 背景"），样式名是 `ListParagraph` 不是 `Heading`。MinerU 预扫描识别这类 numId，当作标题处理。
+
+### 12.3 域代码问题的根因分析
+
+RAGFlow 和 MinerU 都不主动清洗域代码，因为**正规 .docx 中不是问题**：
+
+- `python-docx` 的 `p.text` 只拼接 `w:t` 节点
+- 正规 OOXML 把域指令放在 `w:instrText`（不在 `w:t`），所以自动跳过
+- **textutil 转换**打破了这个假设——它把域结构打平成普通 `w:t` 文本
+
+因此域代码泄漏的根因是**输入质量劣化**，但 parser 仍应有防御性清洗。
+
+## 13. .doc 推荐处理策略（2026-04-16）
+
+### 13.1 综合方案
+
+```
+.doc 输入
+  ├── 文本 → textutil（macOS）/ catdoc（Linux）+ _clean_text() 清洗
+  ├── 图片 → olefile 按签名提取 → PaddleOCR OCR（按文档顺序，但无段落级锚点）
+  ├── 表格 → ❌ 放弃（二进制 TAP 解析不可行）
+  └── metadata → 标记 degraded: true，提示用户转 .docx 获得完整解析
+```
+
+比 RAGFlow（Tika 只提文本）多了**图片 OCR**，对 RAG 检索质量有实际帮助。
+
+### 13.2 待决策事项
+
+以下问题需要在实施前明确：
+
+1. **采用 MinerU 模式（mammoth 双轨）还是在当前基础上迭代？**
+   - MinerU 模式：表格质量更高，但代码量大幅增加（~2700 行 vs ~460 行）
+   - 迭代模式：优先修 Critical 问题（`_clean_text()` + `.doc` 降级），逐步引入 mammoth
+2. **基于当前版本还是新建版本？**
+   - 当前版本测试覆盖完善（26 个单元测试），改动需保持兼容
+   - 新版本可以重构但需重建测试
+3. **.doc 支持的优先级？** — 取决于目标知识库中 .doc 文件的占比
+
+### 13.3 建议的优先级排序
+
+| 优先级 | 改进项 | 复杂度 | 收益 |
+|--------|--------|--------|------|
+| **P0** | `_clean_text()` 域代码清洗 | 低 | 直接修复检索质量 |
+| **P0** | 全角空格等文本标准化 | 低 | 与清洗一起做 |
+| **P1** | TOC 识别（参考 MinerU `toc_anchor_set`） | 中 | 避免目录污染 |
+| **P1** | 解析质量检测 + WARNING 日志 | 低 | 运维可观测性 |
+| **P2** | 表格改用 mammoth 预解析 | 中 | 表格内列表/图片支持 |
+| **P2** | .doc 文本提取 + olefile 图片提取 | 中 | 新格式支持 |
+| **P3** | Heading 降级启发式 | 中 | 非标准 .docx 兼容 |
+| **P3** | 列表编号标题检测 | 中 | 中文文档结构识别 |

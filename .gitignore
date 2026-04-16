@@ -55,6 +55,8 @@ data/
 !tests/data/
 # PaddleOCR extracted images (generated, ~500KB)
 tests/data/paddleocr_output/
+# DOCX parsing eval (internal docs, not for git)
+tests/data/test-reports/docx-eval/
 
 # Pytest / coverage raw artifacts (keep test-reports/ which has HTML)
 .coverage

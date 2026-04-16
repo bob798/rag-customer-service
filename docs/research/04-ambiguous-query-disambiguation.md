@@ -113,23 +113,41 @@ Generator → 用混合模块的 chunk 生成回答 → 答非所问或内容混
 | 对现有架构改动 | 小 (pipeline 加一步) | 中 (query 层改造) | 大 (embedding 流程) | 小 (parser + ingest) |
 | 可维护性 | 好 | 中 | 差 | 好 |
 
-### 决策：方案 4 + 方案 1 组合
+### 决策：方案 1 优先，方案 4 备选
 
-**选择理由：**
+**优先方案 1（检索后 LLM 聚类 + 澄清）：**
 
-1. **方案 4 是基础设施**——给 chunk 打 `module` 标签，是所有上层消歧策略的前提。无论用哪种方案，知道"这个 chunk 属于哪个模块"都是必要信息
+- 不改知识库，不改 parser/ingest 流程
+- rerank 后用 LLM 判断 top-k 结果是否来自不同模块
+- 多模块时返回纯文本模块列表让用户选择
+- 用户选择后，用"模块名 + 原始查询"作为新 query 重新走完整 pipeline
+- **触发条件：** top-k 结果中出现 ≥2 个不同模块即触发（不看占比）
 
-2. **方案 1 是交互层**——检索后按 `module` 标签分组，多模块时触发澄清。利用方案 4 的标签，聚类变成简单的 groupby 操作，无需语义计算
+**备选方案 4（Metadata 打标）：** 如果方案 1 的 LLM 模块判断准确率不够（<85%），再考虑在入库时给 chunk 打 `module` 标签，将 LLM 语义聚类替换为确定性 groupby。
 
-3. **为什么不选方案 2（查询分解）**——需要把模块列表硬编码到 prompt 里，新增模块时要同步更新 prompt。且"静音"这种单词查询，LLM 拆分的质量不稳定
+**为什么这个顺序：**
 
-4. **为什么不选方案 3（HyDE）**——延迟和成本最高，且不解决"用户到底问哪个"的问题，只是让检索更准。在客服场景下，猜错的代价（用户按错误操作指引操作设备）远大于多问一句的代价
+1. **方案 1 不需要改知识库**——可以快速验证消歧交互本身的价值，降低试错成本
+2. **方案 4 是优化手段**——如果 LLM 判断模块的准确率不够，再补上 metadata 打标提升精度
+3. **方案 2（查询分解）不选**——需要把模块列表硬编码到 prompt 里，新增模块时要同步更新 prompt。且"静音"这种单词查询，LLM 拆分的质量不稳定
+4. **方案 3（HyDE）不选**——延迟和成本最高，且不解决"用户到底问哪个"的问题。客服场景下猜错的代价远大于多问一句的代价
+5. **方案 5 不是独立方案**——它是方案 1 的子集，只是触发位置从 intent 层移到了检索后
 
-5. **方案 5 不是独立方案**——它是方案 1 的子集。现有 `IntentClassifier.ambiguous` 已实现 intent 层消歧，但"静音"会通过 in_scope 直接放行。方案 1 在检索后实现消歧，本质就是方案 5 的正确触发位置
+### 竞品对标
 
-## 推荐实现方案
+| 产品 | 消歧能力 | 说明 |
+|------|---------|------|
+| **RAGFlow** | 无主动消歧 | 有 Agentic RAG 循环改写（猜而不问）；元数据只支持文档级，不支持 chunk 级 |
+| **MinerU** | 不涉及 | 纯结构解析器，提供 `text_level` heading 层级，消歧是下游 RAG 的职责 |
+| **本方案** | 主动消歧 | 检索后 LLM 判断模块分布 → 列出选项让用户选 → 重新检索 |
 
-### 架构变更
+**结论：** 一词多模块的主动消歧在开源 RAG 生态中没有现成方案，属于差异化能力。
+
+## 实现方案
+
+### 方案 1（优先）：检索后 LLM 聚类 + 澄清
+
+#### 架构变更
 
 ```
 用户："静音"
@@ -141,91 +159,108 @@ IntentClassifier → in_scope
 QueryRewriter → "静音"
   │
   ▼
-HybridRetriever → top-20 (每个 chunk 带 module 标签)     ← 方案 4：入库时打标
+HybridRetriever → top-20
   │
   ▼
 BGEReranker → top-5
   │
   ▼
 ┌─────────────────────────────────────────────────┐
-│ [NEW] ModuleDisambiguator                       │  ← 方案 1：检索后消歧
+│ [NEW] ModuleDisambiguator                       │
 │                                                 │
-│ 1. 按 metadata["module"] 分组 top-5 结果        │
+│ 1. LLM 分析 top-5 结果，判断涉及哪些功能模块    │
 │ 2. if 单一模块 → 直通                           │
-│ 3. if 多模块 → 生成澄清问题，短路返回            │
-│    "您是在问以下哪个模块的静音功能？"             │
-│    - 输入通道静音（静音某路话筒/线路输入）        │
-│    - 输出静音（静音某路扬声器输出）               │
-│    - 分区静音（按区域整体静音）                   │
+│ 3. if ≥2 模块 → 短路返回澄清问题                │
+│    "您的问题可能涉及以下功能模块，请问您想了解   │
+│     哪个？"                                     │
+│    1. 输入通道静音                               │
+│    2. 输出静音                                   │
+│    3. 分区静音                                   │
 └─────────────────────────────────────────────────┘
-  │
+  │ 单一模块
   ▼
 ConfidenceEvaluator → tier
   │
   ▼
 Generator → 回答
+
+用户选择模块后：
+  "输入通道静音" → 作为新 query 重新走完整 pipeline
 ```
 
-### 实现步骤（概要）
+#### 确认的交互规格
 
-#### Step 1：Chunk 元数据增强（方案 4）
+| 项目 | 决策 |
+|------|------|
+| 触发条件 | top-k 结果涉及 ≥2 个模块即触发（不看占比） |
+| 澄清格式 | 纯文本模块列表，不带摘要 |
+| 用户选择后 | 用"模块名 + 原始查询"重新走完整 pipeline |
+| 模块判断方式 | LLM 分析 top-k chunk 内容，输出模块分类 |
 
-在 parser/chunker 阶段，给每个 chunk 的 metadata 添加 `module` 字段。
-
-**标签来源策略（按优先级）：**
-
-| 策略 | 条件 | 方法 | 成本 |
-|------|------|------|------|
-| A. Section 路径提取 | 文档 heading 按模块组织 | 从 `metadata["section"]` 路径中提取顶层模块名 | 零 |
-| B. 关键词规则匹配 | 内容含明确模块关键词 | 正则匹配"输入通道""输出""分区""ACE"等 | 零 |
-| C. LLM 自动打标 | 上述两种无法覆盖 | 入库时调用 LLM 分类 | 低（一次性） |
-
-**建议：** 先实现 A+B 覆盖大部分场景，C 作为兜底。
-
-#### Step 2：检索后消歧组件（方案 1）
-
-新增 `ModuleDisambiguator` 组件，插入 pipeline 的 rerank 和 confidence 之间。
-
-**核心逻辑：**
+#### 核心逻辑
 
 ```python
 class ModuleDisambiguator:
-    def __init__(self, min_modules_for_clarification: int = 2):
-        self.min_modules = min_modules_for_clarification
+    """检索后消歧：LLM 判断 top-k 结果是否来自不同模块。"""
 
-    def check(self, reranked: list[dict]) -> dict | None:
+    def __init__(self, llm_factory, min_modules: int = 2):
+        self._llm = llm_factory
+        self._min_modules = min_modules
+
+    async def check(self, query: str, reranked: list[dict]) -> dict | None:
         """返回 None 表示无需消歧，返回 dict 表示需要澄清。"""
-        modules = {}
-        for chunk in reranked:
-            module = chunk.get("metadata", {}).get("module", "unknown")
-            modules.setdefault(module, []).append(chunk)
+        # 用 LLM 分析 top-k 结果属于哪些功能模块
+        chunks_text = "\n---\n".join(
+            c.get("content", "")[:200] for c in reranked
+        )
+        prompt = f"""分析以下检索结果，判断它们分别属于产品的哪个功能模块。
+用户查询："{query}"
 
-        if len(modules) < self.min_modules:
+检索结果：
+{chunks_text}
+
+请输出 JSON 格式：{{"modules": ["模块A", "模块B", ...]}}
+只输出不同的模块名，不要重复。"""
+
+        response = await self._llm.generate(prompt)
+        modules = parse_modules(response)  # 解析 LLM 输出
+
+        if len(modules) < self._min_modules:
             return None  # 单一模块，直通
-
-        # 多模块 → 生成澄清选项
-        options = []
-        for module_name, chunks in modules.items():
-            preview = chunks[0].get("content", "")[:50]
-            options.append({"module": module_name, "preview": preview})
 
         return {
             "needs_clarification": True,
-            "modules": options,
-            "question": f"您的问题涉及 {len(modules)} 个模块，请问您想了解哪个？"
+            "modules": modules,
+            "question": self._format_question(modules),
         }
+
+    def _format_question(self, modules: list[str]) -> str:
+        options = "\n".join(f"{i+1}. {m}" for i, m in enumerate(modules))
+        return f"您的问题可能涉及以下功能模块，请问您想了解哪个？\n{options}"
 ```
 
-#### Step 3：Pipeline 集成
+#### Pipeline 集成
 
-在 `pipeline.py` 的 `_run_pre_generation` 中，rerank 之后、confidence 之前插入消歧检查。
+在 `pipeline.py` 的 `_run_pre_generation` 中，rerank（Step 4）之后、confidence（Step 5）之前插入消歧检查。
+
+### 方案 4（备选）：Metadata 打标
+
+当方案 1 的 LLM 模块判断准确率不足时启用。
+
+#### 标签来源策略
+
+| 策略 | 方法 | 成本 |
+|------|------|------|
+| A. Section 路径提取 | 从 `metadata["section"]` 提取顶层模块名 | 零 |
+| B. 关键词规则匹配 | 正则匹配"输入通道""输出""分区""ACE"等 | 零 |
+| C. LLM 入库打标 | 入库时调用 LLM 分类（看完整文档上下文，准确率 ~95%） | 低（一次性） |
+
+启用后，`ModuleDisambiguator.check()` 中的 LLM 判断替换为确定性 `groupby(metadata["module"])`，运行时零额外 LLM 调用。
 
 ### 开放问题
 
 | # | 问题 | 影响 | 状态 |
 |---|------|------|------|
-| 1 | 文档 heading 结构是否能区分模块？ | 决定 Step 1 用策略 A 还是 B/C | **待确认** |
-| 2 | 用户选择模块后，是重新检索还是过滤已有 top-k？ | 过滤更快但结果可能不够；重新检索更准但多一次延迟 | 待定 |
-| 3 | 澄清问题的格式——纯文本 vs 结构化选项？ | 取决于前端 Widget 是否支持按钮式选择 | 待定 |
-| 4 | `module` 标签的粒度——5 个大模块 vs 更细的子模块？ | 太粗可能不够精准，太细选项太多 | 待定 |
-| 5 | 多轮对话中是否记住用户选过的模块？ | 影响 session 内复用，避免反复追问 | 待定 |
+| 1 | `module` 标签粒度——5 个大模块 vs 更细的子模块？ | 太细选项太多 | 待定（方案 4 启用时再定） |
+| 2 | 多轮对话中是否记住用户选过的模块？ | 避免反复追问 | 待定 |
+| 3 | LLM 模块判断的 prompt 需要领域知识注入？ | 影响准确率 | 待验证 |

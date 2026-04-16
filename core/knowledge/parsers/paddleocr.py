@@ -133,7 +133,7 @@ class PaddleOCRParser(BaseParser):
             if in_table and not stripped.startswith("|"):
                 flush_table()
 
-            # Image
+            # Image — standard markdown: ![alt](path)
             img_match = re.match(r'!\[([^\]]*)\]\(([^)]+)\)', stripped)
             if img_match:
                 flush_text()
@@ -142,6 +142,21 @@ class PaddleOCRParser(BaseParser):
                 segments.append({
                     "type": "image",
                     "content": alt if alt else "[图片]",
+                    "level": None,
+                    "image_path": path,
+                })
+                continue
+
+            # Image — HTML format from PaddleOCR: <div...><img src="..." .../></div>
+            html_img_match = re.search(r'<img\s+[^>]*src="([^"]+)"[^>]*/?\s*>', stripped)
+            if html_img_match and stripped.startswith("<div") and stripped.endswith("</div>"):
+                flush_text()
+                path = html_img_match.group(1)
+                alt_match = re.search(r'alt="([^"]*)"', stripped)
+                alt = alt_match.group(1) if alt_match else ""
+                segments.append({
+                    "type": "image",
+                    "content": alt if alt and alt != "Image" else "[图片]",
                     "level": None,
                     "image_path": path,
                 })

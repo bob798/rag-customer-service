@@ -12,7 +12,7 @@ META = {"source_title": "test.pdf", "source_path": "/tmp/test.pdf", "file_type":
 
 @pytest.fixture
 def parser():
-    return PaddleOCRParser(chunker=SemanticChunker(), use_gpu=False)
+    return PaddleOCRParser(chunker=SemanticChunker(), device="cpu")
 
 
 # =====================================================================
@@ -109,6 +109,20 @@ class TestParseMarkdown:
         assert "table" in types
         assert "image" in types
         assert "formula" in types
+
+    def test_html_img_div(self):
+        """PaddleOCR outputs HTML <div><img .../></div> instead of ![](path)."""
+        md = '<div style="text-align: center;"><img src="imgs/photo.jpg" alt="Image" width="40%" /></div>'
+        segments = PaddleOCRParser._parse_markdown(md)
+        assert len(segments) == 1
+        assert segments[0]["type"] == "image"
+        assert segments[0]["image_path"] == "imgs/photo.jpg"
+        assert segments[0]["content"] == "[图片]"  # "Image" alt is replaced
+
+    def test_html_img_with_custom_alt(self):
+        md = '<div style="text-align: center;"><img src="imgs/arch.jpg" alt="系统架构" width="50%" /></div>'
+        segments = PaddleOCRParser._parse_markdown(md)
+        assert segments[0]["content"] == "系统架构"
 
     def test_empty_input(self):
         segments = PaddleOCRParser._parse_markdown("")
@@ -226,15 +240,15 @@ class TestSegmentsToChunks:
 # =====================================================================
 
 class TestIsAvailable:
-    @patch.dict("sys.modules", {"paddleocr": type("mock", (), {})()})
+    @patch.dict("sys.modules", {"paddlex": type("mock", (), {})()})
     def test_available_when_installed(self):
         assert PaddleOCRParser.is_available() is True
 
     def test_not_available_when_missing(self):
-        # paddleocr may or may not be installed — test the logic
+        # paddlex may or may not be installed — test the logic
         import importlib
         try:
-            importlib.import_module("paddleocr")
+            importlib.import_module("paddlex")
             assert PaddleOCRParser.is_available() is True
         except ImportError:
             assert PaddleOCRParser.is_available() is False

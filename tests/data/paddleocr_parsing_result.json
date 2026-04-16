@@ -1,11 +1,12 @@
 {
   "parser": "PaddleOCR PP-StructureV3",
   "pdf": "D:\\workspace\\rag-customer-service\\tests\\data\\功放说明书.pdf",
-  "parse_time_seconds": 60.83,
-  "chunk_count": 19,
-  "total_chars": 7627,
+  "parse_time_seconds": 62.61,
+  "chunk_count": 42,
+  "total_chars": 5177,
   "content_type_distribution": {
-    "text": 18,
+    "text": 21,
+    "image": 20,
     "table": 1
   },
   "sections": [
@@ -25,14 +26,14 @@
   "keyword_coverage": "7/7",
   "metrics": {
     "paddleocr_raw": {
-      "hit_at_1": "1/9",
-      "hit_at_3": "7/9",
-      "mrr": 0.407
+      "hit_at_1": "4/9",
+      "hit_at_3": "8/9",
+      "mrr": 0.667
     },
     "paddleocr_enhanced": {
       "hit_at_1": "4/9",
-      "hit_at_3": "7/9",
-      "mrr": 0.574
+      "hit_at_3": "8/9",
+      "mrr": 0.667
     },
     "default_parser": {
       "hit_at_1": "4/9",
@@ -45,28 +46,28 @@
       "id": "amp-001",
       "question": "BLV-D1 的输出功率是多少？",
       "hit_at_1": false,
-      "hit_at_3": false,
-      "rr": 0.0,
-      "top1_score": 6.25,
-      "top1_preview": "批量采购的所有权利仅限于在一次性交易中购买的数量，且与年度或累计采购数量无关。由于成本考虑，任何定制和定价都是根据在单个"
+      "hit_at_3": true,
+      "rr": 0.5,
+      "top1_score": 7.77,
+      "top1_preview": "图1：将BLV-D1连接到个人电脑或笔记本电脑上，并确保您已经安装了ACP工作台应用程序。 WhenACPWorkbe"
     },
     {
       "id": "amp-002",
       "question": "如何连接蓝牙？",
-      "hit_at_1": false,
+      "hit_at_1": true,
       "hit_at_3": true,
-      "rr": 0.5,
-      "top1_score": 2.54,
-      "top1_preview": "1.通过PCUI接口连接编程端口和计算机，使用支持通信的USB 电缆，轻松控制BLV-D1。 2.在下载和启动软件后，"
+      "rr": 1.0,
+      "top1_score": 4.4,
+      "top1_preview": "注：二维插图以1：1的比例尺提供。请确保您的打印设置被设置为“实际尺寸”或“100%”，以保持准确的尺寸。1.LED指示"
     },
     {
       "id": "amp-003",
       "question": "支持什么电压供电？",
-      "hit_at_1": false,
+      "hit_at_1": true,
       "hit_at_3": true,
-      "rr": 0.5,
-      "top1_score": 4.38,
-      "top1_preview": "BerryBak产品从购买之日起提供一年的保修期。客户负责将货物退还给卖方的费用，通过购买，您同意此条件。由于DIY产品"
+      "rr": 1.0,
+      "top1_score": 5.01,
+      "top1_preview": "blIV-D1支持双向输入方法。首先，它接受在12V到24V范围内的DC功率，需要至少2安培，与3安培或更多推荐的稳定操"
     },
     {
       "id": "amp-004",
@@ -74,35 +75,35 @@
       "hit_at_1": true,
       "hit_at_3": true,
       "rr": 1.0,
-      "top1_score": 5.67,
-      "top1_preview": "<img src=\"imgs/img_in_image"
+      "top1_score": 8.66,
+      "top1_preview": "blV-d1提供了两种主要的音频输入选项：3.5米的线输入和蓝牙连接。3.5毫米的输入提供了一个可靠的有线连接，直接从各"
     },
     {
       "id": "amp-005",
       "question": "这个放大器用的什么芯片？",
       "hit_at_1": false,
       "hit_at_3": true,
-      "rr": 0.333,
-      "top1_score": 5.4,
-      "top1_preview": "接驱动耳机。用户应将该设备连接到扬声器和一个放大器上，以达到最佳的音频性能，并防止对耳机的潜在损害。 启动ACP工作台"
+      "rr": 0.5,
+      "top1_score": 5.98,
+      "top1_preview": "图1：将BLV-D1连接到个人电脑或笔记本电脑上，并确保您已经安装了ACP工作台应用程序。 WhenACPWorkbe"
     },
     {
       "id": "amp-006",
       "question": "蓝牙版本是多少？",
       "hit_at_1": false,
       "hit_at_3": true,
-      "rr": 0.333,
-      "top1_score": 3.48,
+      "rr": 0.5,
+      "top1_score": 3.2,
       "top1_preview": "批量采购的所有权利仅限于在一次性交易中购买的数量，且与年度或累计采购数量无关。由于成本考虑，任何定制和定价都是根据在单个"
     },
     {
       "id": "amp-007",
       "question": "扬声器怎么接线？",
-      "hit_at_1": false,
+      "hit_at_1": true,
       "hit_at_3": true,
-      "rr": 0.5,
-      "top1_score": 2.26,
-      "top1_preview": "1.通过PCUI接口连接编程端口和计算机，使用支持通信的USB 电缆，轻松控制BLV-D1。 2.在下载和启动软件后，"
+      "rr": 1.0,
+      "top1_score": 3.04,
+      "top1_preview": "输出阻抗为600Q，不适合直接驱动耳机。用户应将该设备连接到扬声器和一个放大器上，以达到最佳的音频性能，并防止对耳机的潜"
     },
     {
       "id": "amp-008",
@@ -110,8 +111,8 @@
       "hit_at_1": false,
       "hit_at_3": false,
       "rr": 0.0,
-      "top1_score": 3.89,
-      "top1_preview": "批量采购的所有权利仅限于在一次性交易中购买的数量，且与年度或累计采购数量无关。由于成本考虑，任何定制和定价都是根据在单个"
+      "top1_score": 4.26,
+      "top1_preview": "BerryBak产品从购买之日起提供一年的保修期。客户负责将货物退还给卖方的费用，通过购买，您同意此条件。由于DIY产品"
     },
     {
       "id": "amp-009",
@@ -119,7 +120,7 @@
       "hit_at_1": false,
       "hit_at_3": true,
       "rr": 0.5,
-      "top1_score": 5.08,
+      "top1_score": 4.75,
       "top1_preview": "1.通过PCUI接口连接编程端口和计算机，使用支持通信的USB 电缆，轻松控制BLV-D1。 2.在下载和启动软件后，"
     },
     {
@@ -128,7 +129,7 @@
       "hit_at_1": null,
       "hit_at_3": null,
       "rr": null,
-      "top1_score": 3.55,
+      "top1_score": 2.91,
       "top1_preview": "1.通过PCUI接口连接编程端口和计算机，使用支持通信的USB 电缆，轻松控制BLV-D1。 2.在下载和启动软件后，"
     }
   ],
@@ -137,19 +138,19 @@
       "id": "amp-001",
       "question": "BLV-D1 的输出功率是多少？",
       "hit_at_1": false,
-      "hit_at_3": false,
-      "rr": 0.0,
-      "top1_score": 5.14,
-      "top1_preview": "图5：保存操作。 1.通过PCUI接口连接编程端口和计算机，使用支持通信的USB 电缆，轻松控制BLV-D1。 2.在下"
+      "hit_at_3": true,
+      "rr": 0.5,
+      "top1_score": 7.55,
+      "top1_preview": "音频输入源选项 图1：将BLV-D1连接到个人电脑或笔记本电脑上，并确保您已经安装了ACP工作台应用程序。 WhenAC"
     },
     {
       "id": "amp-002",
       "question": "如何连接蓝牙？",
-      "hit_at_1": false,
+      "hit_at_1": true,
       "hit_at_3": true,
-      "rr": 0.5,
-      "top1_score": 1.8,
-      "top1_preview": "图5：保存操作。 1.通过PCUI接口连接编程端口和计算机，使用支持通信的USB 电缆，轻松控制BLV-D1。 2.在下"
+      "rr": 1.0,
+      "top1_score": 4.07,
+      "top1_preview": "面板布局前面板 注：二维插图以1：1的比例尺提供。请确保您的打印设置被设置为“实际尺寸”或“100%”，以保持准确的尺寸"
     },
     {
       "id": "amp-003",
@@ -157,7 +158,7 @@
       "hit_at_1": true,
       "hit_at_3": true,
       "rr": 1.0,
-      "top1_score": 3.43,
+      "top1_score": 3.57,
       "top1_preview": "面板布局前面板 > 规格如有更改，恕不另行通知。版权所有：©2023，由BerryBakSdn提供。Bhd.保留所有权利"
     },
     {
@@ -166,7 +167,7 @@
       "hit_at_1": true,
       "hit_at_3": true,
       "rr": 1.0,
-      "top1_score": 4.83,
+      "top1_score": 6.0,
       "top1_preview": "音频输入源选项 blV-d1提供了两种主要的音频输入选项：3.5米的线输入和蓝牙连接。3.5毫米的输入提供了一个可靠的有"
     },
     {
@@ -174,17 +175,17 @@
       "question": "这个放大器用的什么芯片？",
       "hit_at_1": false,
       "hit_at_3": true,
-      "rr": 0.333,
-      "top1_score": 5.36,
-      "top1_preview": "音频输入源选项 接驱动耳机。用户应将该设备连接到扬声器和一个放大器上，以达到最佳的音频性能，并防止对耳机的潜在损害。 启"
+      "rr": 0.5,
+      "top1_score": 5.08,
+      "top1_preview": "音频输入源选项 图1：将BLV-D1连接到个人电脑或笔记本电脑上，并确保您已经安装了ACP工作台应用程序。 WhenAC"
     },
     {
       "id": "amp-006",
       "question": "蓝牙版本是多少？",
       "hit_at_1": false,
       "hit_at_3": true,
-      "rr": 0.333,
-      "top1_score": 3.05,
+      "rr": 0.5,
+      "top1_score": 2.86,
       "top1_preview": "批量购买权 批量采购的所有权利仅限于在一次性交易中购买的数量，且与年度或累计采购数量无关。由于成本考虑，任何定制和定价都"
     },
     {
@@ -193,8 +194,8 @@
       "hit_at_1": true,
       "hit_at_3": true,
       "rr": 1.0,
-      "top1_score": 2.05,
-      "top1_preview": "音频输入源选项 blV-d1提供了两种主要的音频输入选项：3.5米的线输入和蓝牙连接。3.5毫米的输入提供了一个可靠的有"
+      "top1_score": 2.76,
+      "top1_preview": "音频输入源选项 输出阻抗为600Q，不适合直接驱动耳机。用户应将该设备连接到扬声器和一个放大器上，以达到最佳的音频性能，"
     },
     {
       "id": "amp-008",
@@ -202,17 +203,17 @@
       "hit_at_1": false,
       "hit_at_3": false,
       "rr": 0.0,
-      "top1_score": 3.1,
+      "top1_score": 4.16,
       "top1_preview": "保修条款和产品使用限制 BerryBak产品从购买之日起提供一年的保修期。客户负责将货物退还给卖方的费用，通过购买，您同"
     },
     {
       "id": "amp-009",
       "question": "电源开关在哪里？",
-      "hit_at_1": true,
+      "hit_at_1": false,
       "hit_at_3": true,
-      "rr": 1.0,
-      "top1_score": 3.96,
-      "top1_preview": "面板布局前面板 注：二维插图以1：1的比例尺提供。请确保您的打印设置被设置为“实际尺寸”或“100%”，以保持准确的尺寸"
+      "rr": 0.5,
+      "top1_score": 4.25,
+      "top1_preview": "图5：保存操作。 1.通过PCUI接口连接编程端口和计算机，使用支持通信的USB 电缆，轻松控制BLV-D1。 2.在下"
     },
     {
       "id": "amp-010",
@@ -220,15 +221,16 @@
       "hit_at_1": null,
       "hit_at_3": null,
       "rr": null,
-      "top1_score": 2.59,
+      "top1_score": 2.57,
       "top1_preview": "图5：保存操作。 1.通过PCUI接口连接编程端口和计算机，使用支持通信的USB 电缆，轻松控制BLV-D1。 2.在下"
     }
   ],
   "comparison_with_default": {
-    "paddleocr_chunks": 19,
+    "paddleocr_chunks": 42,
     "default_chunks": 13,
     "paddleocr_types": {
-      "text": 18,
+      "text": 21,
+      "image": 20,
       "table": 1
     },
     "default_types": {
@@ -242,22 +244,62 @@
       "section": "大器- TPA3116"
     },
     {
-      "content": "Subarag音频控制：\n\n允许您微调音频输出您的偏好。\n\nSubab蓝牙天线：\n\n.增强蓝牙信号接收和范围。\n\n线路输入和线路输出：\n\n<div style=\"text-align: center;\"><img src=\"imgs/img_in_image_box_677_269_1125_757.jpg\" alt=\"Image\" width=\"37%\" /></div>\n\n输出信道(s)输出2",
+      "content": "Subarag音频控制：\n\n允许您微调音频输出您的偏好。\n\nSubab蓝牙天线：\n\n.增强蓝牙信号接收和范围。\n\n线路输入和线路输出：",
       "content_type": "text",
       "section": "特点："
     },
     {
-      "content": "（标称尺寸，英寸（mm））\n\n<div style=\"text-align: center;\"><img src=\"imgs/img_in_image_box_59_1092_566_1257.jpg\" alt=\"Image\" width=\"42%\" /></div>\n\n设计\n\n<div style=\"text-align: center;\"><img src=\"imgs/img_in_formu",
+      "content": "[图片] [图片]",
+      "content_type": "image",
+      "section": "特点："
+    },
+    {
+      "content": "输出信道(s)输出2.0CH\n\n功率2x50W\n\n产品尺寸3.575英寸x3.500英寸x1.075英寸（英寸）\n\n产品尺寸90.81×89.00 x 27.31(mm)\n\n权重\n\n6.0盎司±0.3盎司（盎\n\n切重",
+      "content_type": "text",
+      "section": "特点："
+    },
+    {
+      "content": "[图片] [图片]",
+      "content_type": "image",
+      "section": "特点："
+    },
+    {
+      "content": "（标称尺寸，英寸（mm））",
       "content_type": "text",
       "section": "机械图纸"
     },
     {
-      "content": "<div style=\"text-align: center;\"><img src=\"imgs/img_in_image_box_244_278_857_470.jpg\" alt=\"Image\" width=\"51%\" /></div>\n\n注：二维插图以1：1的比例尺提供。请确保您的打印设置被设置为“实际尺寸”或“100%”，以保持准确的尺寸。1.LED指示灯-纯绿灯表示电源状态，当设备没有连接时",
+      "content": "[图片] [图片]",
+      "content_type": "image",
+      "section": "机械图纸"
+    },
+    {
+      "content": "设计",
+      "content_type": "text",
+      "section": "机械图纸"
+    },
+    {
+      "content": "[图片] [图片]",
+      "content_type": "image",
+      "section": "机械图纸"
+    },
+    {
+      "content": "[图片] [图片]",
+      "content_type": "image",
+      "section": "面板布局前面板"
+    },
+    {
+      "content": "注：二维插图以1：1的比例尺提供。请确保您的打印设置被设置为“实际尺寸”或“100%”，以保持准确的尺寸。1.LED指示灯-纯绿灯表示电源状态，当设备没有连接时，蓝色LED闪烁，但连接到任何蓝牙源时，稳定建立蓝牙连接。2.电源开关-bIv-D1的一个电源开关，允许控制设备的电源状态。",
       "content_type": "text",
       "section": "面板布局前面板"
     },
     {
-      "content": "_804_855_996.jpg\" alt=\"Image\" width=\"51%\" /></div>\n\n注：二维插图以1：1的比例尺提供。请确保您的打印设置被设置为“实际尺寸”或“100%”，以保持准确的尺寸。1.蓝牙天线-蓝牙天线确保了一个扩展的操作范围，允许您享受不间断的音频流，甚至从一个距离，从而扩大了蓝牙连接的范围。2.PCUI编程端口-与PCUI编程端口，bIV-d1提供了个性化和定制的",
+      "content": "[图片] [图片]",
+      "content_type": "image",
+      "section": "面板布局前面板"
+    },
+    {
+      "content": "注：二维插图以1：1的比例尺提供。请确保您的打印设置被设置为“实际尺寸”或“100%”，以保持准确的尺寸。1.蓝牙天线-蓝牙天线确保了一个扩展的操作范围，允许您享受不间断的音频流，甚至从一个距离，从而扩大了蓝牙连接的范围。2.PCUI编程端口-与PCUI编程端口，bIV-d1提供了个性化和定制的音频体验，为任何应用程序提供卓越的音质，无论是娱乐或专业音频3.线路输入-bIv-D1具有3.5mm的线",
       "content_type": "text",
       "section": "面板布局前面板"
     },
@@ -267,23 +309,78 @@
       "section": "面板布局前面板"
     },
     {
-      "content": "<div style=\"text-align: center;\"><img src=\"imgs/img_in_formula_box_117_62_313_117.jpg\" alt=\"Image\" width=\"16%\" /></div>\n\n电源输入选项\n\n<div style=\"text-align: center;\"><img src=\"imgs/img_in_image_box_333_24",
+      "content": "[图片] [图片]",
+      "content_type": "image",
+      "section": "面板布局前面板 > 规格如有更改，恕不另行通知。版权所有：©2023，由BerryBakSdn提供。Bhd.保留所有权利。欲了解更多信息，请联系我们的信息@berrybak。com"
+    },
+    {
+      "content": "电源输入选项",
       "content_type": "text",
       "section": "面板布局前面板 > 规格如有更改，恕不另行通知。版权所有：©2023，由BerryBakSdn提供。Bhd.保留所有权利。欲了解更多信息，请联系我们的信息@berrybak。com"
     },
     {
-      "content": "<div style=\"text-align: center;\"><img src=\"imgs/img_in_image_box_67_696_1078_890.jpg\" alt=\"Image\" width=\"84%\" /></div>\n\nblV-d1提供了两种主要的音频输入选项：3.5米的线输入和蓝牙连接。3.5毫米的输入提供了一个可靠的有线连接，直接从各种设备，如智能手机、个人电脑或音频播放器",
+      "content": "[图片] [图片]",
+      "content_type": "image",
+      "section": "面板布局前面板 > 规格如有更改，恕不另行通知。版权所有：©2023，由BerryBakSdn提供。Bhd.保留所有权利。欲了解更多信息，请联系我们的信息@berrybak。com"
+    },
+    {
+      "content": "blIV-D1支持双向输入方法。首先，它接受在12V到24V范围内的DC功率，需要至少2安培，与3安培或更多推荐的稳定操作。此外，该设备还包括一个专门用于电源传输的USBType-C端口。这允许用户使用现代USBType-C适配器和电源组为blv-d1供电，提供电源选项的灵活性，同时保持一致的性能。",
+      "content_type": "text",
+      "section": "面板布局前面板 > 规格如有更改，恕不另行通知。版权所有：©2023，由BerryBakSdn提供。Bhd.保留所有权利。欲了解更多信息，请联系我们的信息@berrybak。com"
+    },
+    {
+      "content": "[图片] [图片]",
+      "content_type": "image",
+      "section": "音频输入源选项"
+    },
+    {
+      "content": "blV-d1提供了两种主要的音频输入选项：3.5米的线输入和蓝牙连接。3.5毫米的输入提供了一个可靠的有线连接，直接从各种设备，如智能手机、个人电脑或音频播放器。这确保了低强度，高质量的质量。\n\n当两个输入同时连接时，3.5mm输入由于其针脚检测机制而优先考虑。这种设计确保blv-d1自动选择3.5mm的音频源进行播放，提供无缝的使用优势，无需固定的共振峰切换。\n\n音频输出选项\n\n连接到扬声器或外",
       "content_type": "text",
       "section": "音频输入源选项"
     },
     {
-      "content": "接驱动耳机。用户应将该设备连接到扬声器和一个放大器上，以达到最佳的音频性能，并防止对耳机的潜在损害。\n\n启动ACP工作台\n\n<div style=\"text-align: center;\"><img src=\"imgs/img_in_image_box_55_236_539_421.jpg\" alt=\"Image\" width=\"40%\" /></div>\n\n图1：将BLV-D1连接到个人电脑或笔",
+      "content": "[图片] [图片]",
+      "content_type": "image",
+      "section": "音频输入源选项"
+    },
+    {
+      "content": "输出阻抗为600Q，不适合直接驱动耳机。用户应将该设备连接到扬声器和一个放大器上，以达到最佳的音频性能，并防止对耳机的潜在损害。\n\n启动ACP工作台",
       "content_type": "text",
       "section": "音频输入源选项"
     },
     {
-      "content": "669_553_1052.jpg\" alt=\"Image\" width=\"40%\" /></div>\n\n<div style=\"text-align: center;\"><img src=\"imgs/img_in_image_box_66_1104_556_1474.jpg\" alt=\"Image\" width=\"41%\" /></div>\n\n<div style=\"text-align: cen",
+      "content": "[图片] [图片]",
+      "content_type": "image",
+      "section": "音频输入源选项"
+    },
+    {
+      "content": "图1：将BLV-D1连接到个人电脑或笔记本电脑上，并确保您已经安装了ACP工作台应用程序。\n\nWhenACPWorkbench.exe启动后，它将通过连接的UART（串行）或USB（HID）端口自动查找并连接BLV-D1音频放大器。在连接后，ACPWork-bench.exe将读取芯片中的所有配置，并相应地更新其GUI控件。请确保BLV-D1音频放大器已连接到PC 上并已启动。每当blV-D1音频",
       "content_type": "text",
+      "section": "音频输入源选项"
+    },
+    {
+      "content": "[图片] [图片]",
+      "content_type": "image",
+      "section": "音频输入源选项"
+    },
+    {
+      "content": "[图片] [图片]",
+      "content_type": "image",
+      "section": "音频输入源选项"
+    },
+    {
+      "content": "<div style=\"text-align: center;\">图3：针对的效果列表1音乐Pre EQ。</div>",
+      "content_type": "text",
+      "section": "音频输入源选项"
+    },
+    {
+      "content": "[图片] [图片]",
+      "content_type": "image",
+      "section": "音频输入源选项"
+    },
+    {
+      "content": "[图片] [图片]",
+      "content_type": "image",
       "section": "音频输入源选项"
     },
     {
@@ -297,13 +394,23 @@
       "section": "图5：保存操作。"
     },
     {
-      "content": "BLV-D1测试条件包括以下条件：频率响应，VDD设置为21V，负载为2x5W，负载为4欧姆；对于噪声水平测试，VDD为21V，电压为0W，负载为4欧姆，利用A加权滤波器，输入短波为GND；对于THD+N比率评估，VDD电压为21V，负载为2x1W，负载为4欧姆。对于所有的测试，都使用模拟输入源进行测量。\n\n<div style=\"text-align: center;\"><img src=\"im",
+      "content": "BLV-D1测试条件包括以下条件：频率响应，VDD设置为21V，负载为2x5W，负载为4欧姆；对于噪声水平测试，VDD为21V，电压为0W，负载为4欧姆，利用A加权滤波器，输入短波为GND；对于THD+N比率评估，VDD电压为21V，负载为2x1W，负载为4欧姆。对于所有的测试，都使用模拟输入源进行测量。",
       "content_type": "text",
       "section": "图5：保存操作。"
     },
     {
-      "content": "47_1122_1479.jpg\" alt=\"Image\" width=\"41%\" /></div>\n\n<div style=\"text-align: center;\"><img src=\"imgs/img_in_image_box_72_198_561_538.jpg\" alt=\"Image\" width=\"41%\" /></div>",
-      "content_type": "text",
+      "content": "[图片] [图片]",
+      "content_type": "image",
+      "section": "图5：保存操作。"
+    },
+    {
+      "content": "[图片] [图片]",
+      "content_type": "image",
+      "section": "图5：保存操作。"
+    },
+    {
+      "content": "[图片] [图片]",
+      "content_type": "image",
       "section": "图5：保存操作。"
     },
     {
@@ -312,12 +419,22 @@
       "section": "保修条款和产品使用限制"
     },
     {
-      "content": "<div style=\"text-align: center;\"><img src=\"imgs/img_in_image_box_616_200_1114_537.jpg\" alt=\"Image\" width=\"41%\" /></div>",
-      "content_type": "text",
+      "content": "[图片] [图片]",
+      "content_type": "image",
       "section": "发行单位："
     },
     {
       "content": "批量采购的所有权利仅限于在一次性交易中购买的数量，且与年度或累计采购数量无关。由于成本考虑，任何定制和定价都是根据在单个交易中购买的数量来确定的。折扣购买只能通过亚马逊的电子商务平台进行，而目没有其他的购买渠道。平台上列出的价格是零售价格，可以随时波动。我们不提供对现有产品的任何形式的修改或数量低于100件的附加价格折扣对于满足最少100件数量的购买，您可以发送电子邮件定制丝网印刷，并将您的品牌标",
+      "content_type": "text",
+      "section": "批量购买权"
+    },
+    {
+      "content": "[图片] [图片]",
+      "content_type": "image",
+      "section": "批量购买权"
+    },
+    {
+      "content": "BerryBak'",
       "content_type": "text",
       "section": "批量购买权"
     },

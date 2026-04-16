@@ -198,8 +198,9 @@ class DocxParser(BaseParser):
         if self._ocr_engine is None:
             try:
                 from paddleocr import PaddleOCR
+                # use_angle_cls works on both v2 and v3
                 self._ocr_engine = PaddleOCR(
-                    use_textline_orientation=True, lang="ch",
+                    use_angle_cls=True, lang="ch", show_log=False,
                 )
             except ImportError:
                 logger.warning("paddleocr not installed, image OCR disabled")
@@ -231,18 +232,28 @@ class DocxParser(BaseParser):
 
             img_array = np.array(image)
 
-            # PaddleOCR 3.x: predict() accepts numpy array or file path
-            result = engine.predict(img_array)
-
             lines = []
-            # predict() returns a generator of OCRResult (dict subclass)
-            for page_result in result:
-                if not page_result:
-                    continue
-                rec_texts = page_result.get("rec_texts", [])
-                for text in rec_texts:
-                    if text and text.strip():
-                        lines.append(text.strip())
+            if hasattr(engine, "predict"):
+                # PaddleOCR 3.x API
+                result = engine.predict(img_array)
+                for page_result in result:
+                    if not page_result:
+                        continue
+                    rec_texts = page_result.get("rec_texts", [])
+                    for text in rec_texts:
+                        if text and text.strip():
+                            lines.append(text.strip())
+            else:
+                # PaddleOCR 2.x API
+                result = engine.ocr(img_array, cls=True)
+                if result:
+                    for page_result in result:
+                        if not page_result:
+                            continue
+                        for line in page_result:
+                            text = line[1][0]
+                            if text and text.strip():
+                                lines.append(text.strip())
 
             return "\n".join(lines)
 

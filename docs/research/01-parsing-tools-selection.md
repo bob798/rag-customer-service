@@ -1,6 +1,6 @@
 # 中文文档解析工具选型
 
-> 系列文档 1/3 | [② 多模态 Pipeline 设计](./02-multimodal-pipeline-design.md) → [③ 中文分块策略](./03-chinese-chunking-strategy.md)
+> 系列文档 1/4 | [② DOCX 解析](./02-docx-parsing-research.md) → [③ 多模态 Pipeline 设计](./03-multimodal-pipeline-design.md) → [④ 中文分块策略](./04-chinese-chunking-strategy.md)
 >
 > 调研日期：2026-04-08 | 定位：通用技术选型参考
 > 信息来源：OmniDocBench CVPR 2025、PDF Parsing Comparative Study (arxiv 2410.09871)、各工具官方文档

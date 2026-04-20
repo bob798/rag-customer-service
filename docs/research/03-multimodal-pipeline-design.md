@@ -1,6 +1,6 @@
 # 多模态文档内容处理方案
 
-> 系列文档 2/3 | [① 工具选型](./01-parsing-tools-selection.md) ← 本文 → [③ 中文分块策略](./03-chinese-chunking-strategy.md)
+> 系列文档 3/4 | [① 工具选型](./01-parsing-tools-selection.md) → [② DOCX 解析](./02-docx-parsing-research.md) ← 本文 → [④ 中文分块策略](./04-chinese-chunking-strategy.md)
 >
 > 调研日期：2026-04-09 | 定位：技术选型参考
 > 聚焦：五层 Pipeline 各层方案选型 — 解析 → 分类 → 模态处理 → 关系建模 → Chunk

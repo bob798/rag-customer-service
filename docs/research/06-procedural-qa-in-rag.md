@@ -155,10 +155,12 @@ Sources: [RAGFlow Configure Knowledge Base](https://ragflow.io/docs/configure_kn
 
 | 层级 | 方案 | 成本 | 效果 |
 |------|------|------|------|
-| **L1 Prompt** | Generator 增加流程意识 + 检索后按原文排序 + 增大 top-K | 零 | 30-40% |
-| **L2 检索增强** | Parent-Child Chunking + 邻居扩展 + Multi-Query | 低 | 60-70% |
-| **L3 架构改造** | 结构化知识预处理 + 两阶段检索 + 意图路由 | 中 | 80-90% |
-| **L4 范式转换** | Graph RAG + Agentic Workflow + 决策树混合 | 高 | 90%+ |
+| **L1 Prompt** | Generator 增加流程意识 + 检索后按原文排序 + 增大 top-K | 零 | ~30-40% * |
+| **L2 检索增强** | Parent-Child Chunking + 邻居扩展 + Multi-Query | 低 | ~60-70% * |
+| **L3 架构改造** | 结构化知识预处理 + 两阶段检索 + 意图路由 | 中 | ~80-90% * |
+| **L4 范式转换** | Graph RAG + Agentic Workflow + 决策树混合 | 高 | ~90%+ * |
+
+> \* 效果为基于业界案例和项目实测的经验估计，非标准化评测数据。实际效果因数据集和场景差异较大。
 
 ### 3.2 推荐实施路径
 
